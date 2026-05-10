@@ -31,6 +31,7 @@ type Config struct {
 	ScalifyToken   string            `toml:"token"`
 	LocationID     string            `toml:"location_id"`
 	LocationTokens map[string]string `toml:"location_tokens,omitempty"`
+	LocationNames  map[string]string `toml:"location_names,omitempty"`
 }
 
 func Load(configPath string) (*Config, error) {
@@ -129,13 +130,19 @@ func (c *Config) SaveTokens(clientID, clientSecret, accessToken, refreshToken st
 	return c.save()
 }
 
-func (c *Config) SaveLocation(id, token string) error {
+func (c *Config) SaveLocation(id, name, token string) error {
 	c.LocationID = id
 	if token != "" {
 		if c.LocationTokens == nil {
 			c.LocationTokens = map[string]string{}
 		}
 		c.LocationTokens[id] = token
+	}
+	if name != "" {
+		if c.LocationNames == nil {
+			c.LocationNames = map[string]string{}
+		}
+		c.LocationNames[id] = name
 	}
 	// Load saved token for this location into active credentials
 	if saved, ok := c.LocationTokens[id]; ok {
@@ -145,12 +152,30 @@ func (c *Config) SaveLocation(id, token string) error {
 	return c.save()
 }
 
-func (c *Config) AddLocation(id, token string) error {
+func (c *Config) AddLocation(id, name, token string) error {
 	if c.LocationTokens == nil {
 		c.LocationTokens = map[string]string{}
 	}
 	c.LocationTokens[id] = token
+	if name != "" {
+		if c.LocationNames == nil {
+			c.LocationNames = map[string]string{}
+		}
+		c.LocationNames[id] = name
+	}
 	return c.save()
+}
+
+// ResolveLocation returns the location ID for the given name-or-ID string.
+// If the input matches a saved name, the corresponding ID is returned.
+// Otherwise the input is returned as-is (assumed to already be an ID).
+func (c *Config) ResolveLocation(nameOrID string) string {
+	for id, name := range c.LocationNames {
+		if name == nameOrID {
+			return id
+		}
+	}
+	return nameOrID
 }
 
 func (c *Config) ClearTokens() error {
