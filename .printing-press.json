@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-05-10T08:36:00.484921Z",
+  "printing_press_version": "4.2.2",
+  "api_name": "scalify",
+  "display_name": "Scalify",
+  "cli_name": "scalify-pp-cli",
+  "owner": "scalify",
+  "spec_path": "/tmp/ghl-crowd-spec.yaml",
+  "spec_format": "internal",
+  "spec_checksum": "sha256:af2703f37c08cf34b2f5dd2fa1d86b497fdb05515eca83299f1478c46834fe2c",
+  "mcp_binary": "scalify-pp-mcp",
+  "mcp_tool_count": 121,
+  "mcp_ready": "full",
+  "api_version": "0.1.0",
+  "auth_type": "bearer_token",
+  "auth_env_vars": [
+    "SCALIFY_TOKEN"
+  ]
+}

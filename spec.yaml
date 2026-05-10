@@ -1,0 +1,2330 @@
+name: scalify
+description: Scalify Platform API
+version: 0.1.0
+base_url: https://services.leadconnectorhq.com
+spec_source: community
+auth:
+    type: bearer_token
+    header: Authorization
+    format: Bearer {token}
+    env_vars:
+        - SCALIFY_TOKEN
+    env_var_specs:
+        - name: SCALIFY_TOKEN
+          kind: per_call
+          required: true
+          sensitive: true
+          inferred: true
+    in: header
+config:
+    format: toml
+    path: ~/.config/scalify-pp-cli/config.toml
+resources:
+    blogs:
+        description: Operations on posts
+        endpoints:
+            get_posts:
+                method: GET
+                path: /blogs/{id}/posts/{id}
+                description: GET /blogs/{id}/posts/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_authors:
+                method: GET
+                path: /blogs/authors
+                description: GET /blogs/authors
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_categories:
+                method: GET
+                path: /blogs/categories
+                description: GET /blogs/categories
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_posts:
+                method: GET
+                path: /blogs/posts
+                description: GET /blogs/posts
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_url_slug_exists:
+                method: GET
+                path: /blogs/posts/url-slug-exists
+                description: GET /blogs/posts/url-slug-exists
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    businesses:
+        description: Operations on businesses
+        endpoints:
+            create_businesses:
+                method: POST
+                path: /businesses
+                description: POST /businesses
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_businesses:
+                method: DELETE
+                path: /businesses/{id}
+                description: DELETE /businesses/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_businesses:
+                method: GET
+                path: /businesses/{id}
+                description: GET /businesses/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_businesses:
+                method: GET
+                path: /businesses
+                description: GET /businesses
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_businesses:
+                method: PUT
+                path: /businesses/{id}
+                description: PUT /businesses/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    calendars:
+        description: Operations on calendars
+        endpoints:
+            create_appointments:
+                method: POST
+                path: /calendars/events/appointments
+                description: POST /calendars/events/appointments
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_calendars:
+                method: POST
+                path: /calendars
+                description: POST /calendars
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_calendars:
+                method: DELETE
+                path: /calendars/{id}
+                description: DELETE /calendars/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_calendars:
+                method: GET
+                path: /calendars/{id}
+                description: GET /calendars/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_free_slots:
+                method: GET
+                path: /calendars/{id}/free-slots
+                description: GET /calendars/{id}/free-slots
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_calendars:
+                method: GET
+                path: /calendars
+                description: GET /calendars
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_events:
+                method: GET
+                path: /calendars/events
+                description: GET /calendars/events
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_calendars:
+                method: PUT
+                path: /calendars/{id}
+                description: PUT /calendars/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    campaigns:
+        description: Operations on campaigns
+        endpoints:
+            list_campaigns:
+                method: GET
+                path: /campaigns
+                description: GET /campaigns
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    contacts:
+        description: Operations on contacts
+        endpoints:
+            create_contacts:
+                method: POST
+                path: /contacts
+                description: POST /contacts
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_notes:
+                method: POST
+                path: /contacts/{id}/notes
+                description: POST /contacts/{id}/notes
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_tags:
+                method: POST
+                path: /contacts/{id}/tags
+                description: POST /contacts/{id}/tags
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_tasks:
+                method: POST
+                path: /contacts/{id}/tasks
+                description: POST /contacts/{id}/tasks
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_upsert:
+                method: POST
+                path: /contacts/upsert
+                description: POST /contacts/upsert
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_workflow:
+                method: POST
+                path: /contacts/{id}/workflow/{id}
+                description: POST /contacts/{id}/workflow/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_contacts:
+                method: DELETE
+                path: /contacts/{id}
+                description: DELETE /contacts/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_tags:
+                method: DELETE
+                path: /contacts/{id}/tags
+                description: DELETE /contacts/{id}/tags
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_appointments:
+                method: GET
+                path: /contacts/{id}/appointments
+                description: GET /contacts/{id}/appointments
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_contacts:
+                method: GET
+                path: /contacts/{id}
+                description: GET /contacts/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_notes:
+                method: GET
+                path: /contacts/{id}/notes
+                description: GET /contacts/{id}/notes
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_tasks:
+                method: GET
+                path: /contacts/{id}/tasks
+                description: GET /contacts/{id}/tasks
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_contacts:
+                method: GET
+                path: /contacts
+                description: GET /contacts
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_contacts:
+                method: PUT
+                path: /contacts/{id}
+                description: PUT /contacts/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    conversations:
+        description: Operations on search
+        endpoints:
+            create_conversations:
+                method: POST
+                path: /conversations
+                description: POST /conversations
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_inbound:
+                method: POST
+                path: /conversations/messages/inbound
+                description: POST /conversations/messages/inbound
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_messages:
+                method: POST
+                path: /conversations/messages
+                description: POST /conversations/messages
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_conversations:
+                method: GET
+                path: /conversations/{id}
+                description: GET /conversations/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_messages:
+                method: GET
+                path: /conversations/{id}/messages
+                description: GET /conversations/{id}/messages
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_messages_2:
+                method: GET
+                path: /conversations/messages/{id}
+                description: GET /conversations/messages/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_search:
+                method: GET
+                path: /conversations/search
+                description: GET /conversations/search
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_status:
+                method: PUT
+                path: /conversations/messages/{id}/status
+                description: PUT /conversations/messages/{id}/status
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    courses:
+        description: Operations on courses
+        endpoints:
+            list_courses:
+                method: GET
+                path: /courses
+                description: GET /courses
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    documents:
+        description: Operations on documents
+        endpoints:
+            create_send:
+                method: POST
+                path: /documents/{id}/send
+                description: POST /documents/{id}/send
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_documents:
+                method: DELETE
+                path: /documents/{id}
+                description: DELETE /documents/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_documents:
+                method: GET
+                path: /documents/{id}
+                description: GET /documents/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_documents:
+                method: GET
+                path: /documents
+                description: GET /documents
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    emails:
+        description: Operations on emails
+        endpoints:
+            list_emails:
+                method: GET
+                path: /emails
+                description: GET /emails
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    forms:
+        description: Operations on forms
+        endpoints:
+            list_forms:
+                method: GET
+                path: /forms
+                description: GET /forms
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_submissions:
+                method: GET
+                path: /forms/submissions
+                description: GET /forms/submissions
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    funnels:
+        description: Operations on list
+        endpoints:
+            list_funnels:
+                method: GET
+                path: /funnels
+                description: GET /funnels
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_list:
+                method: GET
+                path: /funnels/funnel/list
+                description: GET /funnels/funnel/list
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_page:
+                method: GET
+                path: /funnels/page
+                description: GET /funnels/page
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    invoices:
+        description: Operations on invoices
+        endpoints:
+            create_estimate:
+                method: POST
+                path: /invoices/estimate
+                description: POST /invoices/estimate
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_invoices:
+                method: POST
+                path: /invoices
+                description: POST /invoices
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_record_payment:
+                method: POST
+                path: /invoices/{id}/record-payment
+                description: POST /invoices/{id}/record-payment
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_send:
+                method: POST
+                path: /invoices/{id}/send
+                description: POST /invoices/{id}/send
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_send_2:
+                method: POST
+                path: /invoices/estimate/{id}/send
+                description: POST /invoices/estimate/{id}/send
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_void:
+                method: POST
+                path: /invoices/{id}/void
+                description: POST /invoices/{id}/void
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_estimate:
+                method: DELETE
+                path: /invoices/estimate/{id}
+                description: DELETE /invoices/estimate/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_invoices:
+                method: DELETE
+                path: /invoices/{id}
+                description: DELETE /invoices/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_estimate:
+                method: GET
+                path: /invoices/estimate/{id}
+                description: GET /invoices/estimate/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_invoices:
+                method: GET
+                path: /invoices/{id}
+                description: GET /invoices/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_estimate:
+                method: GET
+                path: /invoices/estimate
+                description: GET /invoices/estimate
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_invoices:
+                method: GET
+                path: /invoices
+                description: GET /invoices
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_estimate:
+                method: PUT
+                path: /invoices/estimate/{id}
+                description: PUT /invoices/estimate/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_invoices:
+                method: PUT
+                path: /invoices/{id}
+                description: PUT /invoices/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    links:
+        description: Operations on links
+        endpoints:
+            list_links:
+                method: GET
+                path: /links
+                description: GET /links
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    locations:
+        description: Operations on locations
+        endpoints:
+            create_customFields:
+                method: POST
+                path: /locations/{id}/customFields
+                description: POST /locations/{id}/customFields
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_customValues:
+                method: POST
+                path: /locations/{id}/customValues
+                description: POST /locations/{id}/customValues
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            create_tags:
+                method: POST
+                path: /locations/{id}/tags
+                description: POST /locations/{id}/tags
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_customFields:
+                method: DELETE
+                path: /locations/{id}/customFields/{id}
+                description: DELETE /locations/{id}/customFields/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_customValues:
+                method: DELETE
+                path: /locations/{id}/customValues/{id}
+                description: DELETE /locations/{id}/customValues/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_tags:
+                method: DELETE
+                path: /locations/{id}/tags/{id}
+                description: DELETE /locations/{id}/tags/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_customFields:
+                method: GET
+                path: /locations/{id}/customFields
+                description: GET /locations/{id}/customFields
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_customValues:
+                method: GET
+                path: /locations/{id}/customValues
+                description: GET /locations/{id}/customValues
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_locations:
+                method: GET
+                path: /locations/{id}
+                description: GET /locations/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_tags:
+                method: GET
+                path: /locations/{id}/tags
+                description: GET /locations/{id}/tags
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_locations:
+                method: GET
+                path: /locations
+                description: GET /locations
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_search:
+                method: GET
+                path: /locations/search
+                description: GET /locations/search
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_customFields:
+                method: PUT
+                path: /locations/{id}/customFields/{id}
+                description: PUT /locations/{id}/customFields/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_customValues:
+                method: PUT
+                path: /locations/{id}/customValues/{id}
+                description: PUT /locations/{id}/customValues/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_locations:
+                method: PUT
+                path: /locations/{id}
+                description: PUT /locations/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_tags:
+                method: PUT
+                path: /locations/{id}/tags/{id}
+                description: PUT /locations/{id}/tags/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    medias:
+        description: Operations on files
+        endpoints:
+            delete_medias:
+                method: DELETE
+                path: /medias/{id}
+                description: DELETE /medias/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_files:
+                method: GET
+                path: /medias/files
+                description: GET /medias/files
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    objects:
+        description: Operations on objects
+        endpoints:
+            create_records:
+                method: POST
+                path: /objects/{id}/records
+                description: POST /objects/{id}/records
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_records:
+                method: DELETE
+                path: /objects/{id}/records/{id}
+                description: DELETE /objects/{id}/records/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_objects:
+                method: GET
+                path: /objects/{id}
+                description: GET /objects/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_records:
+                method: GET
+                path: /objects/{id}/records
+                description: GET /objects/{id}/records
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_records_2:
+                method: GET
+                path: /objects/{id}/records/{id}
+                description: GET /objects/{id}/records/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_objects:
+                method: GET
+                path: /objects
+                description: GET /objects
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_records:
+                method: PUT
+                path: /objects/{id}/records/{id}
+                description: PUT /objects/{id}/records/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    opportunities:
+        description: Operations on search
+        endpoints:
+            create_opportunities:
+                method: POST
+                path: /opportunities
+                description: POST /opportunities
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_opportunities:
+                method: DELETE
+                path: /opportunities/{id}
+                description: DELETE /opportunities/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_opportunities:
+                method: GET
+                path: /opportunities/{id}
+                description: GET /opportunities/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_pipelines:
+                method: GET
+                path: /opportunities/pipelines
+                description: GET /opportunities/pipelines
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_search:
+                method: GET
+                path: /opportunities/search
+                description: GET /opportunities/search
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_opportunities:
+                method: PUT
+                path: /opportunities/{id}
+                description: PUT /opportunities/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    payments:
+        description: Operations on orders
+        endpoints:
+            create_coupons:
+                method: POST
+                path: /payments/coupons
+                description: POST /payments/coupons
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_coupons:
+                method: DELETE
+                path: /payments/coupons/{id}
+                description: DELETE /payments/coupons/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_coupons:
+                method: GET
+                path: /payments/coupons/{id}
+                description: GET /payments/coupons/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_orders:
+                method: GET
+                path: /payments/orders/{id}
+                description: GET /payments/orders/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_coupons:
+                method: GET
+                path: /payments/coupons
+                description: GET /payments/coupons
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_orders:
+                method: GET
+                path: /payments/orders
+                description: GET /payments/orders
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_subscriptions:
+                method: GET
+                path: /payments/subscriptions
+                description: GET /payments/subscriptions
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_transactions:
+                method: GET
+                path: /payments/transactions
+                description: GET /payments/transactions
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_coupons:
+                method: PUT
+                path: /payments/coupons/{id}
+                description: PUT /payments/coupons/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    social-media-posting:
+        description: Operations on social-media-posting
+        endpoints:
+            create_social_media_posting:
+                method: POST
+                path: /social-media-posting
+                description: POST /social-media-posting
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_social_media_posting:
+                method: DELETE
+                path: /social-media-posting/{id}
+                description: DELETE /social-media-posting/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_social_media_posting:
+                method: GET
+                path: /social-media-posting/{id}
+                description: GET /social-media-posting/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_social_media_posting:
+                method: GET
+                path: /social-media-posting
+                description: GET /social-media-posting
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    surveys:
+        description: Operations on surveys
+        endpoints:
+            list_submissions:
+                method: GET
+                path: /surveys/submissions
+                description: GET /surveys/submissions
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_surveys:
+                method: GET
+                path: /surveys
+                description: GET /surveys
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    users:
+        description: Operations on users
+        endpoints:
+            get_users:
+                method: GET
+                path: /users/{id}
+                description: GET /users/{id}
+                params: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_users:
+                method: GET
+                path: /users
+                description: GET /users
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    webhooks:
+        description: Operations on webhooks
+        endpoints:
+            create_webhooks:
+                method: POST
+                path: /webhooks
+                description: POST /webhooks
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            delete_webhooks:
+                method: DELETE
+                path: /webhooks/{id}
+                description: DELETE /webhooks/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            get_webhooks:
+                method: GET
+                path: /webhooks/{id}
+                description: GET /webhooks/{id}
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            list_webhooks:
+                method: GET
+                path: /webhooks
+                description: GET /webhooks
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+            update_webhooks:
+                method: PUT
+                path: /webhooks/{id}
+                description: PUT /webhooks/{id}
+                params:
+                    - name: body
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+    workflows:
+        description: Operations on workflows
+        endpoints:
+            list_workflows:
+                method: GET
+                path: /workflows
+                description: GET /workflows
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
+types: {}

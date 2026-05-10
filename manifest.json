@@ -1,0 +1,39 @@
+{
+  "manifest_version": "0.3",
+  "name": "scalify-pp-mcp",
+  "display_name": "Scalify",
+  "version": "4.2.2",
+  "description": "Scalify API surface as MCP tools.",
+  "author": {
+    "name": "CLI Printing Press"
+  },
+  "license": "Apache-2.0",
+  "server": {
+    "type": "binary",
+    "entry_point": "bin/scalify-pp-mcp",
+    "mcp_config": {
+      "command": "${__dirname}/bin/scalify-pp-mcp",
+      "args": [],
+      "env": {
+        "SCALIFY_TOKEN": "${user_config.scalify_token}"
+      }
+    }
+  },
+  "user_config": {
+    "scalify_token": {
+      "type": "string",
+      "title": "SCALIFY_TOKEN",
+      "description": "Sets SCALIFY_TOKEN for the Scalify MCP server.",
+      "sensitive": true,
+      "required": true
+    }
+  },
+  "compatibility": {
+    "claude_desktop": ">=1.0.0",
+    "platforms": [
+      "darwin",
+      "linux",
+      "win32"
+    ]
+  }
+}

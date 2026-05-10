@@ -1,0 +1,51 @@
+version: 2
+project_name: scalify-pp-cli
+changelog:
+  disable: true
+builds:
+  - id: scalify-pp-cli
+    main: ./cmd/scalify-pp-cli
+    binary: scalify-pp-cli
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X scalify-pp-cli/internal/cli.version={{ .Version }}
+    targets:
+      - darwin_amd64
+      - darwin_arm64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+      - windows_arm64
+  - id: scalify-pp-mcp
+    main: ./cmd/scalify-pp-mcp
+    binary: scalify-pp-mcp
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+    targets:
+      - darwin_amd64
+      - darwin_arm64
+      - linux_amd64
+      - linux_arm64
+      - windows_amd64
+      - windows_arm64
+archives:
+  - formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+checksum:
+  name_template: checksums.txt
+brews:
+  - name: scalify-pp-cli
+    repository:
+      owner: scalify
+      name: homebrew-tap
+    homepage: "https://github.com/scalify/scalify-pp-cli"
+    description: "Scalify Platform API"
+    install: |
+      bin.install "scalify-pp-cli"
+      bin.install "scalify-pp-mcp"
