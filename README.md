@@ -7,14 +7,19 @@ opportunities, invoices, and more — directly from your terminal or AI agent.
 
 ### CLI
 
+**macOS / Linux**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
 ```
+Installs to `/usr/local/bin`. Open a new shell (or run `hash -r`) after install.
 
-Installs the `scalify-cli` binary to `/usr/local/bin`. Supports macOS and Linux.
+**Windows** (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.ps1 | iex
+```
+Installs to `%LOCALAPPDATA%\Programs\scalify-cli` and adds it to your user PATH. Restart your terminal after install.
 
-After install, open a new shell (or run `hash -r`) and verify:
-
+Verify on any platform:
 ```bash
 scalify-cli --version
 ```
@@ -23,8 +28,14 @@ scalify-cli --version
 
 Install the companion skill so Claude Code understands how to use the CLI on your behalf:
 
+**macOS / Linux**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+
+**Windows** (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.ps1 | iex
 ```
 
 Then restart Claude Code (or start a new session). The skill teaches Claude to use `scalify-cli`
@@ -321,8 +332,14 @@ scalify-cli contacts list-contacts --agent --select id \
 
 Install the skill so Claude understands `scalify-cli` commands and can use them autonomously:
 
+**macOS / Linux**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+
+**Windows** (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.ps1 | iex
 ```
 
 Restart Claude Code after install. The skill covers auth setup, location switching, all resource
@@ -374,13 +391,25 @@ Config file: `~/.config/scalify-pp-cli/config.toml`
 `scalify-cli doctor` automatically checks for newer releases on every run. When an update is available it prints the upgrade commands directly in the output — no manual version checking needed.
 
 **Upgrade the CLI binary:**
+
+macOS / Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
 ```
+Windows (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.ps1 | iex
+```
 
 **Upgrade the Claude Code skill:**
+
+macOS / Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+Windows (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.ps1 | iex
 ```
 
 Then start a new Claude Code session for the skill update to take effect.

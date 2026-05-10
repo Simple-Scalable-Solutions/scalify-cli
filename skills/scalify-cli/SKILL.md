@@ -22,10 +22,16 @@ Before using any command, check if the CLI is installed:
 which scalify-cli
 ```
 
-If not found, install it with the one-liner (macOS and Linux):
+If not found, install it:
 
+macOS / Linux:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
+```
+
+Windows (PowerShell):
+```powershell
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.ps1 | iex
 ```
 
 This installs the latest release binary to `/usr/local/bin/scalify-cli`. After install, open a new
@@ -45,12 +51,20 @@ scalify-cli doctor
 
 If the output contains `update_available`, a newer version is available. Warn the user and offer to upgrade both the CLI and the skill:
 
+macOS / Linux:
 ```bash
 # Upgrade CLI binary
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
-
-# Upgrade Claude Code skill
+# Upgrade skill
 curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+
+Windows (PowerShell):
+```powershell
+# Upgrade CLI binary
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.ps1 | iex
+# Upgrade skill
+irm https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.ps1 | iex
 ```
 
 After upgrading the skill, start a new Claude Code session for the changes to take effect.
