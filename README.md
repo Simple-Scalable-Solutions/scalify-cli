@@ -138,6 +138,7 @@ Run `scalify-cli <group> --help` to see all subcommands for a group.
 - `scalify-cli contacts get-notes` — GET /contacts/{id}/notes
 - `scalify-cli contacts get-tasks` — GET /contacts/{id}/tasks
 - `scalify-cli contacts list-contacts` — GET /contacts
+- `scalify-cli contacts list-search` — GET /contacts/search
 - `scalify-cli contacts update-contacts` — PUT /contacts/{id}
 
 ### conversations
@@ -293,6 +294,12 @@ scalify-cli contacts list-contacts --agent
 - **`--data-source live|local|auto`** — force live API, cached SQLite, or auto
 
 Exit codes: `0` success · `2` usage error · `3` not found · `4` auth error · `5` API error · `7` rate limited
+
+Example — search contacts by query:
+
+```bash
+scalify-cli contacts list-search --params "query=jane doe" --agent
+```
 
 Example — fetch all contact IDs and look each one up:
 

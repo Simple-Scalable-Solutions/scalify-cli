@@ -189,7 +189,7 @@ scalify-cli doctor
 
 **Find a contact:**
 ```bash
-scalify-cli search "jane doe" --agent
+scalify-cli contacts list-search --params "query=jane doe" --agent
 scalify-cli contacts list-contacts --agent --select id,name,email
 ```
 

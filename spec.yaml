@@ -598,6 +598,26 @@ resources:
                 meta:
                     source_count: "1"
                     source_tier: community-sdk
+            list_search:
+                method: GET
+                path: /contacts/search
+                description: GET /contacts/search
+                params:
+                    - name: params
+                      type: string
+                      required: false
+                      positional: false
+                      default: null
+                      description: ""
+                      fields: []
+                body: []
+                response:
+                    type: ""
+                    item: ""
+                pagination: null
+                meta:
+                    source_count: "1"
+                    source_tier: community-sdk
             update_contacts:
                 method: PUT
                 path: /contacts/{id}
