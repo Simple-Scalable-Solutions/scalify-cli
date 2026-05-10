@@ -1,412 +1,333 @@
 # Scalify CLI
 
-Scalify Platform API
+Command-line interface to the Scalify Platform. Manage contacts, conversations, calendars,
+opportunities, invoices, and more — directly from your terminal or AI agent.
 
 ## Install
 
-The recommended path installs both the `scalify-pp-cli` binary and the `pp-scalify` agent skill in one shot:
+### CLI
 
 ```bash
-npx -y @mvanhorn/printing-press install scalify
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
 ```
 
-For CLI only (no skill):
+Installs the `scalify-cli` binary to `/usr/local/bin`. Supports macOS and Linux.
+
+After install, open a new shell (or run `hash -r`) and verify:
 
 ```bash
-npx -y @mvanhorn/printing-press install scalify --cli-only
+scalify-cli --version
 ```
 
+### Claude Code Skill
 
-### Without Node
-
-The generated install path is category-agnostic until this CLI is published. If `npx` is not available before publish, install Node or use the category-specific Go fallback from the public-library entry after publish.
-
-### Pre-built binary
-
-Download a pre-built binary for your platform from the [latest release](https://github.com/mvanhorn/printing-press-library/releases/tag/scalify-current). On macOS, clear the Gatekeeper quarantine: `xattr -d com.apple.quarantine <binary>`. On Unix, mark it executable: `chmod +x <binary>`.
-
-<!-- pp-hermes-install-anchor -->
-## Install for Hermes
-
-From the Hermes CLI:
+Install the companion skill so Claude Code understands how to use the CLI on your behalf:
 
 ```bash
-hermes skills install mvanhorn/printing-press-library/cli-skills/pp-scalify --force
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
 ```
 
-Inside a Hermes chat session:
+Then restart Claude Code (or start a new session). The skill teaches Claude to use `scalify-cli`
+commands, handle auth, switch locations, and pipe output — no additional setup needed.
 
-```bash
-/skills install mvanhorn/printing-press-library/cli-skills/pp-scalify --force
-```
-
-## Install for OpenClaw
-
-Tell your OpenClaw agent (copy this):
-
-```
-Install the pp-scalify skill from https://github.com/mvanhorn/printing-press-library/tree/main/cli-skills/pp-scalify. The skill defines how its required CLI can be installed.
-```
+---
 
 ## Quick Start
 
-### 1. Install
+### 1. Set Up Credentials
 
-See [Install](#install) above.
-
-### 2. Set Up Credentials
-
-Get your access token from your API provider's developer portal, then store it:
+Get your API token from the Scalify Platform, then save it:
 
 ```bash
-scalify-pp-cli auth set-token YOUR_TOKEN_HERE
+scalify-cli auth set-token YOUR_TOKEN_HERE
 ```
 
-Or set it via environment variable:
+Or use an environment variable (takes precedence over the config file):
 
 ```bash
 export SCALIFY_TOKEN="your-token-here"
 ```
 
-### 3. Verify Setup
+### 2. Verify Setup
 
 ```bash
-scalify-pp-cli doctor
+scalify-cli doctor
 ```
 
-This checks your configuration and credentials.
+Checks configuration, credentials, and API connectivity.
 
-### 4. Try Your First Command
+### 3. Try a Command
 
 ```bash
-scalify-pp-cli blogs get_posts mock-value
+scalify-cli contacts list-contacts --compact
 ```
 
-## Usage
+---
 
-Run `scalify-pp-cli --help` for the full command reference and flag list.
+## Location (Sub-account) Management
+
+Agency-level tokens work for agency endpoints. Location-scoped endpoints (contacts, conversations,
+etc.) require a per-location Private Integration Token (PIT):
+
+```bash
+# Save a location and its token
+scalify-cli location add <location-id> --token pit-abc123
+
+# Switch to that location
+scalify-cli location use <location-id>
+
+# Save + switch in one step
+scalify-cli location use <location-id> --token pit-abc123
+
+# List saved locations (* = active)
+scalify-cli location list
+
+# Show the currently active location
+scalify-cli location show
+```
+
+Override for a single command without switching:
+
+```bash
+SCALIFY_LOCATION_ID=<id> scalify-cli contacts list-contacts
+```
+
+---
 
 ## Commands
 
+Run `scalify-cli <group> --help` to see all subcommands for a group.
+
+### analytics
+- `scalify-cli analytics` — analytics data
+
 ### blogs
-
-Operations on posts
-
-- **`scalify-pp-cli blogs get_posts`** - GET /blogs/{id}/posts/{id}
-- **`scalify-pp-cli blogs list_authors`** - GET /blogs/authors
-- **`scalify-pp-cli blogs list_categories`** - GET /blogs/categories
-- **`scalify-pp-cli blogs list_posts`** - GET /blogs/posts
-- **`scalify-pp-cli blogs list_url_slug_exists`** - GET /blogs/posts/url-slug-exists
+- `scalify-cli blogs get-posts` — GET /blogs/{id}/posts/{id}
+- `scalify-cli blogs list-authors` — GET /blogs/authors
+- `scalify-cli blogs list-categories` — GET /blogs/categories
+- `scalify-cli blogs list-posts` — GET /blogs/posts
 
 ### businesses
-
-Operations on businesses
-
-- **`scalify-pp-cli businesses create_businesses`** - POST /businesses
-- **`scalify-pp-cli businesses delete_businesses`** - DELETE /businesses/{id}
-- **`scalify-pp-cli businesses get_businesses`** - GET /businesses/{id}
-- **`scalify-pp-cli businesses list_businesses`** - GET /businesses
-- **`scalify-pp-cli businesses update_businesses`** - PUT /businesses/{id}
+- `scalify-cli businesses create-businesses` — POST /businesses
+- `scalify-cli businesses delete-businesses` — DELETE /businesses/{id}
+- `scalify-cli businesses get-businesses` — GET /businesses/{id}
+- `scalify-cli businesses list-businesses` — GET /businesses
+- `scalify-cli businesses update-businesses` — PUT /businesses/{id}
 
 ### calendars
-
-Operations on calendars
-
-- **`scalify-pp-cli calendars create_appointments`** - POST /calendars/events/appointments
-- **`scalify-pp-cli calendars create_calendars`** - POST /calendars
-- **`scalify-pp-cli calendars delete_calendars`** - DELETE /calendars/{id}
-- **`scalify-pp-cli calendars get_calendars`** - GET /calendars/{id}
-- **`scalify-pp-cli calendars get_free_slots`** - GET /calendars/{id}/free-slots
-- **`scalify-pp-cli calendars list_calendars`** - GET /calendars
-- **`scalify-pp-cli calendars list_events`** - GET /calendars/events
-- **`scalify-pp-cli calendars update_calendars`** - PUT /calendars/{id}
-
-### campaigns
-
-Operations on campaigns
-
-- **`scalify-pp-cli campaigns list_campaigns`** - GET /campaigns
+- `scalify-cli calendars create-appointments` — POST /calendars/events/appointments
+- `scalify-cli calendars create-calendars` — POST /calendars
+- `scalify-cli calendars delete-calendars` — DELETE /calendars/{id}
+- `scalify-cli calendars get-calendars` — GET /calendars/{id}
+- `scalify-cli calendars get-free-slots` — GET /calendars/{id}/free-slots
+- `scalify-cli calendars list-calendars` — GET /calendars
+- `scalify-cli calendars list-events` — GET /calendars/events
+- `scalify-cli calendars update-calendars` — PUT /calendars/{id}
 
 ### contacts
-
-Operations on contacts
-
-- **`scalify-pp-cli contacts create_contacts`** - POST /contacts
-- **`scalify-pp-cli contacts create_notes`** - POST /contacts/{id}/notes
-- **`scalify-pp-cli contacts create_tags`** - POST /contacts/{id}/tags
-- **`scalify-pp-cli contacts create_tasks`** - POST /contacts/{id}/tasks
-- **`scalify-pp-cli contacts create_upsert`** - POST /contacts/upsert
-- **`scalify-pp-cli contacts create_workflow`** - POST /contacts/{id}/workflow/{id}
-- **`scalify-pp-cli contacts delete_contacts`** - DELETE /contacts/{id}
-- **`scalify-pp-cli contacts delete_tags`** - DELETE /contacts/{id}/tags
-- **`scalify-pp-cli contacts get_appointments`** - GET /contacts/{id}/appointments
-- **`scalify-pp-cli contacts get_contacts`** - GET /contacts/{id}
-- **`scalify-pp-cli contacts get_notes`** - GET /contacts/{id}/notes
-- **`scalify-pp-cli contacts get_tasks`** - GET /contacts/{id}/tasks
-- **`scalify-pp-cli contacts list_contacts`** - GET /contacts
-- **`scalify-pp-cli contacts update_contacts`** - PUT /contacts/{id}
+- `scalify-cli contacts create-contacts` — POST /contacts
+- `scalify-cli contacts create-notes` — POST /contacts/{id}/notes
+- `scalify-cli contacts create-tags` — POST /contacts/{id}/tags
+- `scalify-cli contacts create-tasks` — POST /contacts/{id}/tasks
+- `scalify-cli contacts create-upsert` — POST /contacts/upsert
+- `scalify-cli contacts create-workflow` — POST /contacts/{id}/workflow/{id}
+- `scalify-cli contacts delete-contacts` — DELETE /contacts/{id}
+- `scalify-cli contacts delete-tags` — DELETE /contacts/{id}/tags
+- `scalify-cli contacts get-appointments` — GET /contacts/{id}/appointments
+- `scalify-cli contacts get-contacts` — GET /contacts/{id}
+- `scalify-cli contacts get-notes` — GET /contacts/{id}/notes
+- `scalify-cli contacts get-tasks` — GET /contacts/{id}/tasks
+- `scalify-cli contacts list-contacts` — GET /contacts
+- `scalify-cli contacts update-contacts` — PUT /contacts/{id}
 
 ### conversations
-
-Operations on search
-
-- **`scalify-pp-cli conversations create_conversations`** - POST /conversations
-- **`scalify-pp-cli conversations create_inbound`** - POST /conversations/messages/inbound
-- **`scalify-pp-cli conversations create_messages`** - POST /conversations/messages
-- **`scalify-pp-cli conversations get_conversations`** - GET /conversations/{id}
-- **`scalify-pp-cli conversations get_messages`** - GET /conversations/{id}/messages
-- **`scalify-pp-cli conversations get_messages_2`** - GET /conversations/messages/{id}
-- **`scalify-pp-cli conversations list_search`** - GET /conversations/search
-- **`scalify-pp-cli conversations update_status`** - PUT /conversations/messages/{id}/status
-
-### courses
-
-Operations on courses
-
-- **`scalify-pp-cli courses list_courses`** - GET /courses
+- `scalify-cli conversations create-conversations` — POST /conversations
+- `scalify-cli conversations create-inbound` — POST /conversations/messages/inbound
+- `scalify-cli conversations create-messages` — POST /conversations/messages
+- `scalify-cli conversations get-conversations` — GET /conversations/{id}
+- `scalify-cli conversations get-messages` — GET /conversations/{id}/messages
+- `scalify-cli conversations list-search` — GET /conversations/search
+- `scalify-cli conversations update-status` — PUT /conversations/messages/{id}/status
 
 ### documents
-
-Operations on documents
-
-- **`scalify-pp-cli documents create_send`** - POST /documents/{id}/send
-- **`scalify-pp-cli documents delete_documents`** - DELETE /documents/{id}
-- **`scalify-pp-cli documents get_documents`** - GET /documents/{id}
-- **`scalify-pp-cli documents list_documents`** - GET /documents
-
-### emails
-
-Operations on emails
-
-- **`scalify-pp-cli emails list_emails`** - GET /emails
+- `scalify-cli documents create-send` — POST /documents/{id}/send
+- `scalify-cli documents delete-documents` — DELETE /documents/{id}
+- `scalify-cli documents get-documents` — GET /documents/{id}
+- `scalify-cli documents list-documents` — GET /documents
 
 ### forms
-
-Operations on forms
-
-- **`scalify-pp-cli forms list_forms`** - GET /forms
-- **`scalify-pp-cli forms list_submissions`** - GET /forms/submissions
+- `scalify-cli forms list-forms` — GET /forms
+- `scalify-cli forms list-submissions` — GET /forms/submissions
 
 ### funnels
-
-Operations on list
-
-- **`scalify-pp-cli funnels list_funnels`** - GET /funnels
-- **`scalify-pp-cli funnels list_list`** - GET /funnels/funnel/list
-- **`scalify-pp-cli funnels list_page`** - GET /funnels/page
+- `scalify-cli funnels list-funnels` — GET /funnels
+- `scalify-cli funnels list-list` — GET /funnels/funnel/list
+- `scalify-cli funnels list-page` — GET /funnels/page
 
 ### invoices
-
-Operations on invoices
-
-- **`scalify-pp-cli invoices create_estimate`** - POST /invoices/estimate
-- **`scalify-pp-cli invoices create_invoices`** - POST /invoices
-- **`scalify-pp-cli invoices create_record_payment`** - POST /invoices/{id}/record-payment
-- **`scalify-pp-cli invoices create_send`** - POST /invoices/{id}/send
-- **`scalify-pp-cli invoices create_send_2`** - POST /invoices/estimate/{id}/send
-- **`scalify-pp-cli invoices create_void`** - POST /invoices/{id}/void
-- **`scalify-pp-cli invoices delete_estimate`** - DELETE /invoices/estimate/{id}
-- **`scalify-pp-cli invoices delete_invoices`** - DELETE /invoices/{id}
-- **`scalify-pp-cli invoices get_estimate`** - GET /invoices/estimate/{id}
-- **`scalify-pp-cli invoices get_invoices`** - GET /invoices/{id}
-- **`scalify-pp-cli invoices list_estimate`** - GET /invoices/estimate
-- **`scalify-pp-cli invoices list_invoices`** - GET /invoices
-- **`scalify-pp-cli invoices update_estimate`** - PUT /invoices/estimate/{id}
-- **`scalify-pp-cli invoices update_invoices`** - PUT /invoices/{id}
-
-### links
-
-Operations on links
-
-- **`scalify-pp-cli links list_links`** - GET /links
+- `scalify-cli invoices create-estimate` — POST /invoices/estimate
+- `scalify-cli invoices create-invoices` — POST /invoices
+- `scalify-cli invoices create-record-payment` — POST /invoices/{id}/record-payment
+- `scalify-cli invoices create-send` — POST /invoices/{id}/send
+- `scalify-cli invoices create-void` — POST /invoices/{id}/void
+- `scalify-cli invoices delete-estimate` — DELETE /invoices/estimate/{id}
+- `scalify-cli invoices delete-invoices` — DELETE /invoices/{id}
+- `scalify-cli invoices get-estimate` — GET /invoices/estimate/{id}
+- `scalify-cli invoices get-invoices` — GET /invoices/{id}
+- `scalify-cli invoices list-estimate` — GET /invoices/estimate
+- `scalify-cli invoices list-invoices` — GET /invoices
+- `scalify-cli invoices update-estimate` — PUT /invoices/estimate/{id}
+- `scalify-cli invoices update-invoices` — PUT /invoices/{id}
 
 ### locations
-
-Operations on locations
-
-- **`scalify-pp-cli locations create_customFields`** - POST /locations/{id}/customFields
-- **`scalify-pp-cli locations create_customValues`** - POST /locations/{id}/customValues
-- **`scalify-pp-cli locations create_tags`** - POST /locations/{id}/tags
-- **`scalify-pp-cli locations delete_customFields`** - DELETE /locations/{id}/customFields/{id}
-- **`scalify-pp-cli locations delete_customValues`** - DELETE /locations/{id}/customValues/{id}
-- **`scalify-pp-cli locations delete_tags`** - DELETE /locations/{id}/tags/{id}
-- **`scalify-pp-cli locations get_customFields`** - GET /locations/{id}/customFields
-- **`scalify-pp-cli locations get_customValues`** - GET /locations/{id}/customValues
-- **`scalify-pp-cli locations get_locations`** - GET /locations/{id}
-- **`scalify-pp-cli locations get_tags`** - GET /locations/{id}/tags
-- **`scalify-pp-cli locations list_locations`** - GET /locations
-- **`scalify-pp-cli locations list_search`** - GET /locations/search
-- **`scalify-pp-cli locations update_customFields`** - PUT /locations/{id}/customFields/{id}
-- **`scalify-pp-cli locations update_customValues`** - PUT /locations/{id}/customValues/{id}
-- **`scalify-pp-cli locations update_locations`** - PUT /locations/{id}
-- **`scalify-pp-cli locations update_tags`** - PUT /locations/{id}/tags/{id}
+- `scalify-cli locations create-customFields` — POST /locations/{id}/customFields
+- `scalify-cli locations create-customValues` — POST /locations/{id}/customValues
+- `scalify-cli locations create-tags` — POST /locations/{id}/tags
+- `scalify-cli locations delete-customFields` — DELETE /locations/{id}/customFields/{id}
+- `scalify-cli locations delete-customValues` — DELETE /locations/{id}/customValues/{id}
+- `scalify-cli locations delete-tags` — DELETE /locations/{id}/tags/{id}
+- `scalify-cli locations get-customFields` — GET /locations/{id}/customFields
+- `scalify-cli locations get-customValues` — GET /locations/{id}/customValues
+- `scalify-cli locations get-locations` — GET /locations/{id}
+- `scalify-cli locations get-tags` — GET /locations/{id}/tags
+- `scalify-cli locations list-locations` — GET /locations
+- `scalify-cli locations list-search` — GET /locations/search
+- `scalify-cli locations update-customFields` — PUT /locations/{id}/customFields/{id}
+- `scalify-cli locations update-customValues` — PUT /locations/{id}/customValues/{id}
+- `scalify-cli locations update-locations` — PUT /locations/{id}
+- `scalify-cli locations update-tags` — PUT /locations/{id}/tags/{id}
 
 ### medias
-
-Operations on files
-
-- **`scalify-pp-cli medias delete_medias`** - DELETE /medias/{id}
-- **`scalify-pp-cli medias list_files`** - GET /medias/files
+- `scalify-cli medias delete-medias` — DELETE /medias/{id}
+- `scalify-cli medias list-files` — GET /medias/files
 
 ### objects
-
-Operations on objects
-
-- **`scalify-pp-cli objects create_records`** - POST /objects/{id}/records
-- **`scalify-pp-cli objects delete_records`** - DELETE /objects/{id}/records/{id}
-- **`scalify-pp-cli objects get_objects`** - GET /objects/{id}
-- **`scalify-pp-cli objects get_records`** - GET /objects/{id}/records
-- **`scalify-pp-cli objects get_records_2`** - GET /objects/{id}/records/{id}
-- **`scalify-pp-cli objects list_objects`** - GET /objects
-- **`scalify-pp-cli objects update_records`** - PUT /objects/{id}/records/{id}
+- `scalify-cli objects create-records` — POST /objects/{id}/records
+- `scalify-cli objects delete-records` — DELETE /objects/{id}/records/{id}
+- `scalify-cli objects get-objects` — GET /objects/{id}
+- `scalify-cli objects get-records` — GET /objects/{id}/records
+- `scalify-cli objects list-objects` — GET /objects
+- `scalify-cli objects update-records` — PUT /objects/{id}/records/{id}
 
 ### opportunities
-
-Operations on search
-
-- **`scalify-pp-cli opportunities create_opportunities`** - POST /opportunities
-- **`scalify-pp-cli opportunities delete_opportunities`** - DELETE /opportunities/{id}
-- **`scalify-pp-cli opportunities get_opportunities`** - GET /opportunities/{id}
-- **`scalify-pp-cli opportunities list_pipelines`** - GET /opportunities/pipelines
-- **`scalify-pp-cli opportunities list_search`** - GET /opportunities/search
-- **`scalify-pp-cli opportunities update_opportunities`** - PUT /opportunities/{id}
+- `scalify-cli opportunities create-opportunities` — POST /opportunities
+- `scalify-cli opportunities delete-opportunities` — DELETE /opportunities/{id}
+- `scalify-cli opportunities get-opportunities` — GET /opportunities/{id}
+- `scalify-cli opportunities list-pipelines` — GET /opportunities/pipelines
+- `scalify-cli opportunities list-search` — GET /opportunities/search
+- `scalify-cli opportunities update-opportunities` — PUT /opportunities/{id}
 
 ### payments
-
-Operations on orders
-
-- **`scalify-pp-cli payments create_coupons`** - POST /payments/coupons
-- **`scalify-pp-cli payments delete_coupons`** - DELETE /payments/coupons/{id}
-- **`scalify-pp-cli payments get_coupons`** - GET /payments/coupons/{id}
-- **`scalify-pp-cli payments get_orders`** - GET /payments/orders/{id}
-- **`scalify-pp-cli payments list_coupons`** - GET /payments/coupons
-- **`scalify-pp-cli payments list_orders`** - GET /payments/orders
-- **`scalify-pp-cli payments list_subscriptions`** - GET /payments/subscriptions
-- **`scalify-pp-cli payments list_transactions`** - GET /payments/transactions
-- **`scalify-pp-cli payments update_coupons`** - PUT /payments/coupons/{id}
+- `scalify-cli payments create-coupons` — POST /payments/coupons
+- `scalify-cli payments delete-coupons` — DELETE /payments/coupons/{id}
+- `scalify-cli payments get-coupons` — GET /payments/coupons/{id}
+- `scalify-cli payments get-orders` — GET /payments/orders/{id}
+- `scalify-cli payments list-coupons` — GET /payments/coupons
+- `scalify-cli payments list-orders` — GET /payments/orders
+- `scalify-cli payments list-subscriptions` — GET /payments/subscriptions
+- `scalify-cli payments list-transactions` — GET /payments/transactions
+- `scalify-cli payments update-coupons` — PUT /payments/coupons/{id}
 
 ### social-media-posting
-
-Operations on social-media-posting
-
-- **`scalify-pp-cli social-media-posting create_social_media_posting`** - POST /social-media-posting
-- **`scalify-pp-cli social-media-posting delete_social_media_posting`** - DELETE /social-media-posting/{id}
-- **`scalify-pp-cli social-media-posting get_social_media_posting`** - GET /social-media-posting/{id}
-- **`scalify-pp-cli social-media-posting list_social_media_posting`** - GET /social-media-posting
+- `scalify-cli social-media-posting create-social-media-posting` — POST /social-media-posting
+- `scalify-cli social-media-posting delete-social-media-posting` — DELETE /social-media-posting/{id}
+- `scalify-cli social-media-posting get-social-media-posting` — GET /social-media-posting/{id}
+- `scalify-cli social-media-posting list-social-media-posting` — GET /social-media-posting
 
 ### surveys
-
-Operations on surveys
-
-- **`scalify-pp-cli surveys list_submissions`** - GET /surveys/submissions
-- **`scalify-pp-cli surveys list_surveys`** - GET /surveys
+- `scalify-cli surveys list-submissions` — GET /surveys/submissions
+- `scalify-cli surveys list-surveys` — GET /surveys
 
 ### users
-
-Operations on users
-
-- **`scalify-pp-cli users get_users`** - GET /users/{id}
-- **`scalify-pp-cli users list_users`** - GET /users
+- `scalify-cli users get-users` — GET /users/{id}
+- `scalify-cli users list-users` — GET /users
 
 ### webhooks
+- `scalify-cli webhooks create-webhooks` — POST /webhooks
+- `scalify-cli webhooks delete-webhooks` — DELETE /webhooks/{id}
+- `scalify-cli webhooks get-webhooks` — GET /webhooks/{id}
+- `scalify-cli webhooks list-webhooks` — GET /webhooks
+- `scalify-cli webhooks update-webhooks` — PUT /webhooks/{id}
 
-Operations on webhooks
-
-- **`scalify-pp-cli webhooks create_webhooks`** - POST /webhooks
-- **`scalify-pp-cli webhooks delete_webhooks`** - DELETE /webhooks/{id}
-- **`scalify-pp-cli webhooks get_webhooks`** - GET /webhooks/{id}
-- **`scalify-pp-cli webhooks list_webhooks`** - GET /webhooks
-- **`scalify-pp-cli webhooks update_webhooks`** - PUT /webhooks/{id}
-
-### workflows
-
-Operations on workflows
-
-- **`scalify-pp-cli workflows list_workflows`** - GET /workflows
-
+---
 
 ## Output Formats
 
 ```bash
 # Human-readable table (default in terminal, JSON when piped)
-scalify-pp-cli blogs get_posts mock-value
+scalify-cli contacts list-contacts
 
-# JSON for scripting and agents
-scalify-pp-cli blogs get_posts mock-value --json
+# JSON
+scalify-cli contacts list-contacts --json
+
+# Compact JSON — key fields only (id, name, status, timestamps)
+scalify-cli contacts list-contacts --compact
 
 # Filter to specific fields
-scalify-pp-cli blogs get_posts mock-value --json --select id,name,status
+scalify-cli contacts list-contacts --json --select id,firstName,email
 
-# Dry run — show the request without sending
-scalify-pp-cli blogs get_posts mock-value --dry-run
+# CSV
+scalify-cli contacts list-contacts --csv
+
+# Dry run — print the request without sending
+scalify-cli contacts list-contacts --dry-run
 
 # Agent mode — JSON + compact + no prompts in one flag
-scalify-pp-cli blogs get_posts mock-value --agent
+scalify-cli contacts list-contacts --agent
 ```
 
-## Agent Usage
+---
 
-This CLI is designed for AI agent consumption:
+## Agent / Scripting Usage
 
-- **Non-interactive** - never prompts, every input is a flag
-- **Pipeable** - `--json` output to stdout, errors to stderr
-- **Filterable** - `--select id,name` returns only fields you need
-- **Previewable** - `--dry-run` shows the request without sending
-- **Explicit retries** - add `--idempotent` to create retries and `--ignore-missing` to delete retries when a no-op success is acceptable
-- **Confirmable** - `--yes` for explicit confirmation of destructive actions
-- **Piped input** - write commands can accept structured input when their help lists `--stdin`
-- **Offline-friendly** - sync/search commands can use the local SQLite store when available
-- **Agent-safe by default** - no colors or formatting unless `--human-friendly` is set
+`scalify-cli` is designed to be driven by AI agents and scripts:
 
-Exit codes: `0` success, `2` usage error, `3` not found, `4` auth error, `5` API error, `7` rate limited, `10` config error.
+- **`--agent`** — sets `--json --compact --no-input --no-color --yes` in one flag
+- **`--select id,name`** — return only the fields you need
+- **`--dry-run`** — preview requests without side effects
+- **`--idempotent`** — makes create retries safe (treats duplicates as success)
+- **`--ignore-missing`** — makes delete retries safe (treats not-found as success)
+- **`--yes`** — skip confirmation prompts
+- **`--deliver file:<path>`** — write output to a file instead of stdout
+- **`--deliver webhook:<url>`** — POST output to a webhook
+- **`--data-source live|local|auto`** — force live API, cached SQLite, or auto
+
+Exit codes: `0` success · `2` usage error · `3` not found · `4` auth error · `5` API error · `7` rate limited
+
+Example — fetch all contact IDs and look each one up:
+
+```bash
+scalify-cli contacts list-contacts --agent --select id \
+  | jq -r '.[].id' \
+  | xargs -I{} scalify-cli contacts get-contacts {} --agent
+```
+
+---
 
 ## Use with Claude Code
 
-Install the focused skill — it auto-installs the CLI on first invocation:
+Install the skill so Claude understands `scalify-cli` commands and can use them autonomously:
 
 ```bash
-npx skills add mvanhorn/printing-press-library/cli-skills/pp-scalify -g
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
 ```
 
-Then invoke `/pp-scalify <query>` in Claude Code. The skill is the most efficient path — Claude Code drives the CLI directly without an MCP server in the middle.
+Restart Claude Code after install. The skill covers auth setup, location switching, all resource
+groups, output flags, and common workflows — Claude will invoke the CLI directly rather than
+asking you to run commands manually.
 
-<details>
-<summary>Use as an MCP server in Claude Code (advanced)</summary>
+---
 
-If you'd rather register this CLI as an MCP server in Claude Code, install the MCP binary first:
+## Use as an MCP Server (Claude Code or Claude Desktop)
 
-
-Install the MCP binary from this CLI's published public-library entry or pre-built release.
-
-Then register it:
+The CLI ships a companion MCP server binary (`scalify-pp-mcp`) that exposes every command as an
+agent tool. Register it in Claude Code:
 
 ```bash
 claude mcp add scalify scalify-pp-mcp -e SCALIFY_TOKEN=<your-token>
 ```
 
-</details>
-
-## Use with Claude Desktop
-
-This CLI ships an [MCPB](https://github.com/modelcontextprotocol/mcpb) bundle — Claude Desktop's standard format for one-click MCP extension installs (no JSON config required).
-
-To install:
-
-1. Download the `.mcpb` for your platform from the [latest release](https://github.com/mvanhorn/printing-press-library/releases/tag/scalify-current).
-2. Double-click the `.mcpb` file. Claude Desktop opens and walks you through the install.
-3. Fill in `SCALIFY_TOKEN` when Claude Desktop prompts you.
-
-Requires Claude Desktop 1.0.0 or later. Pre-built bundles ship for macOS Apple Silicon (`darwin-arm64`) and Windows (`amd64`, `arm64`); for other platforms, use the manual config below.
-
-<details>
-<summary>Manual JSON config (advanced)</summary>
-
-If you can't use the MCPB bundle (older Claude Desktop, unsupported platform), install the MCP binary and configure it manually.
-
-
-Install the MCP binary from this CLI's published public-library entry or pre-built release.
-
-Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+Or add it to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
@@ -421,39 +342,34 @@ Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_
 }
 ```
 
-</details>
-
-## Health Check
-
-```bash
-scalify-pp-cli doctor
-```
-
-Verifies configuration, credentials, and connectivity to the API.
+---
 
 ## Configuration
 
 Config file: `~/.config/scalify-pp-cli/config.toml`
 
-Static request headers can be configured under `headers`; per-command header overrides take precedence.
+| Environment variable | Description |
+|---|---|
+| `SCALIFY_TOKEN` | API token (takes precedence over config file) |
+| `SCALIFY_LOCATION_ID` | Active location ID (takes precedence over config file) |
+| `SCALIFY_CONFIG` | Override config file path |
 
-Environment variables:
-
-| Name | Kind | Required | Description |
-| --- | --- | --- | --- |
-| `SCALIFY_TOKEN` | per_call | Yes | Set to your API credential. |
+---
 
 ## Troubleshooting
-**Authentication errors (exit code 4)**
-- Run `scalify-pp-cli doctor` to check credentials
-- Verify the environment variable is set: `echo $SCALIFY_TOKEN`
+
+**401 / auth errors (exit code 4)**
+- Agency PITs work for agency-level endpoints only — location-scoped endpoints (contacts, conversations, etc.) need a location PIT
+- Run `scalify-cli doctor` and `scalify-cli auth status` to check what's configured
+- Set a location token: `scalify-cli location add <id> --token <pit>`
+
 **Not found errors (exit code 3)**
 - Check the resource ID is correct
-- Run the `list` command to see available items
+- Run the `list` variant of the command to see available items
 
-## HTTP Transport
-
-This CLI uses Chrome-compatible HTTP transport for browser-facing endpoints. It does not require a resident browser process for normal API calls.
+**HTTP transport**
+This CLI uses Chrome-compatible HTTP transport for browser-facing endpoints and does not require a
+resident browser process for normal API calls.
 
 ---
 
