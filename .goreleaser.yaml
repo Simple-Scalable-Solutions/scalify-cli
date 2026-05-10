@@ -39,13 +39,3 @@ archives:
         formats: [zip]
 checksum:
   name_template: checksums.txt
-brews:
-  - name: scalify-pp-cli
-    repository:
-      owner: Simple-Scalable-Solutions
-      name: homebrew-tap
-    homepage: "https://github.com/Simple-Scalable-Solutions/scalify-cli"
-    description: "Scalify Platform API"
-    install: |
-      bin.install "scalify-pp-cli"
-      bin.install "scalify-pp-mcp"
