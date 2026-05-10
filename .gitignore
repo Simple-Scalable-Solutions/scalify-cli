@@ -1,0 +1,10 @@
+# Compiled binaries
+build/stage/
+dist/
+
+# Local test outputs
+.gotmp/
+dogfood-results.json
+
+# OS
+.DS_Store
