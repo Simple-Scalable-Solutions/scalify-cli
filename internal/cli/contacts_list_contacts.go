@@ -6,6 +6,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -28,7 +29,15 @@ func newContactsListContactsCmd(flags *rootFlags) *cobra.Command {
 			path := "/contacts"
 			params := map[string]string{}
 			if flagParams != "" {
-				params["params"] = fmt.Sprintf("%v", flagParams)
+				// Parse as URL query string so each key becomes an individual query param.
+				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
+				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
+					for k, vals := range parsed {
+						if len(vals) > 0 {
+							params[k] = vals[0]
+						}
+					}
+				}
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "contacts", false, path, params, nil)
 			if err != nil {
@@ -72,7 +81,7 @@ func newContactsListContactsCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagParams, "params", "", "")
+	cmd.Flags().StringVar(&flagParams, "params", "", "URL query string of filter params, e.g. \"limit=20&startAfter=abc\"")
 
 	return cmd
 }

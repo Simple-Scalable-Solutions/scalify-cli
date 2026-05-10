@@ -6,18 +6,20 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 func newContactsListSearchCmd(flags *rootFlags) *cobra.Command {
+	var flagQuery string
 	var flagParams string
 
 	cmd := &cobra.Command{
 		Use:   "list-search",
 		Short: "GET /contacts/search",
-		Example: "  scalify-cli contacts list-search",
+		Example: "  scalify-cli contacts list-search --query \"jane doe\"\n  scalify-cli contacts list-search --params \"query=jane+doe&limit=20\"",
 		Annotations: map[string]string{"pp:endpoint": "contacts.list_search", "pp:method": "GET", "pp:path": "/contacts/search", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()
@@ -27,8 +29,19 @@ func newContactsListSearchCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/contacts/search"
 			params := map[string]string{}
+			if flagQuery != "" {
+				params["query"] = flagQuery
+			}
 			if flagParams != "" {
-				params["params"] = fmt.Sprintf("%v", flagParams)
+				// Parse as URL query string so each key becomes an individual query param.
+				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
+				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
+					for k, vals := range parsed {
+						if len(vals) > 0 {
+							params[k] = vals[0]
+						}
+					}
+				}
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "contacts", false, path, params, nil)
 			if err != nil {
@@ -72,7 +85,8 @@ func newContactsListSearchCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagParams, "params", "", "")
+	cmd.Flags().StringVar(&flagQuery, "query", "", "Search query string, e.g. \"jane doe\"")
+	cmd.Flags().StringVar(&flagParams, "params", "", "Additional URL query params, e.g. \"limit=20&startAfter=abc\"")
 
 	return cmd
 }
