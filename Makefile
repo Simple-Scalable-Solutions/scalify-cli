@@ -22,3 +22,6 @@ install-mcp:
 	go install ./cmd/scalify-pp-mcp
 
 build-all: build build-mcp
+
+release:
+	goreleaser release --clean --parallelism 2

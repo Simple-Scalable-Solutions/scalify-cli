@@ -88,6 +88,20 @@ find . -type f \( -name "*.go" -o -name "*.md" -o -name "*.json" -o -name "*.yam
 # (required for dogfood auth-protocol MATCH — see checkAuth in printing-press source)
 ```
 
+## Releasing
+
+**Always use `--parallelism 2` when running goreleaser.** The config builds 2 binaries × 6 platforms = 12 concurrent Go compiler processes by default, which exhausts RAM and freezes the machine.
+
+```shell
+# Correct — always use this
+goreleaser release --clean --parallelism 2
+
+# Or via Makefile
+make release
+```
+
+Never run `goreleaser release --clean` without `--parallelism 2`.
+
 ## Current Quality
 
 Scorecard: **81/100 Grade A** (printing-press v4.2.2)  
