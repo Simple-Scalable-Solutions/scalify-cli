@@ -17,7 +17,7 @@ func newBlogsListCategoriesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-categories",
 		Short: "GET /blogs/categories",
-		Example: "  scalify-pp-cli blogs list-categories",
+		Example: "  scalify-cli blogs list-categories",
 		Annotations: map[string]string{"pp:endpoint": "blogs.list_categories", "pp:method": "GET", "pp:path": "/blogs/categories", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

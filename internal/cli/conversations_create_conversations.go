@@ -19,7 +19,7 @@ func newConversationsCreateConversationsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-conversations",
 		Short: "POST /conversations",
-		Example: "  scalify-pp-cli conversations create-conversations",
+		Example: "  scalify-cli conversations create-conversations",
 		Annotations: map[string]string{"pp:endpoint": "conversations.create_conversations", "pp:method": "POST", "pp:path": "/conversations"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

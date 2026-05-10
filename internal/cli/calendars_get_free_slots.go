@@ -17,7 +17,7 @@ func newCalendarsGetFreeSlotsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-free-slots <id>",
 		Short: "GET /calendars/{id}/free-slots",
-		Example: "  scalify-pp-cli calendars get-free-slots 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli calendars get-free-slots 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "calendars.get_free_slots", "pp:method": "GET", "pp:path": "/calendars/{id}/free-slots", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

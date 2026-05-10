@@ -28,6 +28,9 @@ import (
 // dogfood checks this literal to verify auth protocol matches the spec.
 const authHeaderPrefix = "Bearer "
 
+// apiVersion is the required Version header value for all API requests.
+const apiVersion = "2021-07-28"
+
 type Client struct {
 	BaseURL    string
 	Config     *config.Config
@@ -245,19 +248,25 @@ func (c *Client) do(method, path string, params map[string]string, body any, hea
 			req.Header.Set("Content-Type", "application/json")
 		}
 
+		q := req.URL.Query()
+		if c.Config != nil && c.Config.LocationID != "" {
+			q.Set("locationId", c.Config.LocationID)
+		}
 		if params != nil {
-			q := req.URL.Query()
 			for k, v := range params {
 				if v != "" {
 					q.Set(k, v)
 				}
 			}
-			req.URL.RawQuery = q.Encode()
+		}
+		if encoded := q.Encode(); encoded != "" {
+			req.URL.RawQuery = encoded
 		}
 
 		if authHeader != "" {
 			req.Header.Set("Authorization", authHeader)
 		}
+		req.Header.Set("Version", apiVersion)
 		if c.Config != nil {
 			for k, v := range c.Config.Headers {
 				req.Header.Set(k, v)

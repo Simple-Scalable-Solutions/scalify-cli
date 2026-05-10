@@ -17,7 +17,7 @@ func newSocialMediaPostingListSocialMediaPostingCmd(flags *rootFlags) *cobra.Com
 	cmd := &cobra.Command{
 		Use:   "list-social-media-posting",
 		Short: "GET /social-media-posting",
-		Example: "  scalify-pp-cli social-media-posting list-social-media-posting",
+		Example: "  scalify-cli social-media-posting list-social-media-posting",
 		Annotations: map[string]string{"pp:endpoint": "social-media-posting.list_social_media_posting", "pp:method": "GET", "pp:path": "/social-media-posting", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

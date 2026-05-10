@@ -19,7 +19,7 @@ func newBusinessesCreateBusinessesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-businesses",
 		Short: "POST /businesses",
-		Example: "  scalify-pp-cli businesses create-businesses",
+		Example: "  scalify-cli businesses create-businesses",
 		Annotations: map[string]string{"pp:endpoint": "businesses.create_businesses", "pp:method": "POST", "pp:path": "/businesses"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

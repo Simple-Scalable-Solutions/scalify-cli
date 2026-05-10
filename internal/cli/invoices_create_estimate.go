@@ -19,7 +19,7 @@ func newInvoicesCreateEstimateCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-estimate",
 		Short: "POST /invoices/estimate",
-		Example: "  scalify-pp-cli invoices create-estimate",
+		Example: "  scalify-cli invoices create-estimate",
 		Annotations: map[string]string{"pp:endpoint": "invoices.create_estimate", "pp:method": "POST", "pp:path": "/invoices/estimate"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

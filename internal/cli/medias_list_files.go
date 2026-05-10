@@ -17,7 +17,7 @@ func newMediasListFilesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-files",
 		Short: "GET /medias/files",
-		Example: "  scalify-pp-cli medias list-files",
+		Example: "  scalify-cli medias list-files",
 		Annotations: map[string]string{"pp:endpoint": "medias.list_files", "pp:method": "GET", "pp:path": "/medias/files", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

@@ -19,7 +19,7 @@ func newOpportunitiesUpdateOpportunitiesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-opportunities <id>",
 		Short: "PUT /opportunities/{id}",
-		Example: "  scalify-pp-cli opportunities update-opportunities 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli opportunities update-opportunities 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "opportunities.update_opportunities", "pp:method": "PUT", "pp:path": "/opportunities/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

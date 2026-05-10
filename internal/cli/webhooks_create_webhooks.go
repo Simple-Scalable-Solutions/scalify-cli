@@ -19,7 +19,7 @@ func newWebhooksCreateWebhooksCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-webhooks",
 		Short: "POST /webhooks",
-		Example: "  scalify-pp-cli webhooks create-webhooks",
+		Example: "  scalify-cli webhooks create-webhooks",
 		Annotations: map[string]string{"pp:endpoint": "webhooks.create_webhooks", "pp:method": "POST", "pp:path": "/webhooks"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

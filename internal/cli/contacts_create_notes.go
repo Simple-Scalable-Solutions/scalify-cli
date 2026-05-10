@@ -19,7 +19,7 @@ func newContactsCreateNotesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-notes <id>",
 		Short: "POST /contacts/{id}/notes",
-		Example: "  scalify-pp-cli contacts create-notes 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts create-notes 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create_notes", "pp:method": "POST", "pp:path": "/contacts/{id}/notes"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

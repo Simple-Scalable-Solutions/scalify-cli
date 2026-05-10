@@ -19,7 +19,7 @@ func newLocationsCreateCustomValuesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-custom-values <id>",
 		Short: "POST /locations/{id}/customValues",
-		Example: "  scalify-pp-cli locations create-custom-values 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations create-custom-values 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "locations.create_customValues", "pp:method": "POST", "pp:path": "/locations/{id}/customValues"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

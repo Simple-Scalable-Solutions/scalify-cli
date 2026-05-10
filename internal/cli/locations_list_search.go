@@ -17,7 +17,7 @@ func newLocationsListSearchCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-search",
 		Short: "GET /locations/search",
-		Example: "  scalify-pp-cli locations list-search",
+		Example: "  scalify-cli locations list-search",
 		Annotations: map[string]string{"pp:endpoint": "locations.list_search", "pp:method": "GET", "pp:path": "/locations/search", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

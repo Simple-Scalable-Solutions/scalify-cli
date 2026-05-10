@@ -18,7 +18,7 @@ func newCampaignsPromotedCmd(flags *rootFlags) *cobra.Command {
 		Use:   "campaigns",
 		Short: "GET /campaigns",
 		Long:  "Shortcut for 'campaigns list_campaigns'. GET /campaigns",
-		Example: "  scalify-pp-cli campaigns",
+		Example: "  scalify-cli campaigns",
 		Annotations: map[string]string{"pp:endpoint": "campaigns.list_campaigns", "pp:method": "GET", "pp:path": "/campaigns", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

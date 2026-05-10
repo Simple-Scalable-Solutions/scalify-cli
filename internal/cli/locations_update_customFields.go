@@ -19,7 +19,7 @@ func newLocationsUpdateCustomFieldsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-custom-fields <id>",
 		Short: "PUT /locations/{id}/customFields/{id}",
-		Example: "  scalify-pp-cli locations update-custom-fields 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations update-custom-fields 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "locations.update_customFields", "pp:method": "PUT", "pp:path": "/locations/{id}/customFields/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

@@ -17,7 +17,7 @@ func newFormsListFormsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-forms",
 		Short: "GET /forms",
-		Example: "  scalify-pp-cli forms list-forms",
+		Example: "  scalify-cli forms list-forms",
 		Annotations: map[string]string{"pp:endpoint": "forms.list_forms", "pp:method": "GET", "pp:path": "/forms", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

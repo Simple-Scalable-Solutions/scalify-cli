@@ -19,7 +19,7 @@ func newContactsUpdateContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-contacts <id>",
 		Short: "PUT /contacts/{id}",
-		Example: "  scalify-pp-cli contacts update-contacts 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts update-contacts 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.update_contacts", "pp:method": "PUT", "pp:path": "/contacts/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

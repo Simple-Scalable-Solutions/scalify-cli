@@ -17,7 +17,7 @@ func newObjectsListObjectsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-objects",
 		Short: "GET /objects",
-		Example: "  scalify-pp-cli objects list-objects",
+		Example: "  scalify-cli objects list-objects",
 		Annotations: map[string]string{"pp:endpoint": "objects.list_objects", "pp:method": "GET", "pp:path": "/objects", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

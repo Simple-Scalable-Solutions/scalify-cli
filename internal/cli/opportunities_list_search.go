@@ -16,7 +16,7 @@ func newOpportunitiesListSearchCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-search",
 		Short: "GET /opportunities/search",
-		Example: "  scalify-pp-cli opportunities list-search",
+		Example: "  scalify-cli opportunities list-search",
 		Annotations: map[string]string{"pp:endpoint": "opportunities.list_search", "pp:method": "GET", "pp:path": "/opportunities/search", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

@@ -19,7 +19,7 @@ func newOpportunitiesCreateOpportunitiesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-opportunities",
 		Short: "POST /opportunities",
-		Example: "  scalify-pp-cli opportunities create-opportunities",
+		Example: "  scalify-cli opportunities create-opportunities",
 		Annotations: map[string]string{"pp:endpoint": "opportunities.create_opportunities", "pp:method": "POST", "pp:path": "/opportunities"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

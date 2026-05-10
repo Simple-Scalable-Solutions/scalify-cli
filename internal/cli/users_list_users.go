@@ -17,7 +17,7 @@ func newUsersListUsersCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-users",
 		Short: "GET /users",
-		Example: "  scalify-pp-cli users list-users",
+		Example: "  scalify-cli users list-users",
 		Annotations: map[string]string{"pp:endpoint": "users.list_users", "pp:method": "GET", "pp:path": "/users", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

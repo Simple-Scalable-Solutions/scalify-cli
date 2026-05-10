@@ -17,7 +17,7 @@ func newConversationsListSearchCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-search",
 		Short: "GET /conversations/search",
-		Example: "  scalify-pp-cli conversations list-search",
+		Example: "  scalify-cli conversations list-search",
 		Annotations: map[string]string{"pp:endpoint": "conversations.list_search", "pp:method": "GET", "pp:path": "/conversations/search", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

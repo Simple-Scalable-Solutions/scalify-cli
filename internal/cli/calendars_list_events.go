@@ -17,7 +17,7 @@ func newCalendarsListEventsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-events",
 		Short: "GET /calendars/events",
-		Example: "  scalify-pp-cli calendars list-events",
+		Example: "  scalify-cli calendars list-events",
 		Annotations: map[string]string{"pp:endpoint": "calendars.list_events", "pp:method": "GET", "pp:path": "/calendars/events", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

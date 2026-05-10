@@ -19,7 +19,7 @@ func newCalendarsCreateAppointmentsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-appointments",
 		Short: "POST /calendars/events/appointments",
-		Example: "  scalify-pp-cli calendars create-appointments",
+		Example: "  scalify-cli calendars create-appointments",
 		Annotations: map[string]string{"pp:endpoint": "calendars.create_appointments", "pp:method": "POST", "pp:path": "/calendars/events/appointments"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

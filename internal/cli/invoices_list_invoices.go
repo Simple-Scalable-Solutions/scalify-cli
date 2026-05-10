@@ -17,7 +17,7 @@ func newInvoicesListInvoicesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-invoices",
 		Short: "GET /invoices",
-		Example: "  scalify-pp-cli invoices list-invoices",
+		Example: "  scalify-cli invoices list-invoices",
 		Annotations: map[string]string{"pp:endpoint": "invoices.list_invoices", "pp:method": "GET", "pp:path": "/invoices", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

@@ -17,7 +17,7 @@ func newPaymentsDeleteCouponsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-coupons <id>",
 		Short: "DELETE /payments/coupons/{id}",
-		Example: "  scalify-pp-cli payments delete-coupons 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli payments delete-coupons 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "payments.delete_coupons", "pp:method": "DELETE", "pp:path": "/payments/coupons/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

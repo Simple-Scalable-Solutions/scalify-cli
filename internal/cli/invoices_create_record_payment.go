@@ -19,7 +19,7 @@ func newInvoicesCreateRecordPaymentCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-record-payment <id>",
 		Short: "POST /invoices/{id}/record-payment",
-		Example: "  scalify-pp-cli invoices create-record-payment 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli invoices create-record-payment 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "invoices.create_record_payment", "pp:method": "POST", "pp:path": "/invoices/{id}/record-payment"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

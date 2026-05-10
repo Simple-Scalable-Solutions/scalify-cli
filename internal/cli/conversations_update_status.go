@@ -19,7 +19,7 @@ func newConversationsUpdateStatusCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-status <id>",
 		Short: "PUT /conversations/messages/{id}/status",
-		Example: "  scalify-pp-cli conversations update-status 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli conversations update-status 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "conversations.update_status", "pp:method": "PUT", "pp:path": "/conversations/messages/{id}/status"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

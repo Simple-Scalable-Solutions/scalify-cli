@@ -19,7 +19,7 @@ func newPaymentsCreateCouponsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-coupons",
 		Short: "POST /payments/coupons",
-		Example: "  scalify-pp-cli payments create-coupons",
+		Example: "  scalify-cli payments create-coupons",
 		Annotations: map[string]string{"pp:endpoint": "payments.create_coupons", "pp:method": "POST", "pp:path": "/payments/coupons"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

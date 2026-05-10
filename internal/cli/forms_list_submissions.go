@@ -17,7 +17,7 @@ func newFormsListSubmissionsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-submissions",
 		Short: "GET /forms/submissions",
-		Example: "  scalify-pp-cli forms list-submissions",
+		Example: "  scalify-cli forms list-submissions",
 		Annotations: map[string]string{"pp:endpoint": "forms.list_submissions", "pp:method": "GET", "pp:path": "/forms/submissions", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

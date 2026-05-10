@@ -17,7 +17,7 @@ func newObjectsDeleteRecordsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-records <id>",
 		Short: "DELETE /objects/{id}/records/{id}",
-		Example: "  scalify-pp-cli objects delete-records 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli objects delete-records 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "objects.delete_records", "pp:method": "DELETE", "pp:path": "/objects/{id}/records/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

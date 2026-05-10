@@ -16,7 +16,7 @@ func newLocationsDeleteCustomFieldsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-custom-fields <id>",
 		Short: "DELETE /locations/{id}/customFields/{id}",
-		Example: "  scalify-pp-cli locations delete-custom-fields 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations delete-custom-fields 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "locations.delete_customFields", "pp:method": "DELETE", "pp:path": "/locations/{id}/customFields/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

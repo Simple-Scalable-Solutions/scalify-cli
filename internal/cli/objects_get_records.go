@@ -17,7 +17,7 @@ func newObjectsGetRecordsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-records <id>",
 		Short: "GET /objects/{id}/records",
-		Example: "  scalify-pp-cli objects get-records 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli objects get-records 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "objects.get_records", "pp:method": "GET", "pp:path": "/objects/{id}/records", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

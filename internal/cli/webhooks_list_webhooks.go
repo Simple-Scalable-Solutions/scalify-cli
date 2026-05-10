@@ -17,7 +17,7 @@ func newWebhooksListWebhooksCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-webhooks",
 		Short: "GET /webhooks",
-		Example: "  scalify-pp-cli webhooks list-webhooks",
+		Example: "  scalify-cli webhooks list-webhooks",
 		Annotations: map[string]string{"pp:endpoint": "webhooks.list_webhooks", "pp:method": "GET", "pp:path": "/webhooks", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

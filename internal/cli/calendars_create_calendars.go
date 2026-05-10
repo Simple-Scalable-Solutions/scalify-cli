@@ -19,7 +19,7 @@ func newCalendarsCreateCalendarsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-calendars",
 		Short: "POST /calendars",
-		Example: "  scalify-pp-cli calendars create-calendars",
+		Example: "  scalify-cli calendars create-calendars",
 		Annotations: map[string]string{"pp:endpoint": "calendars.create_calendars", "pp:method": "POST", "pp:path": "/calendars"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

@@ -17,7 +17,7 @@ func newPaymentsListSubscriptionsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-subscriptions",
 		Short: "GET /payments/subscriptions",
-		Example: "  scalify-pp-cli payments list-subscriptions",
+		Example: "  scalify-cli payments list-subscriptions",
 		Annotations: map[string]string{"pp:endpoint": "payments.list_subscriptions", "pp:method": "GET", "pp:path": "/payments/subscriptions", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

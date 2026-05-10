@@ -19,7 +19,7 @@ func newContactsCreateContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-contacts",
 		Short: "POST /contacts",
-		Example: "  scalify-pp-cli contacts create-contacts",
+		Example: "  scalify-cli contacts create-contacts",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create_contacts", "pp:method": "POST", "pp:path": "/contacts"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

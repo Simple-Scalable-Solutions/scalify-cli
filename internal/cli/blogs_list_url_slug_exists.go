@@ -17,7 +17,7 @@ func newBlogsListUrlSlugExistsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-url-slug-exists",
 		Short: "GET /blogs/posts/url-slug-exists",
-		Example: "  scalify-pp-cli blogs list-url-slug-exists",
+		Example: "  scalify-cli blogs list-url-slug-exists",
 		Annotations: map[string]string{"pp:endpoint": "blogs.list_url_slug_exists", "pp:method": "GET", "pp:path": "/blogs/posts/url-slug-exists", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

@@ -16,7 +16,7 @@ func newSocialMediaPostingDeleteSocialMediaPostingCmd(flags *rootFlags) *cobra.C
 	cmd := &cobra.Command{
 		Use:   "delete-social-media-posting <id>",
 		Short: "DELETE /social-media-posting/{id}",
-		Example: "  scalify-pp-cli social-media-posting delete-social-media-posting 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli social-media-posting delete-social-media-posting 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "social-media-posting.delete_social_media_posting", "pp:method": "DELETE", "pp:path": "/social-media-posting/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

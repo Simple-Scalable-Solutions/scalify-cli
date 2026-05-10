@@ -16,7 +16,7 @@ func newContactsDeleteContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-contacts <id>",
 		Short: "DELETE /contacts/{id}",
-		Example: "  scalify-pp-cli contacts delete-contacts 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts delete-contacts 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.delete_contacts", "pp:method": "DELETE", "pp:path": "/contacts/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

@@ -28,7 +28,9 @@ type Config struct {
 	ClientID       string `toml:"client_id"`
 	ClientSecret   string `toml:"client_secret"`
 	Path           string `toml:"-"`
-	ScalifyToken string `toml:"token"`
+	ScalifyToken   string            `toml:"token"`
+	LocationID     string            `toml:"location_id"`
+	LocationTokens map[string]string `toml:"location_tokens,omitempty"`
 }
 
 func Load(configPath string) (*Config, error) {
@@ -56,6 +58,9 @@ func Load(configPath string) (*Config, error) {
 	}
 
 	// Env var overrides
+	if v := os.Getenv("SCALIFY_LOCATION_ID"); v != "" {
+		cfg.LocationID = v
+	}
 	if v := os.Getenv("SCALIFY_TOKEN"); v != "" {
 		cfg.ScalifyToken = v
 		cfg.AuthSource = "env:SCALIFY_TOKEN"
@@ -121,6 +126,30 @@ func (c *Config) SaveTokens(clientID, clientSecret, accessToken, refreshToken st
 	c.AccessToken = accessToken
 	c.RefreshToken = refreshToken
 	c.TokenExpiry = expiry
+	return c.save()
+}
+
+func (c *Config) SaveLocation(id, token string) error {
+	c.LocationID = id
+	if token != "" {
+		if c.LocationTokens == nil {
+			c.LocationTokens = map[string]string{}
+		}
+		c.LocationTokens[id] = token
+	}
+	// Load saved token for this location into active credentials
+	if saved, ok := c.LocationTokens[id]; ok {
+		c.AccessToken = saved
+		c.AuthHeaderVal = ""
+	}
+	return c.save()
+}
+
+func (c *Config) AddLocation(id, token string) error {
+	if c.LocationTokens == nil {
+		c.LocationTokens = map[string]string{}
+	}
+	c.LocationTokens[id] = token
 	return c.save()
 }
 

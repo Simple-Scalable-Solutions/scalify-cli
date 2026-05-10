@@ -17,7 +17,7 @@ func newInvoicesDeleteInvoicesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-invoices <id>",
 		Short: "DELETE /invoices/{id}",
-		Example: "  scalify-pp-cli invoices delete-invoices 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli invoices delete-invoices 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "invoices.delete_invoices", "pp:method": "DELETE", "pp:path": "/invoices/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

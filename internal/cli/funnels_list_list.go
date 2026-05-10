@@ -17,7 +17,7 @@ func newFunnelsListListCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-list",
 		Short: "GET /funnels/funnel/list",
-		Example: "  scalify-pp-cli funnels list-list",
+		Example: "  scalify-cli funnels list-list",
 		Annotations: map[string]string{"pp:endpoint": "funnels.list_list", "pp:method": "GET", "pp:path": "/funnels/funnel/list", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

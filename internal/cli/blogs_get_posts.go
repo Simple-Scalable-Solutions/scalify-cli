@@ -16,7 +16,7 @@ func newBlogsGetPostsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-posts <id>",
 		Short: "GET /blogs/{id}/posts/{id}",
-		Example: "  scalify-pp-cli blogs get-posts 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli blogs get-posts 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "blogs.get_posts", "pp:method": "GET", "pp:path": "/blogs/{id}/posts/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

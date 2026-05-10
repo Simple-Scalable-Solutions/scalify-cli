@@ -17,7 +17,7 @@ func newSurveysListSurveysCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-surveys",
 		Short: "GET /surveys",
-		Example: "  scalify-pp-cli surveys list-surveys",
+		Example: "  scalify-cli surveys list-surveys",
 		Annotations: map[string]string{"pp:endpoint": "surveys.list_surveys", "pp:method": "GET", "pp:path": "/surveys", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

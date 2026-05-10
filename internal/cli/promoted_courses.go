@@ -18,7 +18,7 @@ func newCoursesPromotedCmd(flags *rootFlags) *cobra.Command {
 		Use:   "courses",
 		Short: "GET /courses",
 		Long:  "Shortcut for 'courses list_courses'. GET /courses",
-		Example: "  scalify-pp-cli courses",
+		Example: "  scalify-cli courses",
 		Annotations: map[string]string{"pp:endpoint": "courses.list_courses", "pp:method": "GET", "pp:path": "/courses", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

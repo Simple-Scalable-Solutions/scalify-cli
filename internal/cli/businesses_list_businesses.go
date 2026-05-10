@@ -17,7 +17,7 @@ func newBusinessesListBusinessesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-businesses",
 		Short: "GET /businesses",
-		Example: "  scalify-pp-cli businesses list-businesses",
+		Example: "  scalify-cli businesses list-businesses",
 		Annotations: map[string]string{"pp:endpoint": "businesses.list_businesses", "pp:method": "GET", "pp:path": "/businesses", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

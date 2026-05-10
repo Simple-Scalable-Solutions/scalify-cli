@@ -17,7 +17,7 @@ func newWebhooksDeleteWebhooksCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-webhooks <id>",
 		Short: "DELETE /webhooks/{id}",
-		Example: "  scalify-pp-cli webhooks delete-webhooks 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli webhooks delete-webhooks 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "webhooks.delete_webhooks", "pp:method": "DELETE", "pp:path": "/webhooks/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

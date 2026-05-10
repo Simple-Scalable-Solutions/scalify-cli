@@ -17,7 +17,7 @@ func newDocumentsListDocumentsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-documents",
 		Short: "GET /documents",
-		Example: "  scalify-pp-cli documents list-documents",
+		Example: "  scalify-cli documents list-documents",
 		Annotations: map[string]string{"pp:endpoint": "documents.list_documents", "pp:method": "GET", "pp:path": "/documents", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

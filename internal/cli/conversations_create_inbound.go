@@ -19,7 +19,7 @@ func newConversationsCreateInboundCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-inbound",
 		Short: "POST /conversations/messages/inbound",
-		Example: "  scalify-pp-cli conversations create-inbound",
+		Example: "  scalify-cli conversations create-inbound",
 		Annotations: map[string]string{"pp:endpoint": "conversations.create_inbound", "pp:method": "POST", "pp:path": "/conversations/messages/inbound"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

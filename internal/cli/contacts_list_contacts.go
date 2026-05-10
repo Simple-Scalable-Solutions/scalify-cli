@@ -17,7 +17,7 @@ func newContactsListContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-contacts",
 		Short: "GET /contacts",
-		Example: "  scalify-pp-cli contacts list-contacts",
+		Example: "  scalify-cli contacts list-contacts",
 		Annotations: map[string]string{"pp:endpoint": "contacts.list_contacts", "pp:method": "GET", "pp:path": "/contacts", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

@@ -16,7 +16,7 @@ func newContactsGetContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-contacts <id>",
 		Short: "GET /contacts/{id}",
-		Example: "  scalify-pp-cli contacts get-contacts 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts get-contacts 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.get_contacts", "pp:method": "GET", "pp:path": "/contacts/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

@@ -19,7 +19,7 @@ func newContactsCreateTagsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-tags <id>",
 		Short: "POST /contacts/{id}/tags",
-		Example: "  scalify-pp-cli contacts create-tags 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts create-tags 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create_tags", "pp:method": "POST", "pp:path": "/contacts/{id}/tags"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

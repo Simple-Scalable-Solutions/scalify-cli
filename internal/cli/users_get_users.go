@@ -16,7 +16,7 @@ func newUsersGetUsersCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-users <id>",
 		Short: "GET /users/{id}",
-		Example: "  scalify-pp-cli users get-users 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli users get-users 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "users.get_users", "pp:method": "GET", "pp:path": "/users/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

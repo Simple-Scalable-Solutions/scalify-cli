@@ -16,7 +16,7 @@ func newBusinessesDeleteBusinessesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-businesses <id>",
 		Short: "DELETE /businesses/{id}",
-		Example: "  scalify-pp-cli businesses delete-businesses 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli businesses delete-businesses 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "businesses.delete_businesses", "pp:method": "DELETE", "pp:path": "/businesses/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

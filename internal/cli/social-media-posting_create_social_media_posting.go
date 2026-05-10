@@ -19,7 +19,7 @@ func newSocialMediaPostingCreateSocialMediaPostingCmd(flags *rootFlags) *cobra.C
 	cmd := &cobra.Command{
 		Use:   "create-social-media-posting",
 		Short: "POST /social-media-posting",
-		Example: "  scalify-pp-cli social-media-posting create-social-media-posting",
+		Example: "  scalify-cli social-media-posting create-social-media-posting",
 		Annotations: map[string]string{"pp:endpoint": "social-media-posting.create_social_media_posting", "pp:method": "POST", "pp:path": "/social-media-posting"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

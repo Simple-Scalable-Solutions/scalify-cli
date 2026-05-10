@@ -18,7 +18,7 @@ func newContactsCreateWorkflowCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-workflow <id>",
 		Short: "POST /contacts/{id}/workflow/{id}",
-		Example: "  scalify-pp-cli contacts create-workflow 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli contacts create-workflow 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create_workflow", "pp:method": "POST", "pp:path": "/contacts/{id}/workflow/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

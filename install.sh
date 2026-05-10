@@ -2,8 +2,9 @@
 set -e
 
 REPO="Simple-Scalable-Solutions/scalify-cli"
-BINARY="scalify-pp-cli"
-VERSION="${VERSION:-1.0.0}"
+BINARY="scalify-cli"
+VERSION="${VERSION:-$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | cut -d'"' -f4 | sed 's/^v//')}"
+VERSION="${VERSION:-1.0.1}"
 INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
 
 # Detect OS

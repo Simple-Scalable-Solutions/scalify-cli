@@ -5,7 +5,7 @@ changelog:
 builds:
   - id: scalify-pp-cli
     main: ./cmd/scalify-pp-cli
-    binary: scalify-pp-cli
+    binary: scalify-cli
     env:
       - CGO_ENABLED=0
     ldflags:

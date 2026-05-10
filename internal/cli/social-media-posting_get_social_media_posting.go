@@ -16,7 +16,7 @@ func newSocialMediaPostingGetSocialMediaPostingCmd(flags *rootFlags) *cobra.Comm
 	cmd := &cobra.Command{
 		Use:   "get-social-media-posting <id>",
 		Short: "GET /social-media-posting/{id}",
-		Example: "  scalify-pp-cli social-media-posting get-social-media-posting 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli social-media-posting get-social-media-posting 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "social-media-posting.get_social_media_posting", "pp:method": "GET", "pp:path": "/social-media-posting/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

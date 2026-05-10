@@ -17,7 +17,7 @@ func newConversationsGetMessagesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get-messages <id>",
 		Short: "GET /conversations/{id}/messages",
-		Example: "  scalify-pp-cli conversations get-messages 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli conversations get-messages 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "conversations.get_messages", "pp:method": "GET", "pp:path": "/conversations/{id}/messages", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

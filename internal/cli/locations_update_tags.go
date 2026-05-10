@@ -19,7 +19,7 @@ func newLocationsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-tags <id>",
 		Short: "PUT /locations/{id}/tags/{id}",
-		Example: "  scalify-pp-cli locations update-tags 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations update-tags 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "locations.update_tags", "pp:method": "PUT", "pp:path": "/locations/{id}/tags/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

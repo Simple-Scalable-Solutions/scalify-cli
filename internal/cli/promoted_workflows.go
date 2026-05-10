@@ -18,7 +18,7 @@ func newWorkflowsPromotedCmd(flags *rootFlags) *cobra.Command {
 		Use:   "workflows",
 		Short: "GET /workflows",
 		Long:  "Shortcut for 'workflows list_workflows'. GET /workflows",
-		Example: "  scalify-pp-cli workflows",
+		Example: "  scalify-cli workflows",
 		Annotations: map[string]string{"pp:endpoint": "workflows.list_workflows", "pp:method": "GET", "pp:path": "/workflows", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

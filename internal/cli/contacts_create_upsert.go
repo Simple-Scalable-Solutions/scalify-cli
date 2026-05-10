@@ -19,7 +19,7 @@ func newContactsCreateUpsertCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-upsert",
 		Short: "POST /contacts/upsert",
-		Example: "  scalify-pp-cli contacts create-upsert",
+		Example: "  scalify-cli contacts create-upsert",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create_upsert", "pp:method": "POST", "pp:path": "/contacts/upsert"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {

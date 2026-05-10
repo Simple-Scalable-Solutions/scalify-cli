@@ -19,7 +19,7 @@ func newInvoicesCreateSend2Cmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-send-2 <id>",
 		Short: "POST /invoices/estimate/{id}/send",
-		Example: "  scalify-pp-cli invoices create-send-2 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli invoices create-send-2 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "invoices.create_send_2", "pp:method": "POST", "pp:path": "/invoices/estimate/{id}/send"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
