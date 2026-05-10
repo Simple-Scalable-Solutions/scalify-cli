@@ -1,9 +1,9 @@
 version: 2
-project_name: scalify-pp-cli
+project_name: scalify-cli
 changelog:
   disable: true
 builds:
-  - id: scalify-pp-cli
+  - id: scalify-cli
     main: ./cmd/scalify-pp-cli
     binary: scalify-cli
     env:
