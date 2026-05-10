@@ -35,6 +35,26 @@ shell or run `hash -r` to pick up the new binary, then verify:
 scalify-cli --version
 ```
 
+## Version Check (run at session start)
+
+At the start of every session, check for updates:
+
+```bash
+scalify-cli doctor
+```
+
+If the output contains `update_available`, a newer version is available. Warn the user and offer to upgrade both the CLI and the skill:
+
+```bash
+# Upgrade CLI binary
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
+
+# Upgrade Claude Code skill
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+
+After upgrading the skill, start a new Claude Code session for the changes to take effect.
+
 ## Auth Setup
 
 Two methods (env var wins over config file):

@@ -54,7 +54,13 @@ export SCALIFY_TOKEN="your-token-here"
 scalify-cli doctor
 ```
 
-Checks configuration, credentials, and API connectivity.
+Checks configuration, credentials, API connectivity, and whether a newer version is available. If an update exists, the output will show:
+
+```
+  WARN Update available: v1.x.x
+    CLI:   curl -fsSL .../install.sh | bash
+    Skill: curl -fsSL .../install-skill.sh | bash
+```
 
 ### 3. Try a Command
 
@@ -360,6 +366,24 @@ Config file: `~/.config/scalify-pp-cli/config.toml`
 | `SCALIFY_TOKEN` | API token (takes precedence over config file) |
 | `SCALIFY_LOCATION_ID` | Active location ID (takes precedence over config file) |
 | `SCALIFY_CONFIG` | Override config file path |
+
+---
+
+## Staying Up to Date
+
+`scalify-cli doctor` automatically checks for newer releases on every run. When an update is available it prints the upgrade commands directly in the output — no manual version checking needed.
+
+**Upgrade the CLI binary:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash
+```
+
+**Upgrade the Claude Code skill:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash
+```
+
+Then start a new Claude Code session for the skill update to take effect.
 
 ---
 

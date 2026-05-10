@@ -6,10 +6,13 @@ package cli
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -61,6 +64,65 @@ func looksLikeDoctorInterstitial(body []byte) string {
 		return "PerimeterX"
 	}
 	return ""
+}
+
+// checkLatestVersion queries the GitHub releases API and returns the latest
+// tag name if it is newer than the current build version. Returns empty string
+// when offline, rate-limited, or already up to date. Times out after 3s so it
+// never blocks the rest of the doctor output.
+func checkLatestVersion(ctx context.Context) string {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, "GET",
+		"https://api.github.com/repos/Simple-Scalable-Solutions/scalify-cli/releases/latest", nil)
+	if err != nil {
+		return ""
+	}
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("User-Agent", "scalify-cli/"+version)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil || resp.StatusCode != 200 {
+		return ""
+	}
+	defer resp.Body.Close()
+	var release struct {
+		TagName string `json:"tag_name"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
+		return ""
+	}
+	latest := strings.TrimPrefix(release.TagName, "v")
+	current := strings.TrimPrefix(version, "v")
+	if latest == "" || latest == current {
+		return ""
+	}
+	if semverGreater(latest, current) {
+		return release.TagName
+	}
+	return ""
+}
+
+// semverGreater reports whether a is a higher version than b (x.y.z format).
+func semverGreater(a, b string) bool {
+	pa := strings.SplitN(a, ".", 3)
+	pb := strings.SplitN(b, ".", 3)
+	for len(pa) < 3 {
+		pa = append(pa, "0")
+	}
+	for len(pb) < 3 {
+		pb = append(pb, "0")
+	}
+	for i := 0; i < 3; i++ {
+		ai, _ := strconv.Atoi(pa[i])
+		bi, _ := strconv.Atoi(pb[i])
+		if ai > bi {
+			return true
+		}
+		if ai < bi {
+			return false
+		}
+	}
+	return false
 }
 
 func newDoctorCmd(flags *rootFlags) *cobra.Command {
@@ -195,6 +257,10 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 
 			report["version"] = version
 
+			if latest := checkLatestVersion(cmd.Context()); latest != "" {
+				report["update_available"] = latest
+			}
+
 			if flags.asJSON {
 				if err := printJSONFiltered(cmd.OutOrStdout(), report, flags); err != nil {
 					return err
@@ -241,6 +307,12 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 				if v, ok := report[key]; ok {
 					fmt.Fprintf(w, "  %s: %v\n", key, v)
 				}
+			}
+			// Print update notice if a newer release is available
+			if latest, ok := report["update_available"].(string); ok {
+				fmt.Fprintf(w, "  %s Update available: %s\n", yellow("WARN"), latest)
+				fmt.Fprintf(w, "    CLI:   curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install.sh | bash\n")
+				fmt.Fprintf(w, "    Skill: curl -fsSL https://raw.githubusercontent.com/Simple-Scalable-Solutions/scalify-cli/main/install-skill.sh | bash\n")
 			}
 			// Print auth setup hints (indented under Auth line)
 			if hint, ok := report["auth_hint"]; ok {
