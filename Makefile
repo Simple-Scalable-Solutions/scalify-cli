@@ -24,4 +24,4 @@ install-mcp:
 build-all: build build-mcp
 
 release:
-	goreleaser release --clean --parallelism 2
+	GITHUB_TOKEN=$$(gh auth token) goreleaser release --clean --parallelism 2
