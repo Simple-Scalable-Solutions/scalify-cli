@@ -276,6 +276,26 @@ func replacePathParam(path, name, value string) string {
 	return strings.ReplaceAll(path, "{"+name+"}", value)
 }
 
+// replacePathParamSequential fills repeated same-named path placeholders
+// (e.g. "/locations/{id}/customValues/{id}") left-to-right from distinct
+// values, one per occurrence. Endpoints whose upstream spec reused a
+// parameter name for two different path segments (parent id, then
+// sub-resource id) must not use replacePathParam for those params: a
+// global ReplaceAll collapses every occurrence to the same value, silently
+// pointing the request at the wrong resource. Panics if fewer values than
+// occurrences are supplied — callers must validate arg count first.
+func replacePathParamSequential(path, name string, values ...string) string {
+	placeholder := "{" + name + "}"
+	for _, v := range values {
+		idx := strings.Index(path, placeholder)
+		if idx == -1 {
+			break
+		}
+		path = path[:idx] + v + path[idx+len(placeholder):]
+	}
+	return path
+}
+
 // paginatedGet fetches pages and concatenates array results. The headers
 // argument carries per-endpoint required headers (e.g. cal-api-version) that
 // must be sent on every page request, including the first; pass nil when the

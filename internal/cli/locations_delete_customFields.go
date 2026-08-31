@@ -14,13 +14,13 @@ import (
 func newLocationsDeleteCustomFieldsCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "delete-custom-fields <id>",
+		Use:   "delete-custom-fields <location-id> <id>",
 		Short: "DELETE /locations/{id}/customFields/{id}",
-		Example: "  scalify-cli locations delete-custom-fields 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations delete-custom-fields 550e8400-e29b-41d4-a716-446655440000 660f9511-f3ac-52e5-b827-557766551111",
 		Annotations: map[string]string{"pp:endpoint": "locations.delete_customFields", "pp:method": "DELETE", "pp:path": "/locations/{id}/customFields/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return cmd.Help()
+			if len(args) < 2 {
+				return usageErr(fmt.Errorf("location-id and id are required\nUsage: %s <location-id> <id>", cmd.CommandPath()))
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -28,7 +28,7 @@ func newLocationsDeleteCustomFieldsCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/locations/{id}/customFields/{id}"
-			path = replacePathParam(path, "id", args[0])
+			path = replacePathParamSequential(path, "id", args[0], args[1])
 			data, statusCode, err := c.Delete(path)
 			if err != nil {
 				return classifyDeleteError(err, flags)

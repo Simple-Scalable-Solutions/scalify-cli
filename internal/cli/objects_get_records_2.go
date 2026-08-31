@@ -15,13 +15,13 @@ func newObjectsGetRecords2Cmd(flags *rootFlags) *cobra.Command {
 	var flagParams string
 
 	cmd := &cobra.Command{
-		Use:   "get-records-2 <id>",
+		Use:   "get-records-2 <object-id> <id>",
 		Short: "GET /objects/{id}/records/{id}",
-		Example: "  scalify-cli objects get-records-2 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli objects get-records-2 550e8400-e29b-41d4-a716-446655440000 660f9511-f3ac-52e5-b827-557766551111",
 		Annotations: map[string]string{"pp:endpoint": "objects.get_records_2", "pp:method": "GET", "pp:path": "/objects/{id}/records/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return cmd.Help()
+			if len(args) < 2 {
+				return usageErr(fmt.Errorf("object-id and id are required\nUsage: %s <object-id> <id>", cmd.CommandPath()))
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -29,10 +29,7 @@ func newObjectsGetRecords2Cmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/objects/{id}/records/{id}"
-			if len(args) < 2 {
-				return usageErr(fmt.Errorf("id is required\nUsage: %s <%s>", cmd.CommandPath(), "id"))
-			}
-			path = replacePathParam(path, "id", args[1])
+			path = replacePathParamSequential(path, "id", args[0], args[1])
 			params := map[string]string{}
 			if flagParams != "" {
 				params["params"] = fmt.Sprintf("%v", flagParams)

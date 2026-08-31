@@ -14,13 +14,13 @@ import (
 func newBlogsGetPostsCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:   "get-posts <id>",
+		Use:   "get-posts <blog-id> <id>",
 		Short: "GET /blogs/{id}/posts/{id}",
-		Example: "  scalify-cli blogs get-posts 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli blogs get-posts 550e8400-e29b-41d4-a716-446655440000 660f9511-f3ac-52e5-b827-557766551111",
 		Annotations: map[string]string{"pp:endpoint": "blogs.get_posts", "pp:method": "GET", "pp:path": "/blogs/{id}/posts/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if len(args) == 0 {
-				return cmd.Help()
+			if len(args) < 2 {
+				return usageErr(fmt.Errorf("blog-id and id are required\nUsage: %s <blog-id> <id>", cmd.CommandPath()))
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -28,7 +28,7 @@ func newBlogsGetPostsCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/blogs/{id}/posts/{id}"
-			path = replacePathParam(path, "id", args[0])
+			path = replacePathParamSequential(path, "id", args[0], args[1])
 			params := map[string]string{}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "blogs", false, path, params, nil)
 			if err != nil {

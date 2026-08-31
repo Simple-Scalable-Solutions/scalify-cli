@@ -2329,8 +2329,8 @@ resources:
         endpoints:
             list_workflows:
                 method: GET
-                path: /workflows
-                description: GET /workflows
+                path: /workflows/
+                description: GET /workflows/ (requires trailing slash; upstream API also requires a "Version: v3" request header, unlike the "2021-07-28" default used by every other endpoint — hand-fixed in internal/cli/promoted_workflows.go via a headers override, not represented in this spec schema)
                 params:
                     - name: params
                       type: string

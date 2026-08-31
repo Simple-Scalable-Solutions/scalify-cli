@@ -26,12 +26,17 @@ func newWorkflowsPromotedCmd(flags *rootFlags) *cobra.Command {
 				return err
 			}
 
-			path := "/workflows"
+			// The workflows endpoint requires a trailing slash and a "v3" Version
+			// header — every other endpoint uses the client's default
+			// (2021-07-28). Without both, the upstream API 404s even with valid
+			// credentials that have full access to the location.
+			path := "/workflows/"
 			params := map[string]string{}
 			if flagParams != "" {
 				params["params"] = fmt.Sprintf("%v", flagParams)
 			}
-			data, prov, err := resolveRead(cmd.Context(), c, flags, "workflows", false, path, params, nil)
+			headers := map[string]string{"Version": "v3"}
+			data, prov, err := resolveRead(cmd.Context(), c, flags, "workflows", false, path, params, headers)
 			if err != nil {
 				return classifyAPIError(err, flags)
 			}

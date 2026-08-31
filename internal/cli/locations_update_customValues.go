@@ -17,9 +17,9 @@ func newLocationsUpdateCustomValuesCmd(flags *rootFlags) *cobra.Command {
 	var stdinBody bool
 
 	cmd := &cobra.Command{
-		Use:   "update-custom-values <id>",
+		Use:   "update-custom-values <location-id> <id>",
 		Short: "PUT /locations/{id}/customValues/{id}",
-		Example: "  scalify-cli locations update-custom-values 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations update-custom-values 550e8400-e29b-41d4-a716-446655440000 660f9511-f3ac-52e5-b827-557766551111",
 		Annotations: map[string]string{"pp:endpoint": "locations.update_customValues", "pp:method": "PUT", "pp:path": "/locations/{id}/customValues/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
@@ -34,9 +34,9 @@ func newLocationsUpdateCustomValuesCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/locations/{id}/customValues/{id}"
 			if len(args) < 2 {
-				return usageErr(fmt.Errorf("id is required\nUsage: %s <%s>", cmd.CommandPath(), "id"))
+				return usageErr(fmt.Errorf("location-id and id are required\nUsage: %s <location-id> <id>", cmd.CommandPath()))
 			}
-			path = replacePathParam(path, "id", args[1])
+			path = replacePathParamSequential(path, "id", args[0], args[1])
 			var body map[string]any
 			if stdinBody {
 				stdinData, err := io.ReadAll(os.Stdin)

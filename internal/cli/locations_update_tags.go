@@ -17,9 +17,9 @@ func newLocationsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 	var stdinBody bool
 
 	cmd := &cobra.Command{
-		Use:   "update-tags <id>",
+		Use:   "update-tags <location-id> <id>",
 		Short: "PUT /locations/{id}/tags/{id}",
-		Example: "  scalify-cli locations update-tags 550e8400-e29b-41d4-a716-446655440000",
+		Example: "  scalify-cli locations update-tags 550e8400-e29b-41d4-a716-446655440000 660f9511-f3ac-52e5-b827-557766551111",
 		Annotations: map[string]string{"pp:endpoint": "locations.update_tags", "pp:method": "PUT", "pp:path": "/locations/{id}/tags/{id}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
@@ -34,9 +34,9 @@ func newLocationsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/locations/{id}/tags/{id}"
 			if len(args) < 2 {
-				return usageErr(fmt.Errorf("id is required\nUsage: %s <%s>", cmd.CommandPath(), "id"))
+				return usageErr(fmt.Errorf("location-id and id are required\nUsage: %s <location-id> <id>", cmd.CommandPath()))
 			}
-			path = replacePathParam(path, "id", args[1])
+			path = replacePathParamSequential(path, "id", args[0], args[1])
 			var body map[string]any
 			if stdinBody {
 				stdinData, err := io.ReadAll(os.Stdin)
