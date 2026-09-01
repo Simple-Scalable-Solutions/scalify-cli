@@ -33,10 +33,7 @@ func newObjectsCreateRecordsCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/objects/{id}/records"
-			if len(args) < 2 {
-				return usageErr(fmt.Errorf("id is required\nUsage: %s <%s>", cmd.CommandPath(), "id"))
-			}
-			path = replacePathParam(path, "id", args[1])
+			path = replacePathParam(path, "id", args[0])
 			var body map[string]any
 			if stdinBody {
 				stdinData, err := io.ReadAll(os.Stdin)

@@ -25,7 +25,11 @@ func newUsersListUsersCmd(flags *rootFlags) *cobra.Command {
 				return err
 			}
 
-			path := "/users"
+			// The users list endpoint requires a trailing slash — without it the
+			// upstream API 404s even with valid credentials. (Same root cause as
+			// the /workflows/ fix in promoted_workflows.go.) locationId is
+			// required too, but the client already appends it from config.
+			path := "/users/"
 			params := map[string]string{}
 			if flagParams != "" {
 				params["params"] = fmt.Sprintf("%v", flagParams)

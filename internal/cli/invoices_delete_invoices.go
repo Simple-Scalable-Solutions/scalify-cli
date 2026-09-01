@@ -29,10 +29,7 @@ func newInvoicesDeleteInvoicesCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/invoices/{id}"
-			if len(args) < 2 {
-				return usageErr(fmt.Errorf("id is required\nUsage: %s <%s>", cmd.CommandPath(), "id"))
-			}
-			path = replacePathParam(path, "id", args[1])
+			path = replacePathParam(path, "id", args[0])
 			data, statusCode, err := c.Delete(path)
 			if err != nil {
 				return classifyDeleteError(err, flags)
