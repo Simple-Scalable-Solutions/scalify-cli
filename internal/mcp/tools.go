@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,13 +27,14 @@ import (
 func RegisterTools(s *server.MCPServer) {
 	s.AddTool(
 		mcplib.NewTool("blogs_get_posts",
-			mcplib.WithDescription("GET /blogs/{id}/posts/{id}. Required: id."),
+			mcplib.WithDescription("GET /blogs/{id}/posts/{id}. Required: blog-id, id."),
+			mcplib.WithString("blog-id", mcplib.Required(), mcplib.Description("blog-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithReadOnlyHintAnnotation(true),
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/blogs/{id}/posts/{id}", []mcpParamBinding{{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("GET", "/blogs/{id}/posts/{id}", []mcpParamBinding{{PublicName: "blog-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("blogs_list_authors",
@@ -258,12 +260,13 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("contacts_create_workflow",
-			mcplib.WithDescription("POST /contacts/{id}/workflow/{id}. Required: id."),
+			mcplib.WithDescription("POST /contacts/{id}/workflow/{id}. Required: contact-id, id."),
+			mcplib.WithString("contact-id", mcplib.Required(), mcplib.Description("contact-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("POST", "/contacts/{id}/workflow/{id}", []mcpParamBinding{{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("POST", "/contacts/{id}/workflow/{id}", []mcpParamBinding{{PublicName: "contact-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("contacts_delete_contacts",
@@ -711,30 +714,33 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_delete_custom_fields",
-			mcplib.WithDescription("DELETE /locations/{id}/customFields/{id}. Required: id. Destructive."),
+			mcplib.WithDescription("DELETE /locations/{id}/customFields/{id}. Required: location-id, id. Destructive."),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithDestructiveHintAnnotation(true),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("DELETE", "/locations/{id}/customFields/{id}", []mcpParamBinding{{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("DELETE", "/locations/{id}/customFields/{id}", []mcpParamBinding{{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_delete_custom_values",
-			mcplib.WithDescription("DELETE /locations/{id}/customValues/{id}. Required: id. Destructive."),
+			mcplib.WithDescription("DELETE /locations/{id}/customValues/{id}. Required: location-id, id. Destructive."),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithDestructiveHintAnnotation(true),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("DELETE", "/locations/{id}/customValues/{id}", []mcpParamBinding{{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("DELETE", "/locations/{id}/customValues/{id}", []mcpParamBinding{{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_delete_tags",
-			mcplib.WithDescription("DELETE /locations/{id}/tags/{id}. Required: id. Destructive."),
+			mcplib.WithDescription("DELETE /locations/{id}/tags/{id}. Required: location-id, id. Destructive."),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithDestructiveHintAnnotation(true),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("DELETE", "/locations/{id}/tags/{id}", []mcpParamBinding{{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("DELETE", "/locations/{id}/tags/{id}", []mcpParamBinding{{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_get_custom_fields",
@@ -798,21 +804,23 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_update_custom_fields",
-			mcplib.WithDescription("PUT /locations/{id}/customFields/{id}. Required: id. Optional: body."),
+			mcplib.WithDescription("PUT /locations/{id}/customFields/{id}. Required: location-id, id. Optional: body."),
 			mcplib.WithString("body", mcplib.Description("")),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("PUT", "/locations/{id}/customFields/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("PUT", "/locations/{id}/customFields/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_update_custom_values",
-			mcplib.WithDescription("PUT /locations/{id}/customValues/{id}. Required: id. Optional: body."),
+			mcplib.WithDescription("PUT /locations/{id}/customValues/{id}. Required: location-id, id. Optional: body."),
 			mcplib.WithString("body", mcplib.Description("")),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("PUT", "/locations/{id}/customValues/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("PUT", "/locations/{id}/customValues/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_update_locations",
@@ -825,12 +833,13 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("locations_update_tags",
-			mcplib.WithDescription("PUT /locations/{id}/tags/{id}. Required: id. Optional: body."),
+			mcplib.WithDescription("PUT /locations/{id}/tags/{id}. Required: location-id, id. Optional: body."),
 			mcplib.WithString("body", mcplib.Description("")),
+			mcplib.WithString("location-id", mcplib.Required(), mcplib.Description("location-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("PUT", "/locations/{id}/tags/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("PUT", "/locations/{id}/tags/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "location-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("medias_delete_medias",
@@ -864,13 +873,14 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("objects_delete_records",
-			mcplib.WithDescription("DELETE /objects/{id}/records/{id}. Required: id. Optional: params. Destructive."),
+			mcplib.WithDescription("DELETE /objects/{id}/records/{id}. Required: object-id, id. Optional: params. Destructive."),
 			mcplib.WithString("params", mcplib.Description("")),
+			mcplib.WithString("object-id", mcplib.Required(), mcplib.Description("object-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithDestructiveHintAnnotation(true),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("DELETE", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("DELETE", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"},{PublicName: "object-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("objects_get_objects",
@@ -896,14 +906,15 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("objects_get_records_2",
-			mcplib.WithDescription("GET /objects/{id}/records/{id}. Required: id. Optional: params."),
+			mcplib.WithDescription("GET /objects/{id}/records/{id}. Required: object-id, id. Optional: params."),
 			mcplib.WithString("params", mcplib.Description("")),
+			mcplib.WithString("object-id", mcplib.Required(), mcplib.Description("object-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithReadOnlyHintAnnotation(true),
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("GET", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"},{PublicName: "object-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("objects_list_objects",
@@ -917,12 +928,13 @@ func RegisterTools(s *server.MCPServer) {
 	)
 	s.AddTool(
 		mcplib.NewTool("objects_update_records",
-			mcplib.WithDescription("PUT /objects/{id}/records/{id}. Required: id. Optional: body."),
+			mcplib.WithDescription("PUT /objects/{id}/records/{id}. Required: object-id, id. Optional: body."),
 			mcplib.WithString("body", mcplib.Description("")),
+			mcplib.WithString("object-id", mcplib.Required(), mcplib.Description("object-id")),
 			mcplib.WithString("id", mcplib.Required(), mcplib.Description("id")),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("PUT", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
+		makeAPIHandler("PUT", "/objects/{id}/records/{id}", []mcpParamBinding{{PublicName: "body", WireName: "body", Location: "query"},{PublicName: "object-id", WireName: "id", Location: "path"},{PublicName: "id", WireName: "id", Location: "path"}, }, []string{"id", }),
 	)
 	s.AddTool(
 		mcplib.NewTool("opportunities_create_opportunities",
@@ -1146,7 +1158,9 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/users", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"}, }, []string{ }),
+		// Requires a trailing slash — without it the upstream API 404s even with
+		// valid credentials. Same root cause as the /workflows/ fix below.
+		makeAPIHandler("GET", "/users/", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"}, }, []string{ }),
 	)
 	s.AddTool(
 		mcplib.NewTool("webhooks_create_webhooks",
@@ -1205,7 +1219,9 @@ func RegisterTools(s *server.MCPServer) {
 			mcplib.WithDestructiveHintAnnotation(false),
 			mcplib.WithOpenWorldHintAnnotation(true),
 		),
-		makeAPIHandler("GET", "/workflows", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"}, }, []string{ }),
+		// Requires a trailing slash and a "Version: v3" header — every other
+		// endpoint uses the client's default (2021-07-28). See promoted_workflows.go.
+		makeAPIHandler("GET", "/workflows/", []mcpParamBinding{{PublicName: "params", WireName: "params", Location: "query"}, }, []string{ }, map[string]string{"Version": "v3"}),
 	)
 	// Search tool — faster than iterating list endpoints for finding specific items
 	s.AddTool(
@@ -1251,8 +1267,15 @@ type mcpParamBinding struct {
 	Location   string
 }
 
-// makeAPIHandler creates a generic MCP tool handler for an API endpoint.
-func makeAPIHandler(method, pathTemplate string, bindings []mcpParamBinding, positionalParams []string) server.ToolHandlerFunc {
+// makeAPIHandler creates a generic MCP tool handler for an API endpoint. headers
+// is variadic so the ~100 existing call sites don't need updating: pass a single
+// map only for the rare endpoint that requires a per-request header override
+// (e.g. workflows needs "Version: v3" instead of the client's default API version).
+func makeAPIHandler(method, pathTemplate string, bindings []mcpParamBinding, positionalParams []string, headers ...map[string]string) server.ToolHandlerFunc {
+	var reqHeaders map[string]string
+	if len(headers) > 0 {
+		reqHeaders = headers[0]
+	}
 	return func(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 		c, err := newMCPClient()
 		if err != nil {
@@ -1286,7 +1309,24 @@ func makeAPIHandler(method, pathTemplate string, bindings []mcpParamBinding, pos
 			case "body":
 				bodyArgs[binding.WireName] = v
 			default:
-				params[binding.WireName] = fmt.Sprintf("%v", v)
+				// The "params" wire name carries a raw URL query string (e.g.
+				// "locationId=X&limit=5"), mirroring the CLI's --params flag.
+				// Setting params["params"]=<raw string> would send it as one
+				// literal query key the API doesn't understand — parse it into
+				// individual key/value pairs instead.
+				if binding.WireName == "params" {
+					if s, ok := v.(string); ok && s != "" {
+						if parsed, perr := url.ParseQuery(s); perr == nil {
+							for k, vals := range parsed {
+								if len(vals) > 0 {
+									params[k] = vals[0]
+								}
+							}
+						}
+					}
+				} else {
+					params[binding.WireName] = fmt.Sprintf("%v", v)
+				}
 			}
 		}
 		for _, p := range positionalParams {
@@ -1315,18 +1355,18 @@ func makeAPIHandler(method, pathTemplate string, bindings []mcpParamBinding, pos
 		var data json.RawMessage
 		switch method {
 		case "GET":
-			data, err = c.Get(path, params)
+			data, err = c.GetWithHeaders(path, params, reqHeaders)
 		case "POST":
 			body, _ := json.Marshal(bodyArgs)
-			data, _, err = c.Post(path, body)
+			data, _, err = c.PostWithHeaders(path, body, reqHeaders)
 		case "PUT":
 			body, _ := json.Marshal(bodyArgs)
-			data, _, err = c.Put(path, body)
+			data, _, err = c.PutWithHeaders(path, body, reqHeaders)
 		case "PATCH":
 			body, _ := json.Marshal(bodyArgs)
-			data, _, err = c.Patch(path, body)
+			data, _, err = c.PatchWithHeaders(path, body, reqHeaders)
 		case "DELETE":
-			data, _, err = c.Delete(path)
+			data, _, err = c.DeleteWithHeaders(path, reqHeaders)
 		default:
 			return mcplib.NewToolResultError("unsupported method: " + method), nil
 		}

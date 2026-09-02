@@ -102,6 +102,46 @@ make release
 
 Never run `goreleaser release --clean` without `--parallelism 2`.
 
+## CLI/MCP Surface Parity — read this before touching path params or headers
+
+`internal/cli/*.go` (the Cobra commands) and `internal/mcp/tools.go` (the typed MCP
+tool registry, `RegisterTools`) each hand-encode their own copy of every endpoint's
+path template, path-param bindings, and per-endpoint header overrides. They are
+**not generated from a shared source and do not stay in sync automatically** — a
+fix applied to one surface has no effect on the other.
+
+This has already caused a real bug: a fix to 11 commands whose path reuses the same
+`{id}` placeholder twice (e.g. `/locations/{id}/customValues/{id}`) was applied to
+`internal/cli/*.go` and `internal/cli/helpers.go` (`replacePathParamSequential`) but
+missed `internal/mcp/tools.go`, which kept silently collapsing both `{id}` slots to
+one value — the CLI got fixed, the MCP surface stayed broken, and the two surfaces
+diverged. Same story for path/header quirks discovered per-endpoint (e.g. a
+trailing-slash 404, a required non-default API-version header): fixing
+`internal/cli/data_source.go`'s `resolveRead`/`resolvePaginatedRead` headers plumbing
+does not touch `makeAPIHandler` in `internal/mcp/tools.go` at all.
+
+**Whenever a fix touches how a command builds its path, path params, or headers,
+check both surfaces before calling it done:**
+
+1. `internal/cli/<resource>_<action>.go` — the Cobra command's `RunE`.
+2. `internal/mcp/tools.go` — search for the same path template string (e.g.
+   `grep -n '"/locations/{id}/customValues/{id}"' internal/mcp/tools.go`) and check
+   the `mcpParamBinding` list and `makeAPIHandler(...)` call for the same endpoint.
+   A path with a repeated placeholder name needs one `mcpParamBinding` per
+   occurrence, in the order they appear in the path (`makeAPIHandler` fills path
+   placeholders left-to-right, one per binding, via a single-occurrence
+   `strings.Replace`). A header override needs the variadic `headers
+   map[string]string` argument on `makeAPIHandler` (added specifically so the other
+   ~100 call sites don't need touching).
+3. `go build ./... && go vet ./... && go test ./...` — with `GOTOOLCHAIN=go1.26.3`
+   if your local Go is newer than the pinned `go 1.26.3` in `go.mod` (a newer local
+   toolchain hits an unrelated incompatibility in `github.com/enetx/http2` v1.0.26
+   that is not related to CLI/MCP changes).
+
+If you only have time to fix one surface, say so explicitly in the commit message
+under a "Known gap" note — don't let the divergence go undocumented like the
+workflows/users trailing-slash fix's MCP gap did.
+
 ## Current Quality
 
 Scorecard: **81/100 Grade A** (printing-press v4.2.2)  
