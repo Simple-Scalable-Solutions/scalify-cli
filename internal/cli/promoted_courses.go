@@ -6,6 +6,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -29,7 +30,15 @@ func newCoursesPromotedCmd(flags *rootFlags) *cobra.Command {
 			path := "/courses"
 			params := map[string]string{}
 			if flagParams != "" {
-				params["params"] = fmt.Sprintf("%v", flagParams)
+				// Parse as URL query string so each key becomes an individual query param.
+				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
+				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
+					for k, vals := range parsed {
+						if len(vals) > 0 {
+							params[k] = vals[0]
+						}
+					}
+				}
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "courses", false, path, params, nil)
 			if err != nil {

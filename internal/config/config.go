@@ -93,6 +93,19 @@ func (c *Config) AuthHeader() string {
 	if c.AuthHeaderVal != "" {
 		return c.AuthHeaderVal
 	}
+	// The active location's saved token wins over the master/env token.
+	// `location use` is an explicit, later action than whatever set
+	// ScalifyToken (env var or config `token` field) — without this check,
+	// switching location never changes which credentials go out on the
+	// wire whenever a master token is present, silently making `location
+	// use` a no-op for auth while `location show` still reports the switch
+	// as having happened.
+	if c.LocationID != "" {
+		if token, ok := c.LocationTokens[c.LocationID]; ok && token != "" {
+			c.AuthSource = "location:" + c.LocationID
+			return applyAuthFormat("Bearer {token}", map[string]string{"token": token})
+		}
+	}
 	// Env-var token wins over file-stored AccessToken (env > config convention).
 	if c.ScalifyToken != "" {
 		c.AuthSource = "env:SCALIFY_TOKEN"
