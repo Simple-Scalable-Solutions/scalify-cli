@@ -10,7 +10,12 @@ python3 scripts/e2e/crud.py --contact-email will@… [--contact-phone +66…] [-
 ```
 
 - Asks before it sends anything (`--yes` skips the prompt). Ask whoever owns the test email first: it gets
-  real messages (1 email, 1 invoice, 1 estimate; 1 SMS with `--contact-phone`).
+  real messages (1 email, 1 estimate; 1 SMS with `--contact-phone`). Each run uses a fresh plus-address
+  (`will+e2e-<run id>@…`), so it never touches an existing contact.
+- `--invoice-sends` also tests invoice send, void and record-payment. The API can't delete a sent or paid
+  invoice, so this leaves a voided and a paid $1 test invoice behind; the run lists them.
+- Safe workflow for `--workflow-id` on Scalify Demo: `0bad27ed-3041-4760-b98b-be683f65db39`
+  ("[Claude] Live edit test (do not use) v2", one wait step).
 - Everything it makes is named `e2e-<run id>` and is deleted at the end, even if a step fails.
 - `--only contacts,payments` runs some groups: contacts, conversations, opportunities, calendars, location,
   objects, emails, payments, businesses, funnels, social, workflows, mcp.

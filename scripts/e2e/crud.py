@@ -14,7 +14,7 @@ Writes results to scripts/e2e/last-run.json (git-ignored).
 import argparse, datetime, json, os, re, subprocess, sys, time, tomllib
 
 DEMO = "OGpQQmmQzXMpwEkaNxHr"
-ALLOWED_EMAIL = re.compile(r"^(will|wrankin1101)@", re.I)
+ALLOWED_EMAIL = re.compile(r"^(will|wrankin1101)(\+[\w.-]+)?@", re.I)
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -23,6 +23,8 @@ ap.add_argument("--mcp-bin", default="scalify-pp-mcp", help="MCP server binary, 
 ap.add_argument("--contact-email", required=True, help="test contact's email: will@… or wrankin1101@…")
 ap.add_argument("--contact-phone", help="test contact's phone, for the SMS test (skipped without it)")
 ap.add_argument("--workflow-id", help="a Scalify Demo workflow that is safe to enrol the test contact in")
+ap.add_argument("--invoice-sends", action="store_true",
+                help="also test invoice send, void and record-payment: leaves a voided and a paid test invoice behind (the API can't delete either)")
 ap.add_argument("--only", help="comma-separated groups to run (default: all)")
 ap.add_argument("--dry-run", action="store_true", help="print each request instead of sending it")
 ap.add_argument("--yes", action="store_true", help="skip the confirmation prompt")
@@ -36,6 +38,10 @@ if DEMO not in (cfg.get("location_tokens") or {}):
     sys.exit(f"No token saved for Scalify Demo ({DEMO}). Run: scalify-cli location add {DEMO} --token <pit>")
 
 RUN = "e2e-" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+# A fresh plus-address each run (same inbox): the sub-account may block duplicate contacts, and the
+# suite must never touch, or delete, a contact that was already there.
+user, domain = a.contact_email.split("@", 1)
+EMAIL = f"{user.split('+')[0]}+{RUN}@{domain}"
 NOW = datetime.datetime.now(datetime.timezone.utc)
 ENV = {**os.environ, "SCALIFY_LOCATION_ID": DEMO}
 ENV.pop("SCALIFY_TOKEN", None)  # use the location token, not an agency one
@@ -55,7 +61,7 @@ def walk(c, pre):
 for c in ctx["commands"]:
     walk(c, [])
 
-results, cleanup, covered = [], [], set()
+results, cleanup, covered, leftovers = [], [], set(), []
 
 def find_id(o, prefer=("id", "_id")):
     """First id in a create response: breadth-first, skipping the CLI's meta envelope."""
@@ -86,8 +92,12 @@ def call(step, route, args=(), body=None, flags=(), expect_ok=True):
         cmd.append("--stdin")
     if a.dry_run:
         cmd.append("--dry-run")
-    p = subprocess.run(cmd, capture_output=True, text=True, env=ENV, timeout=90,
-                       input=json.dumps(body) if body is not None else None)
+    for attempt in range(7):
+        p = subprocess.run(cmd, capture_output=True, text=True, env=ENV, timeout=90,
+                           input=json.dumps(body) if body is not None else None)
+        if p.returncode == 0 or a.dry_run or "IN_PROGRESS" not in p.stderr:
+            break
+        time.sleep(5)  # e.g. a tag delete right after its rename: TAG_RENAME_IN_PROGRESS
     out = (p.stderr + p.stdout).strip()
     if a.dry_run:
         req = [l.strip() for l in out.splitlines() if re.match(r"\s*(GET|POST|PUT|PATCH|DELETE) ", l)]
@@ -158,8 +168,8 @@ def dig(o, *paths):
 
 # ---------------------------------------------------------------- confirm
 print(f"Scalify Demo ({DEMO}), run {RUN}{' (dry run: nothing is sent)' if a.dry_run else ''}")
-print(f"Test contact: {a.contact_email}{' / ' + a.contact_phone if a.contact_phone else ' (no phone: SMS skipped)'}")
-print("Real messages: 1 email" + (" + 1 SMS" if a.contact_phone else "") + ", 1 invoice email, 1 estimate email"
+print(f"Test contact: {EMAIL}{' / ' + a.contact_phone if a.contact_phone else ' (no phone: SMS skipped)'}")
+print("Real messages: 1 email" + (" + 1 SMS" if a.contact_phone else "") + (", 1 invoice email" if a.invoice_sends else "") + ", 1 estimate email"
       + (f", enrolment in workflow {a.workflow_id}" if a.workflow_id else " (no --workflow-id: enrolment skipped)"))
 if not a.dry_run and not a.yes and input("Run against Scalify Demo? [y/N] ").strip().lower() != "y":
     sys.exit("Cancelled.")
@@ -174,7 +184,7 @@ try:
     # ------------------------------------------------------------ contacts
     if group("contacts") or group("conversations") or group("calendars") or group("opportunities") or group("payments"):
         print("contacts")
-        body = {"locationId": DEMO, "firstName": "e2e", "lastName": RUN, "email": a.contact_email, "source": RUN}
+        body = {"locationId": DEMO, "firstName": "e2e", "lastName": RUN, "email": EMAIL, "source": RUN}
         if a.contact_phone:
             body["phone"] = a.contact_phone
         contact_id = created("contact create", "POST /contacts/", body=body,
@@ -182,7 +192,7 @@ try:
     if group("contacts") and contact_id:
         call("contact get", "GET /contacts/{contactId}", [contact_id])
         call("contact update", "PUT /contacts/{contactId}", [contact_id], {"lastName": RUN + "-updated"})
-        call("contact upsert", "POST /contacts/upsert", body={"locationId": DEMO, "email": a.contact_email, "firstName": "e2e-upsert"})
+        call("contact upsert", "POST /contacts/upsert", body={"locationId": DEMO, "email": EMAIL, "firstName": "e2e-upsert"})
         call("contact tags add", "POST /contacts/{contactId}/tags", [contact_id], {"tags": [RUN]})
         call("contact tags remove", "DELETE /contacts/{contactId}/tags", [contact_id], flags=["--tags", json.dumps([RUN])])
         call("bulk tags add", "POST /contacts/bulk/tags/update/{type}", ["add"], {"contacts": [contact_id], "tags": [RUN + "-bulk"], "locationId": DEMO})
@@ -194,7 +204,7 @@ try:
         task = created("task create", "POST /contacts/{contactId}/tasks", [contact_id], {"title": RUN, "dueDate": due, "completed": False})
         if task:
             call("task get", "GET /contacts/{contactId}/tasks/{taskId}", [contact_id, task])
-        call("contact search", "POST /contacts/search", body={"locationId": DEMO, "pageLimit": 1, "query": a.contact_email})
+        call("contact search", "POST /contacts/search", body={"locationId": DEMO, "pageLimit": 1, "query": EMAIL})
         call("contact count", "POST /contacts/search/count", body={"locationId": DEMO, "query": RUN})
         call("notes search", "POST /notes/search", flags=["--relations", json.dumps([{"objectKey": "contact", "recordId": contact_id}]), "--limit", "5"])
         if a.workflow_id:
@@ -208,15 +218,13 @@ try:
     if group("conversations") and contact_id:
         print("conversations")
         conv = created("conversation create", "POST /conversations/", body={"locationId": DEMO, "contactId": contact_id})
-        msg = call("send email", "POST /conversations/messages", body={
-            "type": "Email", "contactId": contact_id, "status": "pending", "emailTo": a.contact_email,
+        call("send email", "POST /conversations/messages", body={
+            "type": "Email", "contactId": contact_id, "status": "pending", "emailTo": EMAIL,
             "subject": f"Scalify CLI test {RUN}", "html": f"<p>Automated test from scalify-cli ({RUN}). Ignore.</p>"})
-        msg_id = dig(msg, "messageId", "id") if msg else None
         if a.contact_phone:
             call("send SMS", "POST /conversations/messages", body={
                 "type": "SMS", "contactId": contact_id, "status": "pending", "message": f"Scalify CLI test {RUN}. Ignore."})
-        if msg_id:
-            call("message status update", "PUT /conversations/messages/{messageId}/status", [msg_id], {"status": "read"})
+        skip("PUT /conversations/messages/{messageId}/status", "only for messages from a custom conversation provider")
         skip("POST /conversations/messages/inbound", "needs a custom conversation provider")
 
     # ------------------------------------------------------------ opportunities
@@ -233,7 +241,7 @@ try:
                 call("opportunity update", "PUT /opportunities/{id}", [opp], {"name": RUN + "-updated", "monetaryValue": 1})
                 call("opportunity status", "PUT /opportunities/{id}/status", [opp], {"status": "won"})
                 call("opportunity search", "POST /opportunities/search", body={"locationId": DEMO, "limit": 1, "query": RUN})
-                call("opportunity delete", "DELETE /opportunities/{id}", [opp]); undone("opportunity create")
+                if call("opportunity delete", "DELETE /opportunities/{id}", [opp]) is not None: undone("opportunity create")
         else:
             skip("POST /opportunities/", "Scalify Demo has no pipeline")
 
@@ -256,7 +264,7 @@ try:
                 if appt:
                     call("appointment get", "GET /calendars/events/appointments/{eventId}", [appt])
                     call("appointment notes list", "GET /calendars/appointments/{appointmentId}/notes", [appt], flags=["--limit", "5", "--offset", "0"])
-            call("calendar delete", "DELETE /calendars/{calendarId}", [cal]); undone("calendar create")
+            if call("calendar delete", "DELETE /calendars/{calendarId}", [cal]) is not None: undone("calendar create")
 
     # ------------------------------------------------------------ location settings
     if group("location"):
@@ -267,18 +275,18 @@ try:
         if cf:
             call("location custom field get", "GET /locations/{locationId}/customFields/{id}", [DEMO, cf])
             call("location custom field update", "PUT /locations/{locationId}/customFields/{id}", [DEMO, cf], {"name": RUN + "-updated"})
-            call("location custom field delete", "DELETE /locations/{locationId}/customFields/{id}", [DEMO, cf]); undone("location custom field create")
+            if call("location custom field delete", "DELETE /locations/{locationId}/customFields/{id}", [DEMO, cf]) is not None: undone("location custom field create")
         cv = created("custom value create", "POST /locations/{locationId}/customValues", [DEMO], {"name": RUN, "value": "1"},
                      undo=lambda i: call("cleanup custom value", "DELETE /locations/{locationId}/customValues/{id}", [DEMO, i]))
         if cv:
             call("custom value get", "GET /locations/{locationId}/customValues/{id}", [DEMO, cv])
             call("custom value update", "PUT /locations/{locationId}/customValues/{id}", [DEMO, cv], {"name": RUN, "value": "2"})
-            call("custom value delete", "DELETE /locations/{locationId}/customValues/{id}", [DEMO, cv]); undone("custom value create")
-        tag = created("tag create", "POST /locations/{locationId}/tags", [DEMO], {"name": RUN},
+            if call("custom value delete", "DELETE /locations/{locationId}/customValues/{id}", [DEMO, cv]) is not None: undone("custom value create")
+        tag = created("tag create", "POST /locations/{locationId}/tags", [DEMO], {"name": RUN + "-location"},
                       undo=lambda i: call("cleanup tag", "DELETE /locations/{locationId}/tags/{tagId}", [DEMO, i]))
         if tag:
-            call("tag update", "PUT /locations/{locationId}/tags/{tagId}", [DEMO, tag], {"name": RUN + "-updated"})
-            call("tag delete", "DELETE /locations/{locationId}/tags/{tagId}", [DEMO, tag]); undone("tag create")
+            call("tag update", "PUT /locations/{locationId}/tags/{tagId}", [DEMO, tag], {"name": RUN + "-location-updated"})
+            if call("tag delete", "DELETE /locations/{locationId}/tags/{tagId}", [DEMO, tag]) is not None: undone("tag create")
         call("task search", "POST /locations/{locationId}/tasks/search", [DEMO], {})
         skip("PUT /locations/{locationId}", "changes the sub-account itself and needs an agency token")
 
@@ -300,8 +308,8 @@ try:
                 if fld:
                     call("field get", "GET /custom-fields/{id}", [fld])
                     call("field update", "PUT /custom-fields/{id}", [fld], {"locationId": DEMO, "showInForms": False, "name": RUN + "-updated"})
-                    call("field delete", "DELETE /custom-fields/{id}", [fld]); undone("field create")
-                call("field folder delete", "DELETE /custom-fields/folder/{id}", [folder], flags=["--location-id", DEMO]); undone("field folder create")
+                    if call("field delete", "DELETE /custom-fields/{id}", [fld]) is not None: undone("field create")
+                if call("field folder delete", "DELETE /custom-fields/folder/{id}", [folder], flags=["--location-id", DEMO]) is not None: undone("field folder create")
             schema = get("GET /objects/{key}", [key], flags=["--location-id", DEMO])
             prim = dig(schema, "object.primaryDisplayProperty") or "name"
             prop = prim.split(".")[-1]
@@ -311,7 +319,7 @@ try:
                 call("record get", "GET /objects/{schemaKey}/records/{id}", [key, rec])
                 call("record update", "PUT /objects/{schemaKey}/records/{id}", [key, rec], {"properties": {prop: RUN + "-updated"}}, flags=["--location-id", DEMO])
                 call("record search", "POST /objects/{schemaKey}/records/search", [key], {"locationId": DEMO, "page": 1, "pageLimit": 5, "query": RUN})
-                call("record delete", "DELETE /objects/{schemaKey}/records/{id}", [key, rec]); undone("record create")
+                if call("record delete", "DELETE /objects/{schemaKey}/records/{id}", [key, rec]) is not None: undone("record create")
         else:
             skip("POST /objects/{schemaKey}/records", "Scalify Demo has no custom object")
 
@@ -326,43 +334,54 @@ try:
         if tpl:
             call("template get", "GET /emails/locations/{locationId}/templates/{templateId}", [DEMO, tpl])
             call("template update", "PATCH /emails/locations/{locationId}/templates/{templateId}", [DEMO, tpl], {"name": RUN + "-updated"})
-            call("template delete", "DELETE /emails/locations/{locationId}/templates/{templateId}", [DEMO, tpl]); undone("template create")
+            if call("template delete", "DELETE /emails/locations/{locationId}/templates/{templateId}", [DEMO, tpl]) is not None: undone("template create")
         if folder:
-            call("template folder delete", "DELETE /emails/locations/{locationId}/templates/{templateId}", [DEMO, folder]); undone("template folder create")
+            if call("template folder delete", "DELETE /emails/locations/{locationId}/templates/{templateId}", [DEMO, folder]) is not None: undone("template folder create")
         skip("POST /emails/locations/{locationId}/templates/import", "needs a Mailchimp/ActiveCampaign share URL")
 
     # ------------------------------------------------------------ payments
     if group("payments") and contact_id:
         print("invoices and estimates")
         today = NOW.date().isoformat()
-        common = {"altId": DEMO, "altType": "location", "currency": "USD", "name": RUN,
+        common = {"altId": DEMO, "altType": "location", "currency": "USD", "name": RUN, "title": "ESTIMATE",  # title: required, though the docs say optional
                   "businessDetails": {"name": "Scalify Demo"}, "discount": {"type": "fixed", "value": 0},
-                  "contactDetails": {"id": contact_id, "name": "e2e " + RUN, "email": a.contact_email, "phoneNo": a.contact_phone or ""}}
+                  "contactDetails": {"id": contact_id, "name": "e2e " + RUN, "email": EMAIL, "phoneNo": a.contact_phone or ""}}
         item = {"name": RUN, "currency": "USD", "amount": 1, "qty": 1, "type": "one_time"}
-        inv = created("invoice create", "POST /invoices/", body={**common, "items": [item], "issueDate": today,
-                      "dueDate": (NOW + datetime.timedelta(days=7)).date().isoformat(), "sentTo": {"email": [a.contact_email]}, "liveMode": False},
-                      undo=lambda i: call("cleanup invoice", "DELETE /invoices/{invoiceId}", [i], flags=["--alt-id", DEMO, "--alt-type", "location"]))
+        due = (NOW + datetime.timedelta(days=7)).date().isoformat()
+        inv_body = {**common, "items": [item], "issueDate": today, "dueDate": due, "sentTo": {"email": [EMAIL]}, "liveMode": False}
+        undo_inv = lambda i: call("cleanup invoice", "DELETE /invoices/{invoiceId}", [i], flags=["--alt-id", DEMO, "--alt-type", "location"])
+        inv = created("invoice create", "POST /invoices/", body=inv_body, undo=undo_inv)
         if inv:
             call("invoice get", "GET /invoices/{invoiceId}", [inv], flags=["--alt-id", DEMO, "--alt-type", "location"])
             call("invoice update", "PUT /invoices/{invoiceId}", [inv], {**common, "name": RUN + "-updated", "invoiceItems": [item],
-                 "issueDate": today, "dueDate": (NOW + datetime.timedelta(days=14)).date().isoformat()})
-            if user_id:
-                call("invoice send", "POST /invoices/{invoiceId}/send", [inv], {"altId": DEMO, "altType": "location", "userId": user_id, "action": "email", "liveMode": False})
-            call("invoice record payment", "POST /invoices/{invoiceId}/record-payment", [inv], {
-                "altId": DEMO, "altType": "location", "mode": "cash", "card": {"brand": "", "last4": ""}, "cheque": {"number": ""}, "notes": RUN, "amount": 1})
-        inv2 = created("invoice 2 create", "POST /invoices/", body={**common, "items": [item], "issueDate": today, "sentTo": {"email": [a.contact_email]}, "liveMode": False},
-                       undo=lambda i: call("cleanup invoice 2", "DELETE /invoices/{invoiceId}", [i], flags=["--alt-id", DEMO, "--alt-type", "location"]))
-        if inv2:
-            call("invoice void", "POST /invoices/{invoiceId}/void", [inv2], {"altId": DEMO, "altType": "location"})
-            call("invoice delete", "DELETE /invoices/{invoiceId}", [inv2], flags=["--alt-id", DEMO, "--alt-type", "location"]); undone("invoice 2 create")
-        est_body = {**common, "items": [item], "liveMode": False, "frequencySettings": {"enabled": False}, "issueDate": today}
+                 "issueDate": today, "dueDate": due})
+            if call("invoice delete", "DELETE /invoices/{invoiceId}", [inv], flags=["--alt-id", DEMO, "--alt-type", "location"]) is not None:
+                undone("invoice create")
+        if a.invoice_sends:
+            # A sent invoice can be voided but not deleted, and a paid one needs a refund first: both stay behind.
+            inv2 = created("invoice 2 create", "POST /invoices/", body={**inv_body, "name": RUN + "-sent-then-voided"})
+            if inv2 and user_id:
+                call("invoice send", "POST /invoices/{invoiceId}/send", [inv2], {"altId": DEMO, "altType": "location", "userId": user_id, "action": "email", "liveMode": False})
+                call("invoice void", "POST /invoices/{invoiceId}/void", [inv2], {"altId": DEMO, "altType": "location"})
+                a.dry_run or leftovers.append(f"voided test invoice {RUN}-sent-then-voided")
+            inv3 = created("invoice 3 create", "POST /invoices/", body={**inv_body, "name": RUN + "-paid"})
+            if inv3:
+                call("invoice record payment", "POST /invoices/{invoiceId}/record-payment", [inv3], {
+                    "altId": DEMO, "altType": "location", "mode": "cash", "card": {"brand": "", "last4": ""}, "cheque": {"number": ""}, "notes": RUN, "amount": 1})
+                a.dry_run or leftovers.append(f"paid $1 test invoice {RUN}-paid (refund it in the CRM to remove it)")
+        else:
+            for r in ("POST /invoices/{invoiceId}/send", "POST /invoices/{invoiceId}/void", "POST /invoices/{invoiceId}/record-payment"):
+                skip(r, "leaves an invoice the API can't delete; run with --invoice-sends")
+        est_body = {**common, "items": [item], "liveMode": False, "frequencySettings": {"enabled": False}, "issueDate": today,
+                    "expiryDate": (NOW + datetime.timedelta(days=30)).date().isoformat(), "sentTo": {"email": [EMAIL]},
+                    **({"userId": user_id} if user_id else {})}
         est = created("estimate create", "POST /invoices/estimate", body=est_body,
                       undo=lambda i: call("cleanup estimate", "DELETE /invoices/estimate/{estimateId}", [i], flags=["--alt-id", DEMO, "--alt-type", "location"]))
         if est:
             call("estimate update", "PUT /invoices/estimate/{estimateId}", [est], {**est_body, "name": RUN + "-updated"})
             if user_id:
                 call("estimate send", "POST /invoices/estimate/{estimateId}/send", [est], {"altId": DEMO, "altType": "location", "userId": user_id, "action": "email", "liveMode": False})
-            call("estimate delete", "DELETE /invoices/estimate/{estimateId}", [est], flags=["--alt-id", DEMO, "--alt-type", "location"]); undone("estimate create")
+            if call("estimate delete", "DELETE /invoices/estimate/{estimateId}", [est], flags=["--alt-id", DEMO, "--alt-type", "location"]) is not None: undone("estimate create")
 
     # ------------------------------------------------------------ businesses
     if group("businesses"):
@@ -372,7 +391,7 @@ try:
         if biz:
             call("business get", "GET /businesses/{businessId}", [biz])
             call("business update", "PUT /businesses/{businessId}", [biz], {"name": RUN + "-updated"})
-            call("business delete", "DELETE /businesses/{businessId}", [biz]); undone("business create")
+            if call("business delete", "DELETE /businesses/{businessId}", [biz]) is not None: undone("business create")
 
     # ------------------------------------------------------------ funnels
     if group("funnels"):
@@ -385,7 +404,7 @@ try:
                 undo=lambda i: call("cleanup redirect", "DELETE /funnels/lookup/redirect/{id}", [i], flags=["--location-id", DEMO]))
             if red:
                 call("redirect update", "PATCH /funnels/lookup/redirect/{id}", [red], {"target": "https://example.org/", "action": "url", "locationId": DEMO})
-                call("redirect delete", "DELETE /funnels/lookup/redirect/{id}", [red], flags=["--location-id", DEMO]); undone("redirect create")
+                if call("redirect delete", "DELETE /funnels/lookup/redirect/{id}", [red], flags=["--location-id", DEMO]) is not None: undone("redirect create")
         else:
             skip("POST /funnels/lookup/redirect", "no existing redirect to borrow a connected domain from")
 
@@ -393,18 +412,21 @@ try:
     if group("social"):
         print("social posts (draft, scheduled a year out)")
         when = (NOW + datetime.timedelta(days=365)).isoformat().replace("+00:00", "Z")
-        post_body = {"type": "post", "status": "draft", "summary": f"{RUN} automated test, never published", "scheduleDate": when}
+        accts = get("GET /social-media-posting/{locationId}/accounts", [DEMO])
+        acct = "dry-account" if a.dry_run else dig(accts, "results.accounts.0.id", "accounts.0.id")
+        post_body = {"type": "post", "status": "draft", "summary": f"{RUN} automated test, never published", "scheduleDate": when,
+                     "accountIds": [acct] if acct else [], "userId": user_id}
         post = created("post create", "POST /social-media-posting/{locationId}/posts", [DEMO], post_body,
                        undo=lambda i: call("cleanup post", "DELETE /social-media-posting/{locationId}/posts/{id}", [DEMO, i]))
         if post:
             call("post get", "GET /social-media-posting/{locationId}/posts/{id}", [DEMO, post])
             call("post edit", "PUT /social-media-posting/{locationId}/posts/{id}", [DEMO, post], {**post_body, "summary": RUN + " edited"})
-            call("post delete", "DELETE /social-media-posting/{locationId}/posts/{id}", [DEMO, post]); undone("post create")
+            if call("post delete", "DELETE /social-media-posting/{locationId}/posts/{id}", [DEMO, post]) is not None: undone("post create")
         call("posts list", "POST /social-media-posting/{locationId}/posts/list", [DEMO], {"limit": "5", "skip": "0"})
         post2 = created("post 2 create", "POST /social-media-posting/{locationId}/posts", [DEMO], post_body,
                         undo=lambda i: call("cleanup post 2", "DELETE /social-media-posting/{locationId}/posts/{id}", [DEMO, i]))
         if post2:
-            call("posts bulk delete", "POST /social-media-posting/{locationId}/posts/bulk-delete", [DEMO], {"postIds": [post2]}); undone("post 2 create")
+            if call("posts bulk delete", "POST /social-media-posting/{locationId}/posts/bulk-delete", [DEMO], {"postIds": [post2]}) is not None: undone("post 2 create")
 
     # ------------------------------------------------------------ workflows (limited availability)
     if group("workflows"):
@@ -416,7 +438,7 @@ try:
         if wf:
             call("workflow definition update", "PUT /workflows/{workflowId}/definition", [wf], {**wf_body, "version": 1}, flags=["--location-id", DEMO])
             call("workflow status", "PUT /workflows/{workflowId}/status", [wf], {"status": "draft"}, flags=["--location-id", DEMO])
-            call("workflow delete", "DELETE /workflows/{workflowId}", [wf], flags=["--location-id", DEMO]); undone("workflow create")
+            if call("workflow delete", "DELETE /workflows/{workflowId}", [wf], flags=["--location-id", DEMO]) is not None: undone("workflow create")
         call("workflow search", "POST /workflows/search", body={}, flags=["--location-id", DEMO])
 
     for route, why in [("DELETE /medias/{id}", "no upload route to make a file to delete"),
@@ -436,8 +458,12 @@ try:
             p.stdin.write(json.dumps({"jsonrpc": "2.0", "id": n[0], "method": method, "params": params or {}}) + "\n"); p.stdin.flush()
             return json.loads(p.stdout.readline())
         def ex(step, endpoint, params):
-            r = rpc("tools/call", {"name": "scalify_execute", "arguments": {"endpoint_id": endpoint, "params": params}})["result"]
-            text = r["content"][0]["text"]
+            for attempt in range(7):
+                r = rpc("tools/call", {"name": "scalify_execute", "arguments": {"endpoint_id": endpoint, "params": params}})["result"]
+                text = r["content"][0]["text"]
+                if not r.get("isError") or "IN_PROGRESS" not in text:
+                    break
+                time.sleep(5)
             ok = not r.get("isError")
             results.append({"step": "mcp " + step, "route": "mcp " + endpoint, "status": "ok" if ok else "broken", "detail": "" if ok else text[:300]})
             print(f"  {'ok' if ok else 'broken':<5} mcp {step}{'' if ok else ': ' + text[:160]}")
@@ -453,17 +479,22 @@ try:
         if contact_id:
             ex("contact tags add", "contacts.tags.add", {"contactId": contact_id, "tags": [RUN + "-mcp"]})
             ex("contact tags remove (DELETE with body)", "contacts.tags.remove", {"contactId": contact_id, "tags": [RUN + "-mcp"]})
-            ex("contact search", "contacts.search", {"pageLimit": 1, "query": a.contact_email})
+            ex("contact search", "contacts.search", {"pageLimit": 1, "query": EMAIL})
         p.kill()
 
     if contact_id:
-        call("contact delete", "DELETE /contacts/{contactId}", [contact_id]); undone("contact create")
+        if call("contact delete", "DELETE /contacts/{contactId}", [contact_id]) is not None: undone("contact create")
 finally:
     # ------------------------------------------------------------ cleanup
-    if cleanup and not a.dry_run:
+    if not a.dry_run:
         print("cleanup")
         for step, undo, rid in reversed(cleanup):
             undo(rid)
+        # Tagging a contact creates the tag on the sub-account too: remove this run's.
+        tags = get("GET /locations/{locationId}/tags", [DEMO])
+        for t in (tags or {}).get("tags", []):
+            if t.get("name", "").startswith(RUN):
+                call("cleanup tag " + t["name"], "DELETE /locations/{locationId}/tags/{tagId}", [DEMO, t["id"]])
 
 # ---------------------------------------------------------------- report
 untested = sorted(WRITES - covered)
@@ -476,5 +507,7 @@ print("\n" + ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())))
 for r in results:
     if r["status"] not in ("ok", "dry-run", "skipped"):
         print(f"  {r['status']:<12} {r['step']:<34} {r['detail'][:150]}")
-json.dump({"run": RUN, "dry_run": a.dry_run, "results": results}, open(os.path.join(HERE, "last-run.json"), "w"), indent=1)
+if leftovers:
+    print("\nLeft in Scalify Demo (the API can't remove these):"); [print("  " + l) for l in leftovers]
+json.dump({"run": RUN, "leftovers": leftovers, "dry_run": a.dry_run, "results": results}, open(os.path.join(HERE, "last-run.json"), "w"), indent=1)
 sys.exit(1 if counts.get("broken") else 0)
