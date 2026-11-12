@@ -207,8 +207,10 @@ echo '{"locationId":"<loc>","pageLimit":20,"filters":[{"field":"tags","operator"
 
 ```bash
 scalify-cli doctor              # Check auth + connectivity + cache health
-scalify-cli sync                # Pull data into local SQLite cache
-scalify-cli search <query>      # Full-text search over cached data
+scalify-cli sync                # Copy the active location's records (contacts, conversations, opportunities,
+                                #   workflows, invoices and more; --resources to pick) into a local cache
+scalify-cli search <query>      # Full-text search over the synced copy (--type contacts to narrow)
+scalify-cli analytics --type contacts --group-by type   # Counts over the synced copy
 scalify-cli tail                # Stream live events
 scalify-cli which <command>     # Show which binary will run
 ```
@@ -259,9 +261,12 @@ a logged-in browser profile.
 get <locationId>` and pass each account's `profileId` (not its `id`, which returns 400 "Invalid
 connected account ID").
 
-**Writes not yet tested live**: every endpoint's method, path and flags come from the v3 docs, and
-reads were checked against a real sub-account. Create/update/delete commands haven't been run live:
-`--dry-run` first and check the request.
+**Docs vs API** (found in live tests): estimates need `title` and `expiryDate`, though the docs mark them
+optional. Notes search `relations` takes `[{"objectKey":"contact","recordId":"<id>"}]`, not a list of IDs.
+
+**Writes**: create/update/delete are tested end to end on a playground sub-account before each release
+(`scripts/e2e/crud.py` in the scalify-cli repo). Not covered: workflow create/update/delete (API not enabled
+there), funnel redirects, invoice void. `--dry-run` prints the request without sending it.
 
 **When a call's behavior is genuinely murky** (undocumented error, unclear required headers/fields,
 auth scope confusion) and `--help` plus the top-level docs above don't resolve it, check
