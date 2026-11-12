@@ -31,7 +31,16 @@ func newContactsTagsRemoveCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/contacts/{contactId}/tags"
 			path = replacePathParam(path, "contactId", args[0])
-			data, statusCode, err := c.Delete(path)
+			body := map[string]any{}
+			if bodyTags != "" {
+				var parsed any
+				if json.Unmarshal([]byte(bodyTags), &parsed) == nil {
+					body["tags"] = parsed
+				} else {
+					body["tags"] = bodyTags
+				}
+			}
+			data, statusCode, err := c.DeleteWithBody(path, body)
 			if err != nil {
 				return classifyDeleteError(err, flags)
 			}
