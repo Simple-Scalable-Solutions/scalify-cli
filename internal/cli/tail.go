@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -60,6 +61,7 @@ native streaming instead of polling.`,
 				return err
 			}
 			c.NoCache = true
+			syncLocationID = c.Config.LocationID
 
 			path := "/" + resource
 
@@ -103,40 +105,19 @@ native streaming instead of polling.`,
 // no-arg JSON help envelope can list them without depending on sync's
 // defaultSyncResources (which only exists when sync is generated).
 func tailKnownResources() []string {
-	return []string{
-		"associations",
-		"blogs",
-		"businesses",
-		"calendars",
-		"campaigns",
-		"contacts",
-		"conversations",
-		"courses",
-		"custom-fields",
-		"emails",
-		"forms",
-		"funnels",
-		"invoices",
-		"links",
-		"locations",
-		"medias",
-		"notes",
-		"objects",
-		"opportunities",
-		"payments",
-		"products",
-		"proposals",
-		"social-media-posting",
-		"surveys",
-		"users",
-		"workflows",
-	}
+	return scalifySyncResources()
 }
 
 func fetchAndEmit(c interface {
 	Get(string, map[string]string) (json.RawMessage, error)
 }, path string, enc *json.Encoder) error {
-	data, err := c.Get(path, nil)
+	var data json.RawMessage
+	var err error
+	if _, ok := scalifySyncDefs[strings.TrimPrefix(path, "/")]; ok {
+		data, err = scalifySyncFetch(c, strings.TrimPrefix(path, "/"), 1)
+	} else {
+		data, err = c.Get(path, nil)
+	}
 	if err != nil {
 		return err
 	}

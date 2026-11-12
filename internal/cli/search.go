@@ -211,6 +211,18 @@ In local mode: searches locally synced data only.`,
 						}
 					}
 				}
+				{
+					partial, searchErr := db.Search(query, limit)
+					if searchErr != nil {
+						return fmt.Errorf("search failed: %w", searchErr)
+					}
+					for _, r := range partial {
+						if !seen[string(r)] {
+							seen[string(r)] = true
+							results = append(results, r)
+						}
+					}
+				}
 			default:
 				// Unrecognized type — fall back to generic search
 				results, err = db.Search(query, limit)
