@@ -31,6 +31,7 @@ cp $R/internal/mcp/code_orch_scalify.go $R/internal/mcp/code_orch_scalify_test.g
 find $W/gen/internal $W/gen/cmd -name '*.go' -print0 | xargs -0 perl -pi -e "s/scalify-pp-cli(?=[ '])/scalify-cli/g"
 python3 -I $D/fix_write_query.py $R/spec.json $W/gen
 python3 -I $D/fix_code_orch.py $W/gen
+python3 -I $D/fix_delete_body.py $W/gen
 python3 -I $D/gen_orch_meta.py $R/spec.json $W/gen/internal/mcp/code_orch_meta.go
 gofmt -w $W/gen/internal
 cp $R/go.sum $W/gen/go.sum

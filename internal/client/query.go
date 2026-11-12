@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/json"
 	"net/url"
 	"strings"
 )
@@ -23,4 +24,10 @@ func WithQuery(path string, params map[string]string) string {
 		sep = "&"
 	}
 	return path + sep + q.Encode()
+}
+
+// DeleteWithBody sends a DELETE with a JSON body. A few endpoints take their
+// input in the body of a DELETE (e.g. the tags to remove from a contact).
+func (c *Client) DeleteWithBody(path string, body any) (json.RawMessage, int, error) {
+	return c.do("DELETE", path, nil, body, nil)
 }

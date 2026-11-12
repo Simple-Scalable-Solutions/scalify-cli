@@ -8,3 +8,4 @@ dogfood-results.json
 
 # OS
 .DS_Store
+scripts/e2e/last-run.json

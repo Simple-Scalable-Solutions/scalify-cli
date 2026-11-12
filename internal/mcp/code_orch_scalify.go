@@ -146,7 +146,8 @@ func scalifySearch(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.Cal
 }
 
 // scalifyExecute calls one endpoint. Path placeholders and the endpoint's query params
-// come out of params by name; the rest is the query string (GET/DELETE) or JSON body.
+// come out of params by name; the rest is the query string (GET, DELETE) or JSON body
+// (POST/PUT/PATCH, and DELETE fields the endpoint documents as body).
 // locationId defaults to the active location when the endpoint takes one.
 func scalifyExecute(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.CallToolResult, error) {
 	args := req.GetArguments()
@@ -198,7 +199,7 @@ func scalifyExecute(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.Ca
 
 	query := map[string]string{}
 	for k, v := range params {
-		if hasParam(meta.Query, k) || ep.Method == "GET" || ep.Method == "DELETE" {
+		if hasParam(meta.Query, k) || ep.Method == "GET" || ep.Method == "DELETE" && !hasParam(meta.Body, k) {
 			query[k] = queryValue(v)
 			delete(params, k)
 		}
@@ -211,7 +212,11 @@ func scalifyExecute(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.Ca
 	case "GET":
 		data, err = c.Get(path, query)
 	case "DELETE":
-		data, _, err = c.Delete(client.WithQuery(path, query))
+		if len(params) > 0 {
+			data, _, err = c.DeleteWithBody(client.WithQuery(path, query), params)
+		} else {
+			data, _, err = c.Delete(client.WithQuery(path, query))
+		}
 	case "POST":
 		data, _, err = c.Post(client.WithQuery(path, query), params)
 	case "PUT":
