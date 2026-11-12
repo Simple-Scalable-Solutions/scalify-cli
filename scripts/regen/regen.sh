@@ -27,8 +27,11 @@ gofmt -w $W/gen/internal
 for p in $D/patches/*.patch; do patch -s -p1 -d $W/gen --no-backup-if-mismatch < $p; done
 cp $R/internal/cli/location_config.go $R/internal/cli/location_default.go $W/gen/internal/cli/
 cp $R/internal/client/query.go $W/gen/internal/client/
+cp $R/internal/mcp/code_orch_scalify.go $R/internal/mcp/code_orch_scalify_test.go $W/gen/internal/mcp/
 find $W/gen/internal $W/gen/cmd -name '*.go' -print0 | xargs -0 perl -pi -e "s/scalify-pp-cli(?=[ '])/scalify-cli/g"
 python3 -I $D/fix_write_query.py $R/spec.json $W/gen
+python3 -I $D/fix_code_orch.py $W/gen
+python3 -I $D/gen_orch_meta.py $R/spec.json $W/gen/internal/mcp/code_orch_meta.go
 gofmt -w $W/gen/internal
 cp $R/go.sum $W/gen/go.sum
 (cd $W/gen && GOFLAGS=-mod=mod go mod tidy && go build ./... && go vet ./...)
@@ -38,4 +41,7 @@ rsync -a --delete $W/gen/internal/ $R/internal/
 rsync -a --delete $W/gen/cmd/ $R/cmd/
 cp $W/gen/go.mod $W/gen/go.sum $R/
 python3 -I -c 'import json,sys; p=sys.argv[1]; d=json.load(open(sys.argv[2])); d["spec_path"]="spec.json"; d.pop("printer_name",None); json.dump(d,open(p,"w"),indent=2)' $R/.printing-press.json $W/gen/.printing-press.json
+# The generator picks the live-search endpoint (search.go) and one sync path (sync.go) in random
+# order, so each run differs. Keep the committed picks; drop this line to take the generator's.
+git -C $R checkout -- internal/cli/search.go internal/cli/sync.go
 echo "regenerated; now: go test ./... and review git diff"

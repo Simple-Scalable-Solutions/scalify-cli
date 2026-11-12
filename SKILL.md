@@ -371,6 +371,9 @@ claude mcp add scalify-pp-mcp -- scalify-pp-mcp
 
 Verify: `claude mcp list`
 
+The server has two API tools: `scalify_search` (find an endpoint and its params) and `scalify_execute`
+(call it by `endpoint_id` with a flat `params` object; `locationId` defaults to the active location).
+
 ## Direct Use
 
 1. Check if installed: `which scalify-cli`

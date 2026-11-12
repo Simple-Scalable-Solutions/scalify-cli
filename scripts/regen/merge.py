@@ -1,7 +1,9 @@
 import json,re,sys,os,glob
 pages=sys.argv[1]; out=sys.argv[2]
 spec={"openapi":"3.0.0","info":{"title":"Scalify","version":"v3"},
-      "servers":[{"url":"https://services.leadconnectorhq.com"}],"paths":{},"components":{"schemas":{},"securitySchemes":{}}}
+      "servers":[{"url":"https://services.leadconnectorhq.com"}],"paths":{},"components":{"schemas":{},"securitySchemes":{}},
+      # MCP: a search + execute pair instead of one tool per endpoint (~62k tokens)
+      "x-mcp":{"orchestration":"code","endpoint_tools":"hidden"}}
 conflicts=[];bad=[];renamed=[]
 for f in sorted(glob.glob(pages+"/*")):
     t=open(f).read()

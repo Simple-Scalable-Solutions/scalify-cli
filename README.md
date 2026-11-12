@@ -523,8 +523,14 @@ asking you to run commands manually.
 
 ## Use as an MCP Server (Claude Code or Claude Desktop)
 
-The CLI ships a companion MCP server binary (`scalify-pp-mcp`) that exposes every command as an
-agent tool. Register it in Claude Code:
+The CLI ships a companion MCP server binary (`scalify-pp-mcp`). It covers every API endpoint with two
+tools, so it costs a few hundred tokens of context instead of one tool per endpoint:
+
+- `scalify_search`: find the endpoint for a task ("list email templates"). Each result lists its params.
+- `scalify_execute`: call it by `endpoint_id` with one flat `params` object. `locationId` defaults to the
+  active location (`scalify-cli location use`, or `SCALIFY_LOCATION_ID`).
+
+It also has the CLI's utility tools (`location_*`, `sync`, `search`, `sql` and others). Register it in Claude Code:
 
 ```bash
 claude mcp add scalify scalify-pp-mcp -e SCALIFY_TOKEN=<your-token>

@@ -18,10 +18,16 @@ Doc pages are cached in `$REGEN_WORK/pages` (default `$TMPDIR/scalify-regen`); d
 | `merge.py` | Merges the OpenAPI block of every page into `spec.json`: renames clashing schema names per service, collapses auth to one bearer scheme (keeps `SCALIFY_TOKEN`), strips provider names and doc links, applies `renames.tsv`. |
 | `renames.tsv` | Readable command names (`METHOD /path<TAB>operationId`). |
 | `patches/*.patch` | Hand fixes to generated files: location switching (config, root, auth, doctor), `Version: v3`, binary name in hints. |
+| `fix_code_orch.py` | Points the MCP's `scalify_search` / `scalify_execute` tools at the hand-owned handlers. |
+| `gen_orch_meta.py` | Writes `internal/mcp/code_orch_meta.go`: each endpoint's path, query and body params, which search shows and execute uses to split params. |
 | `fix_write_query.py` | Sends query params (e.g. `locationId`) on POST/PUT/DELETE, in both the CLI and the MCP handler. The generator only does this for GET. |
 
 Hand-owned files copied into each run: `internal/cli/location_config.go`, `internal/cli/location_default.go`,
-`internal/client/query.go`.
+`internal/client/query.go`, `internal/mcp/code_orch_scalify.go` (+ its test).
 
-Known generator quirk: `internal/cli/sync.go` picks one of two email child paths in random order, so that line can
-flip between runs. Either is fine.
+MCP: `merge.py` sets `x-mcp: orchestration: code`, so the generator emits a search + execute pair
+(`internal/mcp/code_orch.go`) instead of one tool per endpoint. Its handlers rank loosely, don't show params,
+put query params in the body on writes and never fill the location, so `code_orch_scalify.go` replaces them.
+
+Known generator quirk: `internal/cli/search.go` and `internal/cli/sync.go` pick an endpoint in random order, so
+they flip between runs. `regen.sh` keeps the committed versions.
