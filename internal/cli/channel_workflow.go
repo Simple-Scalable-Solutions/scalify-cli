@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
-	"scalify-pp-cli/internal/store"
 	"github.com/spf13/cobra"
+	"scalify-pp-cli/internal/store"
 )
 
 func newWorkflowCmd(flags *rootFlags) *cobra.Command {
@@ -35,10 +35,10 @@ func newWorkflowArchiveCmd(flags *rootFlags) *cobra.Command {
 local SQLite database. Supports incremental sync (only new data since last run)
 and full resync. After archiving, use 'search' for instant full-text search.`,
 		Example: `  # Archive all resources
-  scalify-pp-cli workflow archive
+  scalify-cli workflow archive
 
   # Full re-archive (ignore previous sync state)
-  scalify-pp-cli workflow archive --full`,
+  scalify-cli workflow archive --full`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()
 			if err != nil {
@@ -55,7 +55,7 @@ and full resync. After archiving, use 'search' for instant full-text search.`,
 			}
 			defer s.Close()
 
-			resources := []string{"blogs", "blogs-authors", "blogs-categories", "blogs-posts-url-slug-exists", "businesses", "calendars", "calendars-events", "campaigns", "contacts", "conversations", "courses", "documents", "emails", "forms", "forms-submissions", "funnels", "funnels-page", "invoices", "invoices-estimate", "links", "locations", "medias", "objects", "opportunities", "opportunities-pipelines", "payments", "payments-coupons", "payments-subscriptions", "payments-transactions", "social-media-posting", "surveys", "surveys-submissions", "users", "webhooks", "workflows",  }
+			resources := []string{"locations"}
 			totalSynced := 0
 
 			for _, resource := range resources {
@@ -94,7 +94,9 @@ and full resync. After archiving, use 'search' for instant full-text search.`,
 						break
 					}
 					for _, item := range items {
-						var obj struct{ ID string `json:"id"` }
+						var obj struct {
+							ID string `json:"id"`
+						}
 						json.Unmarshal(item, &obj)
 						id := obj.ID
 						if id == "" {
@@ -149,10 +151,10 @@ func newWorkflowStatusCmd(flags *rootFlags) *cobra.Command {
 		Short:       "Show local archive status and sync state for all resources",
 		Annotations: map[string]string{"mcp:read-only": "true"},
 		Example: `  # Show archive status
-  scalify-pp-cli workflow status
+  scalify-cli workflow status
 
   # Show status as JSON
-  scalify-pp-cli workflow status --json`,
+  scalify-cli workflow status --json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if dbPath == "" {
 				dbPath = defaultDBPath("scalify-pp-cli")

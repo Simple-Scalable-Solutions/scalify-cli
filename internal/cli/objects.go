@@ -10,15 +10,11 @@ import (
 func newObjectsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "objects",
-		Short: "Operations on objects",
+		Short: "Manage objects",
 	}
 
-	cmd.AddCommand(newObjectsCreateRecordsCmd(flags))
-	cmd.AddCommand(newObjectsDeleteRecordsCmd(flags))
-	cmd.AddCommand(newObjectsGetObjectsCmd(flags))
-	cmd.AddCommand(newObjectsGetRecordsCmd(flags))
-	cmd.AddCommand(newObjectsGetRecords2Cmd(flags))
-	cmd.AddCommand(newObjectsListObjectsCmd(flags))
-	cmd.AddCommand(newObjectsUpdateRecordsCmd(flags))
+	cmd.AddCommand(newObjectsGetSchemaCmd(flags))
+	cmd.AddCommand(newObjectsListCmd(flags))
+	cmd.AddCommand(newObjectsRecordsCmd(flags))
 	return cmd
 }

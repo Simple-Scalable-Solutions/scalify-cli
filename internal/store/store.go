@@ -204,6 +204,255 @@ func (s *Store) ensureColumn(ctx context.Context, conn *sql.Conn, table, column,
 // word.
 func (s *Store) backfillColumns(ctx context.Context, conn *sql.Conn) error {
 	for _, c := range []struct{ table, column, decl string }{
+		{table: "associations", column: "key", decl: "TEXT"},
+		{table: "associations", column: "location_id", decl: "TEXT"},
+		{table: "blogs", column: "name", decl: "TEXT"},
+		{table: "businesses", column: "business", decl: "TEXT"},
+		{table: "calendars", column: "has_more", decl: "INTEGER"},
+		{table: "free_slots", column: "calendars_id", decl: "TEXT"},
+		{table: "notifications", column: "calendars_id", decl: "TEXT"},
+		{table: "contacts", column: "contact", decl: "TEXT"},
+		{table: "contacts", column: "matching_field", decl: "TEXT"},
+		{table: "contacts", column: "next_cursor", decl: "TEXT"},
+		{table: "appointments", column: "contacts_id", decl: "TEXT"},
+		{table: "contacts_notes", column: "contacts_id", decl: "TEXT"},
+		{table: "contacts_tags", column: "contacts_id", decl: "TEXT"},
+		{table: "contacts_tasks", column: "contacts_id", decl: "TEXT"},
+		{table: "workflow", column: "contacts_id", decl: "TEXT"},
+		{table: "conversations", column: "next_cursor", decl: "TEXT"},
+		{table: "conversations", column: "total", decl: "REAL"},
+		{table: "conversations", column: "assigned_to", decl: "TEXT"},
+		{table: "conversations", column: "contact_id", decl: "TEXT"},
+		{table: "conversations", column: "deleted", decl: "INTEGER"},
+		{table: "conversations", column: "inbox", decl: "INTEGER"},
+		{table: "conversations", column: "location_id", decl: "TEXT"},
+		{table: "conversations", column: "starred", decl: "INTEGER"},
+		{table: "conversations", column: "type", decl: "REAL"},
+		{table: "conversations", column: "unread_count", decl: "REAL"},
+		{table: "conversations", column: "alt_id", decl: "TEXT"},
+		{table: "conversations", column: "body", decl: "TEXT"},
+		{table: "conversations", column: "content_type", decl: "TEXT"},
+		{table: "conversations", column: "conversation_id", decl: "TEXT"},
+		{table: "conversations", column: "conversation_provider_id", decl: "TEXT"},
+		{table: "conversations", column: "date_added", decl: "TEXT"},
+		{table: "conversations", column: "direction", decl: "TEXT"},
+		{table: "conversations", column: "error", decl: "TEXT"},
+		{table: "conversations", column: "from", decl: "TEXT"},
+		{table: "conversations", column: "provider", decl: "TEXT"},
+		{table: "conversations", column: "reply_to_message_id", decl: "TEXT"},
+		{table: "conversations", column: "source", decl: "TEXT"},
+		{table: "conversations", column: "status", decl: "TEXT"},
+		{table: "conversations", column: "subject", decl: "TEXT"},
+		{table: "conversations", column: "thread_id", decl: "TEXT"},
+		{table: "conversations", column: "chat_widget_id", decl: "TEXT"},
+		{table: "conversations", column: "message_type", decl: "TEXT"},
+		{table: "conversations", column: "user_id", decl: "TEXT"},
+		{table: "conversations", column: "confidence", decl: "REAL"},
+		{table: "conversations", column: "end_time", decl: "REAL"},
+		{table: "conversations", column: "media_channel", decl: "REAL"},
+		{table: "conversations", column: "sentence_index", decl: "REAL"},
+		{table: "conversations", column: "start_time", decl: "REAL"},
+		{table: "conversations", column: "transcript", decl: "TEXT"},
+		{table: "messages", column: "conversations_id", decl: "TEXT"},
+		{table: "emails", column: "completed_at", decl: "TEXT"},
+		{table: "emails", column: "created_at", decl: "TEXT"},
+		{table: "emails", column: "deleted", decl: "INTEGER"},
+		{table: "emails", column: "editor_content_url", decl: "TEXT"},
+		{table: "emails", column: "editor_type", decl: "TEXT"},
+		{table: "emails", column: "from_email", decl: "TEXT"},
+		{table: "emails", column: "from_name", decl: "TEXT"},
+		{table: "emails", column: "is_plain_text", decl: "INTEGER"},
+		{table: "emails", column: "name", decl: "TEXT"},
+		{table: "emails", column: "preview_text", decl: "TEXT"},
+		{table: "emails", column: "reply_to_address", decl: "TEXT"},
+		{table: "emails", column: "schedule_type", decl: "TEXT"},
+		{table: "emails", column: "source", decl: "TEXT"},
+		{table: "emails", column: "source_id", decl: "TEXT"},
+		{table: "emails", column: "status", decl: "TEXT"},
+		{table: "emails", column: "subject", decl: "TEXT"},
+		{table: "emails", column: "trace_id", decl: "TEXT"},
+		{table: "emails", column: "updated_at", decl: "TEXT"},
+		{table: "emails", column: "campaign_category", decl: "TEXT"},
+		{table: "emails", column: "campaign_type", decl: "TEXT"},
+		{table: "emails", column: "location_id", decl: "TEXT"},
+		{table: "emails", column: "stats", decl: "TEXT"},
+		{table: "emails", column: "sub_source_id", decl: "TEXT"},
+		{table: "emails", column: "parent_folder_id", decl: "TEXT"},
+		{table: "emails", column: "total", decl: "REAL"},
+		{table: "emails", column: "parent_id", decl: "TEXT"},
+		{table: "forms", column: "total", decl: "REAL"},
+		{table: "invoices", column: "alt_id", decl: "TEXT"},
+		{table: "invoices", column: "alt_type", decl: "TEXT"},
+		{table: "invoices", column: "amount_due", decl: "REAL"},
+		{table: "invoices", column: "amount_paid", decl: "REAL"},
+		{table: "invoices", column: "automatic_taxes_calculated", decl: "INTEGER"},
+		{table: "invoices", column: "automatic_taxes_enabled", decl: "INTEGER"},
+		{table: "invoices", column: "created_at", decl: "TEXT"},
+		{table: "invoices", column: "currency", decl: "TEXT"},
+		{table: "invoices", column: "due_date", decl: "TEXT"},
+		{table: "invoices", column: "invoice_number", decl: "REAL"},
+		{table: "invoices", column: "issue_date", decl: "TEXT"},
+		{table: "invoices", column: "live_mode", decl: "INTEGER"},
+		{table: "invoices", column: "name", decl: "TEXT"},
+		{table: "invoices", column: "reminders_configuration", decl: "TEXT"},
+		{table: "invoices", column: "status", decl: "TEXT"},
+		{table: "invoices", column: "title", decl: "TEXT"},
+		{table: "invoices", column: "total", decl: "REAL"},
+		{table: "invoices", column: "updated_at", decl: "TEXT"},
+		{table: "invoices", column: "custom_notification", decl: "TEXT"},
+		{table: "invoices", column: "due_after_x_days", decl: "REAL"},
+		{table: "invoices", column: "estimate_number_prefix", decl: "TEXT"},
+		{table: "invoices", column: "estimates_expire_after_x_days", decl: "REAL"},
+		{table: "invoices", column: "estimates_terms_note", decl: "TEXT"},
+		{table: "invoices", column: "estimates_title", decl: "TEXT"},
+		{table: "invoices", column: "invoice_number_prefix", decl: "TEXT"},
+		{table: "invoices", column: "late_fees_configuration", decl: "TEXT"},
+		{table: "invoices", column: "minimum_percentage_partial_payment", decl: "REAL"},
+		{table: "invoices", column: "payment_methods", decl: "TEXT"},
+		{table: "invoices", column: "product_settings", decl: "TEXT"},
+		{table: "invoices", column: "reminder_settings", decl: "TEXT"},
+		{table: "invoices", column: "sender_configuration", decl: "TEXT"},
+		{table: "invoices", column: "terms_note", decl: "TEXT"},
+		{table: "invoices", column: "tips_configuration", decl: "TEXT"},
+		{table: "record_payment", column: "invoices_id", decl: "TEXT"},
+		{table: "send", column: "invoices_id", decl: "TEXT"},
+		{table: "void", column: "invoices_id", decl: "TEXT"},
+		{table: "locations_custom_fields", column: "locations_id", decl: "TEXT"},
+		{table: "custom_values", column: "locations_id", decl: "TEXT"},
+		{table: "features", column: "locations_id", decl: "TEXT"},
+		{table: "locations_tags", column: "locations_id", decl: "TEXT"},
+		{table: "locations_tasks", column: "locations_id", decl: "TEXT"},
+		{table: "templates", column: "locations_id", decl: "TEXT"},
+		{table: "templates", column: "parent_id", decl: "TEXT"},
+		{table: "timezones", column: "locations_id", decl: "TEXT"},
+		{table: "records", column: "objects_id", decl: "TEXT"},
+		{table: "opportunities", column: "opportunity", decl: "TEXT"},
+		{table: "opportunities", column: "total", decl: "REAL"},
+		{table: "opportunities", column: "color_render_mode", decl: "TEXT"},
+		{table: "opportunities", column: "location_id", decl: "TEXT"},
+		{table: "opportunities", column: "name", decl: "TEXT"},
+		{table: "opportunities", column: "position", decl: "TEXT"},
+		{table: "opportunities", column: "show_in_funnel", decl: "INTEGER"},
+		{table: "opportunities", column: "show_in_pie_chart", decl: "INTEGER"},
+		{table: "opportunities", column: "use_opportunity_probability", decl: "INTEGER"},
+		{table: "opportunities", column: "meta", decl: "TEXT"},
+		{table: "opportunities_status", column: "opportunities_id", decl: "TEXT"},
+		{table: "payments", column: "alt_id", decl: "TEXT"},
+		{table: "payments", column: "alt_type", decl: "TEXT"},
+		{table: "payments", column: "apply_to_future_payments", decl: "INTEGER"},
+		{table: "payments", column: "apply_to_future_payments_config", decl: "TEXT"},
+		{table: "payments", column: "code", decl: "TEXT"},
+		{table: "payments", column: "created_at", decl: "DATETIME"},
+		{table: "payments", column: "discount_type", decl: "TEXT"},
+		{table: "payments", column: "discount_value", decl: "REAL"},
+		{table: "payments", column: "end_date", decl: "TEXT"},
+		{table: "payments", column: "limit_per_customer", decl: "REAL"},
+		{table: "payments", column: "name", decl: "TEXT"},
+		{table: "payments", column: "start_date", decl: "TEXT"},
+		{table: "payments", column: "status", decl: "TEXT"},
+		{table: "payments", column: "trace_id", decl: "TEXT"},
+		{table: "payments", column: "updated_at", decl: "DATETIME"},
+		{table: "payments", column: "usage_count", decl: "REAL"},
+		{table: "payments", column: "user_id", decl: "TEXT"},
+		{table: "payments", column: "amount", decl: "REAL"},
+		{table: "payments", column: "amount_summary", decl: "TEXT"},
+		{table: "payments", column: "automatic_taxes_calculated", decl: "INTEGER"},
+		{table: "payments", column: "contact_id", decl: "TEXT"},
+		{table: "payments", column: "created_by", decl: "TEXT"},
+		{table: "payments", column: "currency", decl: "TEXT"},
+		{table: "payments", column: "fingerprint", decl: "TEXT"},
+		{table: "payments", column: "fulfillment_status", decl: "TEXT"},
+		{table: "payments", column: "live_mode", decl: "INTEGER"},
+		{table: "payments", column: "mark_as_test", decl: "INTEGER"},
+		{table: "payments", column: "source", decl: "TEXT"},
+		{table: "payments", column: "tracking_id", decl: "TEXT"},
+		{table: "payments", column: "canceled_at", decl: "DATETIME"},
+		{table: "payments", column: "canceled_by", decl: "TEXT"},
+		{table: "payments", column: "entity_id", decl: "TEXT"},
+		{table: "payments", column: "entity_source", decl: "TEXT"},
+		{table: "payments", column: "entity_type", decl: "TEXT"},
+		{table: "payments", column: "ip_address", decl: "TEXT"},
+		{table: "payments", column: "schedule", decl: "TEXT"},
+		{table: "payments", column: "subscription_id", decl: "TEXT"},
+		{table: "payments", column: "amount_refunded", decl: "REAL"},
+		{table: "payments", column: "charge_id", decl: "TEXT"},
+		{table: "payments", column: "invoice_id", decl: "TEXT"},
+		{table: "payments", column: "is_parent", decl: "INTEGER"},
+		{table: "payments", column: "merged_from_contact_id", decl: "TEXT"},
+		{table: "payments", column: "qbo_synced", decl: "INTEGER"},
+		{table: "payments", column: "receipt_id", decl: "TEXT"},
+		{table: "payments", column: "contact_email", decl: "TEXT"},
+		{table: "payments", column: "contact_name", decl: "TEXT"},
+		{table: "payments", column: "coupon_code", decl: "TEXT"},
+		{table: "payments", column: "discount", decl: "REAL"},
+		{table: "payments", column: "onetime_products", decl: "REAL"},
+		{table: "payments", column: "recurring_products", decl: "REAL"},
+		{table: "payments", column: "source_id", decl: "TEXT"},
+		{table: "payments", column: "source_name", decl: "TEXT"},
+		{table: "payments", column: "source_sub_type", decl: "TEXT"},
+		{table: "payments", column: "source_type", decl: "TEXT"},
+		{table: "payments", column: "subtotal", decl: "REAL"},
+		{table: "payments", column: "total_products", decl: "REAL"},
+		{table: "payments", column: "entity_source_id", decl: "TEXT"},
+		{table: "payments", column: "entity_source_name", decl: "TEXT"},
+		{table: "payments", column: "entity_source_type", decl: "TEXT"},
+		{table: "payments", column: "payment_provider_connected_account", decl: "TEXT"},
+		{table: "payments", column: "payment_provider_type", decl: "TEXT"},
+		{table: "payments", column: "entity_source_sub_type", decl: "TEXT"},
+		{table: "payments", column: "fulfilled_at", decl: "DATETIME"},
+		{table: "products", column: "automatic_tax_category_id", decl: "TEXT"},
+		{table: "products", column: "available_in_store", decl: "INTEGER"},
+		{table: "products", column: "created_at", decl: "DATETIME"},
+		{table: "products", column: "description", decl: "TEXT"},
+		{table: "products", column: "image", decl: "TEXT"},
+		{table: "products", column: "is_taxes_enabled", decl: "INTEGER"},
+		{table: "products", column: "label", decl: "TEXT"},
+		{table: "products", column: "location_id", decl: "TEXT"},
+		{table: "products", column: "name", decl: "TEXT"},
+		{table: "products", column: "product_type", decl: "TEXT"},
+		{table: "products", column: "slug", decl: "TEXT"},
+		{table: "products", column: "statement_descriptor", decl: "TEXT"},
+		{table: "products", column: "updated_at", decl: "DATETIME"},
+		{table: "price", column: "products_id", decl: "TEXT"},
+		{table: "proposals", column: "total", decl: "REAL"},
+		{table: "proposals", column: "white_label_base_url", decl: "REAL"},
+		{table: "proposals", column: "white_label_base_url_for_invoice", decl: "REAL"},
+		{table: "proposals", column: "created_at", decl: "TEXT"},
+		{table: "proposals", column: "deleted", decl: "INTEGER"},
+		{table: "proposals", column: "doc_form_url", decl: "TEXT"},
+		{table: "proposals", column: "document_count", decl: "REAL"},
+		{table: "proposals", column: "is_public_document", decl: "INTEGER"},
+		{table: "proposals", column: "location_id", decl: "TEXT"},
+		{table: "proposals", column: "name", decl: "TEXT"},
+		{table: "proposals", column: "type", decl: "TEXT"},
+		{table: "proposals", column: "updated_at", decl: "TEXT"},
+		{table: "proposals", column: "updated_by", decl: "TEXT"},
+		{table: "proposals", column: "version", decl: "REAL"},
+		{table: "accounts", column: "social_media_posting_id", decl: "TEXT"},
+		{table: "categories", column: "social_media_posting_id", decl: "TEXT"},
+		{table: "categories", column: "parent_id", decl: "TEXT"},
+		{table: "posts", column: "social_media_posting_id", decl: "TEXT"},
+		{table: "social_media_posting_tags", column: "social_media_posting_id", decl: "TEXT"},
+		{table: "social_media_posting_tags", column: "parent_id", decl: "TEXT"},
+		{table: "surveys", column: "total", decl: "REAL"},
+		{table: "users", column: "email", decl: "TEXT"},
+		{table: "users", column: "extension", decl: "TEXT"},
+		{table: "users", column: "first_name", decl: "TEXT"},
+		{table: "users", column: "last_name", decl: "TEXT"},
+		{table: "users", column: "name", decl: "TEXT"},
+		{table: "users", column: "permissions", decl: "TEXT"},
+		{table: "users", column: "phone", decl: "TEXT"},
+		{table: "users", column: "platform_language", decl: "TEXT"},
+		{table: "users", column: "roles", decl: "TEXT"},
+		{table: "users", column: "scopes", decl: "TEXT"},
+		{table: "users", column: "count", decl: "REAL"},
+		{table: "workflows", column: "count", decl: "REAL"},
+		{table: "workflows", column: "location_id", decl: "TEXT"},
+		{table: "workflows", column: "skip", decl: "REAL"},
+		{table: "workflows", column: "total", decl: "REAL"},
+		{table: "definition", column: "workflows_id", decl: "TEXT"},
+		{table: "logs", column: "workflows_id", decl: "TEXT"},
+		{table: "workflows_status", column: "workflows_id", decl: "TEXT"},
 		{table: "sync_state", column: "last_cursor", decl: "TEXT"},
 		{table: "sync_state", column: "last_synced_at", decl: "DATETIME"},
 		{table: "sync_state", column: "total_count", decl: "INTEGER DEFAULT 0"},
@@ -256,6 +505,598 @@ func (s *Store) migrate(ctx context.Context) error {
 		`CREATE VIRTUAL TABLE IF NOT EXISTS resources_fts USING fts5(
 			id, resource_type, content, tokenize='porter unicode61'
 		)`,
+		`CREATE TABLE IF NOT EXISTS associations (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			"key" TEXT,
+			location_id TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS blogs (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			name TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS businesses (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			business TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS calendars (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			has_more INTEGER
+		)`,
+		`CREATE TABLE IF NOT EXISTS free_slots (
+			id TEXT PRIMARY KEY,
+			calendars_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_free_slots_calendars_id ON free_slots(calendars_id)`,
+		`CREATE TABLE IF NOT EXISTS notifications (
+			id TEXT PRIMARY KEY,
+			calendars_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_notifications_calendars_id ON notifications(calendars_id)`,
+		`CREATE TABLE IF NOT EXISTS contacts (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			contact TEXT,
+			matching_field TEXT,
+			next_cursor TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS appointments (
+			id TEXT PRIMARY KEY,
+			contacts_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_appointments_contacts_id ON appointments(contacts_id)`,
+		`CREATE TABLE IF NOT EXISTS contacts_notes (
+			id TEXT PRIMARY KEY,
+			contacts_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_contacts_notes_contacts_id ON contacts_notes(contacts_id)`,
+		`CREATE TABLE IF NOT EXISTS contacts_tags (
+			id TEXT PRIMARY KEY,
+			contacts_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_contacts_tags_contacts_id ON contacts_tags(contacts_id)`,
+		`CREATE TABLE IF NOT EXISTS contacts_tasks (
+			id TEXT PRIMARY KEY,
+			contacts_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_contacts_tasks_contacts_id ON contacts_tasks(contacts_id)`,
+		`CREATE TABLE IF NOT EXISTS workflow (
+			id TEXT PRIMARY KEY,
+			contacts_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_workflow_contacts_id ON workflow(contacts_id)`,
+		`CREATE TABLE IF NOT EXISTS conversations (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			next_cursor TEXT,
+			total REAL,
+			assigned_to TEXT,
+			contact_id TEXT,
+			deleted INTEGER,
+			inbox INTEGER,
+			location_id TEXT,
+			starred INTEGER,
+			type REAL,
+			unread_count REAL,
+			alt_id TEXT,
+			body TEXT,
+			content_type TEXT,
+			conversation_id TEXT,
+			conversation_provider_id TEXT,
+			date_added TEXT,
+			direction TEXT,
+			error TEXT,
+			"from" TEXT,
+			provider TEXT,
+			reply_to_message_id TEXT,
+			source TEXT,
+			status TEXT,
+			subject TEXT,
+			thread_id TEXT,
+			chat_widget_id TEXT,
+			message_type TEXT,
+			user_id TEXT,
+			confidence REAL,
+			end_time REAL,
+			media_channel REAL,
+			sentence_index REAL,
+			start_time REAL,
+			transcript TEXT
+		)`,
+		`CREATE VIRTUAL TABLE IF NOT EXISTS conversations_fts USING fts5(
+			body,
+			subject,
+			content='conversations',
+			content_rowid='rowid'
+		)`,
+		`CREATE TRIGGER IF NOT EXISTS conversations_ai AFTER INSERT ON conversations BEGIN
+			INSERT INTO conversations_fts(rowid, body, subject)
+			VALUES (new.rowid,new.body, new.subject);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS conversations_ad AFTER DELETE ON conversations BEGIN
+			INSERT INTO conversations_fts(conversations_fts, rowid, body, subject)
+			VALUES ('delete', old.rowid,old.body, old.subject);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS conversations_au AFTER UPDATE ON conversations BEGIN
+			INSERT INTO conversations_fts(conversations_fts, rowid, body, subject)
+			VALUES ('delete', old.rowid,old.body, old.subject);
+			INSERT INTO conversations_fts(rowid, body, subject)
+			VALUES (new.rowid,new.body, new.subject);
+		END`,
+		`CREATE TABLE IF NOT EXISTS messages (
+			id TEXT PRIMARY KEY,
+			conversations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_messages_conversations_id ON messages(conversations_id)`,
+		`CREATE TABLE IF NOT EXISTS emails (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			completed_at TEXT,
+			created_at TEXT,
+			deleted INTEGER,
+			editor_content_url TEXT,
+			editor_type TEXT,
+			from_email TEXT,
+			from_name TEXT,
+			is_plain_text INTEGER,
+			name TEXT,
+			preview_text TEXT,
+			reply_to_address TEXT,
+			schedule_type TEXT,
+			source TEXT,
+			source_id TEXT,
+			status TEXT,
+			subject TEXT,
+			trace_id TEXT,
+			updated_at TEXT,
+			campaign_category TEXT,
+			campaign_type TEXT,
+			location_id TEXT,
+			stats TEXT,
+			sub_source_id TEXT,
+			parent_folder_id TEXT,
+			total REAL,
+			parent_id TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_emails_created_at ON emails(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_emails_updated_at ON emails(updated_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_emails_parent_id ON emails(parent_id)`,
+		`CREATE VIRTUAL TABLE IF NOT EXISTS emails_fts USING fts5(
+			name,
+			subject,
+			content='emails',
+			content_rowid='rowid'
+		)`,
+		`CREATE TRIGGER IF NOT EXISTS emails_ai AFTER INSERT ON emails BEGIN
+			INSERT INTO emails_fts(rowid, name, subject)
+			VALUES (new.rowid,new.name, new.subject);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS emails_ad AFTER DELETE ON emails BEGIN
+			INSERT INTO emails_fts(emails_fts, rowid, name, subject)
+			VALUES ('delete', old.rowid,old.name, old.subject);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS emails_au AFTER UPDATE ON emails BEGIN
+			INSERT INTO emails_fts(emails_fts, rowid, name, subject)
+			VALUES ('delete', old.rowid,old.name, old.subject);
+			INSERT INTO emails_fts(rowid, name, subject)
+			VALUES (new.rowid,new.name, new.subject);
+		END`,
+		`CREATE TABLE IF NOT EXISTS forms (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			total REAL
+		)`,
+		`CREATE TABLE IF NOT EXISTS invoices (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			alt_id TEXT,
+			alt_type TEXT,
+			amount_due REAL,
+			amount_paid REAL,
+			automatic_taxes_calculated INTEGER,
+			automatic_taxes_enabled INTEGER,
+			created_at TEXT,
+			currency TEXT,
+			due_date TEXT,
+			invoice_number REAL,
+			issue_date TEXT,
+			live_mode INTEGER,
+			name TEXT,
+			reminders_configuration TEXT,
+			status TEXT,
+			title TEXT,
+			total REAL,
+			updated_at TEXT,
+			custom_notification TEXT,
+			due_after_x_days REAL,
+			estimate_number_prefix TEXT,
+			estimates_expire_after_x_days REAL,
+			estimates_terms_note TEXT,
+			estimates_title TEXT,
+			invoice_number_prefix TEXT,
+			late_fees_configuration TEXT,
+			minimum_percentage_partial_payment REAL,
+			payment_methods TEXT,
+			product_settings TEXT,
+			reminder_settings TEXT,
+			sender_configuration TEXT,
+			terms_note TEXT,
+			tips_configuration TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_invoices_created_at ON invoices(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_invoices_updated_at ON invoices(updated_at)`,
+		`CREATE VIRTUAL TABLE IF NOT EXISTS invoices_fts USING fts5(
+			name,
+			title,
+			content='invoices',
+			content_rowid='rowid'
+		)`,
+		`CREATE TRIGGER IF NOT EXISTS invoices_ai AFTER INSERT ON invoices BEGIN
+			INSERT INTO invoices_fts(rowid, name, title)
+			VALUES (new.rowid,new.name, new.title);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS invoices_ad AFTER DELETE ON invoices BEGIN
+			INSERT INTO invoices_fts(invoices_fts, rowid, name, title)
+			VALUES ('delete', old.rowid,old.name, old.title);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS invoices_au AFTER UPDATE ON invoices BEGIN
+			INSERT INTO invoices_fts(invoices_fts, rowid, name, title)
+			VALUES ('delete', old.rowid,old.name, old.title);
+			INSERT INTO invoices_fts(rowid, name, title)
+			VALUES (new.rowid,new.name, new.title);
+		END`,
+		`CREATE TABLE IF NOT EXISTS record_payment (
+			id TEXT PRIMARY KEY,
+			invoices_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_record_payment_invoices_id ON record_payment(invoices_id)`,
+		`CREATE TABLE IF NOT EXISTS send (
+			id TEXT PRIMARY KEY,
+			invoices_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_send_invoices_id ON send(invoices_id)`,
+		`CREATE TABLE IF NOT EXISTS void (
+			id TEXT PRIMARY KEY,
+			invoices_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_void_invoices_id ON void(invoices_id)`,
+		`CREATE TABLE IF NOT EXISTS locations_custom_fields (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_locations_custom_fields_locations_id ON locations_custom_fields(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS custom_values (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_custom_values_locations_id ON custom_values(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS features (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_features_locations_id ON features(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS locations_tags (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_locations_tags_locations_id ON locations_tags(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS locations_tasks (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_locations_tasks_locations_id ON locations_tasks(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS templates (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			parent_id TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_templates_locations_id ON templates(locations_id)`,
+		`CREATE INDEX IF NOT EXISTS idx_templates_parent_id ON templates(parent_id)`,
+		`CREATE TABLE IF NOT EXISTS timezones (
+			id TEXT PRIMARY KEY,
+			locations_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_timezones_locations_id ON timezones(locations_id)`,
+		`CREATE TABLE IF NOT EXISTS records (
+			id TEXT PRIMARY KEY,
+			objects_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_records_objects_id ON records(objects_id)`,
+		`CREATE TABLE IF NOT EXISTS opportunities (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			opportunity TEXT,
+			total REAL,
+			color_render_mode TEXT,
+			location_id TEXT,
+			name TEXT,
+			position TEXT,
+			show_in_funnel INTEGER,
+			show_in_pie_chart INTEGER,
+			use_opportunity_probability INTEGER,
+			meta TEXT
+		)`,
+		`CREATE TABLE IF NOT EXISTS opportunities_status (
+			id TEXT PRIMARY KEY,
+			opportunities_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_opportunities_status_opportunities_id ON opportunities_status(opportunities_id)`,
+		`CREATE TABLE IF NOT EXISTS payments (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			alt_id TEXT,
+			alt_type TEXT,
+			apply_to_future_payments INTEGER,
+			apply_to_future_payments_config TEXT,
+			code TEXT,
+			created_at DATETIME,
+			discount_type TEXT,
+			discount_value REAL,
+			end_date TEXT,
+			limit_per_customer REAL,
+			name TEXT,
+			start_date TEXT,
+			status TEXT,
+			trace_id TEXT,
+			updated_at DATETIME,
+			usage_count REAL,
+			user_id TEXT,
+			amount REAL,
+			amount_summary TEXT,
+			automatic_taxes_calculated INTEGER,
+			contact_id TEXT,
+			created_by TEXT,
+			currency TEXT,
+			fingerprint TEXT,
+			fulfillment_status TEXT,
+			live_mode INTEGER,
+			mark_as_test INTEGER,
+			source TEXT,
+			tracking_id TEXT,
+			canceled_at DATETIME,
+			canceled_by TEXT,
+			entity_id TEXT,
+			entity_source TEXT,
+			entity_type TEXT,
+			ip_address TEXT,
+			schedule TEXT,
+			subscription_id TEXT,
+			amount_refunded REAL,
+			charge_id TEXT,
+			invoice_id TEXT,
+			is_parent INTEGER,
+			merged_from_contact_id TEXT,
+			qbo_synced INTEGER,
+			receipt_id TEXT,
+			contact_email TEXT,
+			contact_name TEXT,
+			coupon_code TEXT,
+			discount REAL,
+			onetime_products REAL,
+			recurring_products REAL,
+			source_id TEXT,
+			source_name TEXT,
+			source_sub_type TEXT,
+			source_type TEXT,
+			subtotal REAL,
+			total_products REAL,
+			entity_source_id TEXT,
+			entity_source_name TEXT,
+			entity_source_type TEXT,
+			payment_provider_connected_account TEXT,
+			payment_provider_type TEXT,
+			entity_source_sub_type TEXT,
+			fulfilled_at DATETIME
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_payments_created_at ON payments(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_payments_updated_at ON payments(updated_at)`,
+		`CREATE TABLE IF NOT EXISTS products (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			automatic_tax_category_id TEXT,
+			available_in_store INTEGER,
+			created_at DATETIME,
+			description TEXT,
+			image TEXT,
+			is_taxes_enabled INTEGER,
+			label TEXT,
+			location_id TEXT,
+			name TEXT,
+			product_type TEXT,
+			slug TEXT,
+			statement_descriptor TEXT,
+			updated_at DATETIME
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_products_created_at ON products(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_products_updated_at ON products(updated_at)`,
+		`CREATE VIRTUAL TABLE IF NOT EXISTS products_fts USING fts5(
+			description,
+			label,
+			name,
+			content='products',
+			content_rowid='rowid'
+		)`,
+		`CREATE TRIGGER IF NOT EXISTS products_ai AFTER INSERT ON products BEGIN
+			INSERT INTO products_fts(rowid, description, label, name)
+			VALUES (new.rowid,new.description, new.label, new.name);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS products_ad AFTER DELETE ON products BEGIN
+			INSERT INTO products_fts(products_fts, rowid, description, label, name)
+			VALUES ('delete', old.rowid,old.description, old.label, old.name);
+		END`,
+		`CREATE TRIGGER IF NOT EXISTS products_au AFTER UPDATE ON products BEGIN
+			INSERT INTO products_fts(products_fts, rowid, description, label, name)
+			VALUES ('delete', old.rowid,old.description, old.label, old.name);
+			INSERT INTO products_fts(rowid, description, label, name)
+			VALUES (new.rowid,new.description, new.label, new.name);
+		END`,
+		`CREATE TABLE IF NOT EXISTS price (
+			id TEXT PRIMARY KEY,
+			products_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_price_products_id ON price(products_id)`,
+		`CREATE TABLE IF NOT EXISTS proposals (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			total REAL,
+			white_label_base_url REAL,
+			white_label_base_url_for_invoice REAL,
+			created_at TEXT,
+			deleted INTEGER,
+			doc_form_url TEXT,
+			document_count REAL,
+			is_public_document INTEGER,
+			location_id TEXT,
+			name TEXT,
+			type TEXT,
+			updated_at TEXT,
+			updated_by TEXT,
+			version REAL
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_proposals_created_at ON proposals(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_proposals_updated_at ON proposals(updated_at)`,
+		`CREATE TABLE IF NOT EXISTS accounts (
+			id TEXT PRIMARY KEY,
+			social_media_posting_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_accounts_social_media_posting_id ON accounts(social_media_posting_id)`,
+		`CREATE TABLE IF NOT EXISTS categories (
+			id TEXT PRIMARY KEY,
+			social_media_posting_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			parent_id TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_categories_social_media_posting_id ON categories(social_media_posting_id)`,
+		`CREATE INDEX IF NOT EXISTS idx_categories_parent_id ON categories(parent_id)`,
+		`CREATE TABLE IF NOT EXISTS posts (
+			id TEXT PRIMARY KEY,
+			social_media_posting_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_posts_social_media_posting_id ON posts(social_media_posting_id)`,
+		`CREATE TABLE IF NOT EXISTS social_media_posting_tags (
+			id TEXT PRIMARY KEY,
+			social_media_posting_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			parent_id TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_social_media_posting_tags_social_media_posting_id ON social_media_posting_tags(social_media_posting_id)`,
+		`CREATE INDEX IF NOT EXISTS idx_social_media_posting_tags_parent_id ON social_media_posting_tags(parent_id)`,
+		`CREATE TABLE IF NOT EXISTS surveys (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			total REAL
+		)`,
+		`CREATE TABLE IF NOT EXISTS users (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			email TEXT,
+			extension TEXT,
+			first_name TEXT,
+			last_name TEXT,
+			name TEXT,
+			permissions TEXT,
+			phone TEXT,
+			platform_language TEXT,
+			roles TEXT,
+			scopes TEXT,
+			count REAL
+		)`,
+		`CREATE TABLE IF NOT EXISTS workflows (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			count REAL,
+			location_id TEXT,
+			skip REAL,
+			total REAL
+		)`,
+		`CREATE TABLE IF NOT EXISTS definition (
+			id TEXT PRIMARY KEY,
+			workflows_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_definition_workflows_id ON definition(workflows_id)`,
+		`CREATE TABLE IF NOT EXISTS logs (
+			id TEXT PRIMARY KEY,
+			workflows_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_logs_workflows_id ON logs(workflows_id)`,
+		`CREATE TABLE IF NOT EXISTS workflows_status (
+			id TEXT PRIMARY KEY,
+			workflows_id TEXT NOT NULL,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_workflows_status_workflows_id ON workflows_status(workflows_id)`,
 	}
 
 	// Run every migration — including the column backfill and the
@@ -584,6 +1425,2455 @@ func lookupFieldValue(obj map[string]any, snakeKey string) any {
 	return LookupFieldValue(obj, snakeKey)
 }
 
+// upsertAssociationsTx writes the typed-table portion of a associations upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertAssociationsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO associations (id, data, synced_at, "key", location_id)
+		 VALUES (?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, "key" = excluded."key", location_id = excluded.location_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "key"),
+		lookupFieldValue(obj, "location_id"),
+	); err != nil {
+		return fmt.Errorf("insert into associations: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertAssociations inserts or updates a associations record with domain-specific columns.
+func (s *Store) UpsertAssociations(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling associations: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for associations")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "associations", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertAssociationsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertBlogsTx writes the typed-table portion of a blogs upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertBlogsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO blogs (id, data, synced_at, name)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, name = excluded.name`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "name"),
+	); err != nil {
+		return fmt.Errorf("insert into blogs: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertBlogs inserts or updates a blogs record with domain-specific columns.
+func (s *Store) UpsertBlogs(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling blogs: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for blogs")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "blogs", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertBlogsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertBusinessesTx writes the typed-table portion of a businesses upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertBusinessesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO businesses (id, data, synced_at, business)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, business = excluded.business`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "business"),
+	); err != nil {
+		return fmt.Errorf("insert into businesses: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertBusinesses inserts or updates a businesses record with domain-specific columns.
+func (s *Store) UpsertBusinesses(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling businesses: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for businesses")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "businesses", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertBusinessesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertCalendarsTx writes the typed-table portion of a calendars upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertCalendarsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO calendars (id, data, synced_at, has_more)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, has_more = excluded.has_more`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "has_more"),
+	); err != nil {
+		return fmt.Errorf("insert into calendars: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertCalendars inserts or updates a calendars record with domain-specific columns.
+func (s *Store) UpsertCalendars(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling calendars: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for calendars")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "calendars", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertCalendarsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertFreeSlotsTx writes the typed-table portion of a free_slots upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertFreeSlotsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO free_slots (id, calendars_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET calendars_id = excluded.calendars_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "calendars_id"),
+	); err != nil {
+		return fmt.Errorf("insert into free_slots: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertFreeSlots inserts or updates a free_slots record with domain-specific columns.
+func (s *Store) UpsertFreeSlots(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling free_slots: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for free_slots")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "free_slots", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertFreeSlotsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertNotificationsTx writes the typed-table portion of a notifications upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertNotificationsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO notifications (id, calendars_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET calendars_id = excluded.calendars_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "calendars_id"),
+	); err != nil {
+		return fmt.Errorf("insert into notifications: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertNotifications inserts or updates a notifications record with domain-specific columns.
+func (s *Store) UpsertNotifications(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling notifications: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for notifications")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "notifications", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertNotificationsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertContactsTx writes the typed-table portion of a contacts upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertContactsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO contacts (id, data, synced_at, contact, matching_field, next_cursor)
+		 VALUES (?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, contact = excluded.contact, matching_field = excluded.matching_field, next_cursor = excluded.next_cursor`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contact"),
+		lookupFieldValue(obj, "matching_field"),
+		lookupFieldValue(obj, "next_cursor"),
+	); err != nil {
+		return fmt.Errorf("insert into contacts: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertContacts inserts or updates a contacts record with domain-specific columns.
+func (s *Store) UpsertContacts(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling contacts: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for contacts")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "contacts", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertContactsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertAppointmentsTx writes the typed-table portion of a appointments upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertAppointmentsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO appointments (id, contacts_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET contacts_id = excluded.contacts_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contacts_id"),
+	); err != nil {
+		return fmt.Errorf("insert into appointments: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertAppointments inserts or updates a appointments record with domain-specific columns.
+func (s *Store) UpsertAppointments(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling appointments: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for appointments")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "appointments", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertAppointmentsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertContactsNotesTx writes the typed-table portion of a contacts_notes upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertContactsNotesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO contacts_notes (id, contacts_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET contacts_id = excluded.contacts_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contacts_id"),
+	); err != nil {
+		return fmt.Errorf("insert into contacts_notes: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertContactsNotes inserts or updates a contacts_notes record with domain-specific columns.
+func (s *Store) UpsertContactsNotes(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling contacts_notes: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for contacts_notes")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "contacts_notes", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertContactsNotesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertContactsTagsTx writes the typed-table portion of a contacts_tags upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertContactsTagsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO contacts_tags (id, contacts_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET contacts_id = excluded.contacts_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contacts_id"),
+	); err != nil {
+		return fmt.Errorf("insert into contacts_tags: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertContactsTags inserts or updates a contacts_tags record with domain-specific columns.
+func (s *Store) UpsertContactsTags(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling contacts_tags: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for contacts_tags")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "contacts_tags", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertContactsTagsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertContactsTasksTx writes the typed-table portion of a contacts_tasks upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertContactsTasksTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO contacts_tasks (id, contacts_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET contacts_id = excluded.contacts_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contacts_id"),
+	); err != nil {
+		return fmt.Errorf("insert into contacts_tasks: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertContactsTasks inserts or updates a contacts_tasks record with domain-specific columns.
+func (s *Store) UpsertContactsTasks(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling contacts_tasks: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for contacts_tasks")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "contacts_tasks", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertContactsTasksTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertWorkflowTx writes the typed-table portion of a workflow upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertWorkflowTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO workflow (id, contacts_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET contacts_id = excluded.contacts_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "contacts_id"),
+	); err != nil {
+		return fmt.Errorf("insert into workflow: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertWorkflow inserts or updates a workflow record with domain-specific columns.
+func (s *Store) UpsertWorkflow(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling workflow: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for workflow")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "workflow", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertWorkflowTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertConversationsTx writes the typed-table portion of a conversations upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertConversationsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO conversations (id, data, synced_at, next_cursor, total, assigned_to, contact_id, deleted, inbox, location_id, starred, type, unread_count, alt_id, body, content_type, conversation_id, conversation_provider_id, date_added, direction, error, "from", provider, reply_to_message_id, source, status, subject, thread_id, chat_widget_id, message_type, user_id, confidence, end_time, media_channel, sentence_index, start_time, transcript)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, next_cursor = excluded.next_cursor, total = excluded.total, assigned_to = excluded.assigned_to, contact_id = excluded.contact_id, deleted = excluded.deleted, inbox = excluded.inbox, location_id = excluded.location_id, starred = excluded.starred, type = excluded.type, unread_count = excluded.unread_count, alt_id = excluded.alt_id, body = excluded.body, content_type = excluded.content_type, conversation_id = excluded.conversation_id, conversation_provider_id = excluded.conversation_provider_id, date_added = excluded.date_added, direction = excluded.direction, error = excluded.error, "from" = excluded."from", provider = excluded.provider, reply_to_message_id = excluded.reply_to_message_id, source = excluded.source, status = excluded.status, subject = excluded.subject, thread_id = excluded.thread_id, chat_widget_id = excluded.chat_widget_id, message_type = excluded.message_type, user_id = excluded.user_id, confidence = excluded.confidence, end_time = excluded.end_time, media_channel = excluded.media_channel, sentence_index = excluded.sentence_index, start_time = excluded.start_time, transcript = excluded.transcript`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "next_cursor"),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "assigned_to"),
+		lookupFieldValue(obj, "contact_id"),
+		lookupFieldValue(obj, "deleted"),
+		lookupFieldValue(obj, "inbox"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "starred"),
+		lookupFieldValue(obj, "type"),
+		lookupFieldValue(obj, "unread_count"),
+		lookupFieldValue(obj, "alt_id"),
+		lookupFieldValue(obj, "body"),
+		lookupFieldValue(obj, "content_type"),
+		lookupFieldValue(obj, "conversation_id"),
+		lookupFieldValue(obj, "conversation_provider_id"),
+		lookupFieldValue(obj, "date_added"),
+		lookupFieldValue(obj, "direction"),
+		lookupFieldValue(obj, "error"),
+		lookupFieldValue(obj, "from"),
+		lookupFieldValue(obj, "provider"),
+		lookupFieldValue(obj, "reply_to_message_id"),
+		lookupFieldValue(obj, "source"),
+		lookupFieldValue(obj, "status"),
+		lookupFieldValue(obj, "subject"),
+		lookupFieldValue(obj, "thread_id"),
+		lookupFieldValue(obj, "chat_widget_id"),
+		lookupFieldValue(obj, "message_type"),
+		lookupFieldValue(obj, "user_id"),
+		lookupFieldValue(obj, "confidence"),
+		lookupFieldValue(obj, "end_time"),
+		lookupFieldValue(obj, "media_channel"),
+		lookupFieldValue(obj, "sentence_index"),
+		lookupFieldValue(obj, "start_time"),
+		lookupFieldValue(obj, "transcript"),
+	); err != nil {
+		return fmt.Errorf("insert into conversations: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertConversations inserts or updates a conversations record with domain-specific columns.
+func (s *Store) UpsertConversations(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling conversations: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for conversations")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "conversations", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertConversationsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertMessagesTx writes the typed-table portion of a messages upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertMessagesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO messages (id, conversations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET conversations_id = excluded.conversations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "conversations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into messages: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertMessages inserts or updates a messages record with domain-specific columns.
+func (s *Store) UpsertMessages(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling messages: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for messages")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "messages", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertMessagesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertEmailsTx writes the typed-table portion of a emails upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertEmailsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO emails (id, data, synced_at, completed_at, created_at, deleted, editor_content_url, editor_type, from_email, from_name, is_plain_text, name, preview_text, reply_to_address, schedule_type, source, source_id, status, subject, trace_id, updated_at, campaign_category, campaign_type, location_id, stats, sub_source_id, parent_folder_id, total, parent_id)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, completed_at = excluded.completed_at, created_at = excluded.created_at, deleted = excluded.deleted, editor_content_url = excluded.editor_content_url, editor_type = excluded.editor_type, from_email = excluded.from_email, from_name = excluded.from_name, is_plain_text = excluded.is_plain_text, name = excluded.name, preview_text = excluded.preview_text, reply_to_address = excluded.reply_to_address, schedule_type = excluded.schedule_type, source = excluded.source, source_id = excluded.source_id, status = excluded.status, subject = excluded.subject, trace_id = excluded.trace_id, updated_at = excluded.updated_at, campaign_category = excluded.campaign_category, campaign_type = excluded.campaign_type, location_id = excluded.location_id, stats = excluded.stats, sub_source_id = excluded.sub_source_id, parent_folder_id = excluded.parent_folder_id, total = excluded.total, parent_id = excluded.parent_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "completed_at"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "deleted"),
+		lookupFieldValue(obj, "editor_content_url"),
+		lookupFieldValue(obj, "editor_type"),
+		lookupFieldValue(obj, "from_email"),
+		lookupFieldValue(obj, "from_name"),
+		lookupFieldValue(obj, "is_plain_text"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "preview_text"),
+		lookupFieldValue(obj, "reply_to_address"),
+		lookupFieldValue(obj, "schedule_type"),
+		lookupFieldValue(obj, "source"),
+		lookupFieldValue(obj, "source_id"),
+		lookupFieldValue(obj, "status"),
+		lookupFieldValue(obj, "subject"),
+		lookupFieldValue(obj, "trace_id"),
+		lookupFieldValue(obj, "updated_at"),
+		lookupFieldValue(obj, "campaign_category"),
+		lookupFieldValue(obj, "campaign_type"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "stats"),
+		lookupFieldValue(obj, "sub_source_id"),
+		lookupFieldValue(obj, "parent_folder_id"),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "parent_id"),
+	); err != nil {
+		return fmt.Errorf("insert into emails: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertEmails inserts or updates a emails record with domain-specific columns.
+func (s *Store) UpsertEmails(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling emails: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for emails")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "emails", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertEmailsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertFormsTx writes the typed-table portion of a forms upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertFormsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO forms (id, data, synced_at, total)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, total = excluded.total`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "total"),
+	); err != nil {
+		return fmt.Errorf("insert into forms: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertForms inserts or updates a forms record with domain-specific columns.
+func (s *Store) UpsertForms(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling forms: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for forms")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "forms", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertFormsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertInvoicesTx writes the typed-table portion of a invoices upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertInvoicesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO invoices (id, data, synced_at, alt_id, alt_type, amount_due, amount_paid, automatic_taxes_calculated, automatic_taxes_enabled, created_at, currency, due_date, invoice_number, issue_date, live_mode, name, reminders_configuration, status, title, total, updated_at, custom_notification, due_after_x_days, estimate_number_prefix, estimates_expire_after_x_days, estimates_terms_note, estimates_title, invoice_number_prefix, late_fees_configuration, minimum_percentage_partial_payment, payment_methods, product_settings, reminder_settings, sender_configuration, terms_note, tips_configuration)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, alt_id = excluded.alt_id, alt_type = excluded.alt_type, amount_due = excluded.amount_due, amount_paid = excluded.amount_paid, automatic_taxes_calculated = excluded.automatic_taxes_calculated, automatic_taxes_enabled = excluded.automatic_taxes_enabled, created_at = excluded.created_at, currency = excluded.currency, due_date = excluded.due_date, invoice_number = excluded.invoice_number, issue_date = excluded.issue_date, live_mode = excluded.live_mode, name = excluded.name, reminders_configuration = excluded.reminders_configuration, status = excluded.status, title = excluded.title, total = excluded.total, updated_at = excluded.updated_at, custom_notification = excluded.custom_notification, due_after_x_days = excluded.due_after_x_days, estimate_number_prefix = excluded.estimate_number_prefix, estimates_expire_after_x_days = excluded.estimates_expire_after_x_days, estimates_terms_note = excluded.estimates_terms_note, estimates_title = excluded.estimates_title, invoice_number_prefix = excluded.invoice_number_prefix, late_fees_configuration = excluded.late_fees_configuration, minimum_percentage_partial_payment = excluded.minimum_percentage_partial_payment, payment_methods = excluded.payment_methods, product_settings = excluded.product_settings, reminder_settings = excluded.reminder_settings, sender_configuration = excluded.sender_configuration, terms_note = excluded.terms_note, tips_configuration = excluded.tips_configuration`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "alt_id"),
+		lookupFieldValue(obj, "alt_type"),
+		lookupFieldValue(obj, "amount_due"),
+		lookupFieldValue(obj, "amount_paid"),
+		lookupFieldValue(obj, "automatic_taxes_calculated"),
+		lookupFieldValue(obj, "automatic_taxes_enabled"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "currency"),
+		lookupFieldValue(obj, "due_date"),
+		lookupFieldValue(obj, "invoice_number"),
+		lookupFieldValue(obj, "issue_date"),
+		lookupFieldValue(obj, "live_mode"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "reminders_configuration"),
+		lookupFieldValue(obj, "status"),
+		lookupFieldValue(obj, "title"),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "updated_at"),
+		lookupFieldValue(obj, "custom_notification"),
+		lookupFieldValue(obj, "due_after_x_days"),
+		lookupFieldValue(obj, "estimate_number_prefix"),
+		lookupFieldValue(obj, "estimates_expire_after_x_days"),
+		lookupFieldValue(obj, "estimates_terms_note"),
+		lookupFieldValue(obj, "estimates_title"),
+		lookupFieldValue(obj, "invoice_number_prefix"),
+		lookupFieldValue(obj, "late_fees_configuration"),
+		lookupFieldValue(obj, "minimum_percentage_partial_payment"),
+		lookupFieldValue(obj, "payment_methods"),
+		lookupFieldValue(obj, "product_settings"),
+		lookupFieldValue(obj, "reminder_settings"),
+		lookupFieldValue(obj, "sender_configuration"),
+		lookupFieldValue(obj, "terms_note"),
+		lookupFieldValue(obj, "tips_configuration"),
+	); err != nil {
+		return fmt.Errorf("insert into invoices: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertInvoices inserts or updates a invoices record with domain-specific columns.
+func (s *Store) UpsertInvoices(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling invoices: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for invoices")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "invoices", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertInvoicesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertRecordPaymentTx writes the typed-table portion of a record_payment upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertRecordPaymentTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO record_payment (id, invoices_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET invoices_id = excluded.invoices_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "invoices_id"),
+	); err != nil {
+		return fmt.Errorf("insert into record_payment: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertRecordPayment inserts or updates a record_payment record with domain-specific columns.
+func (s *Store) UpsertRecordPayment(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling record_payment: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for record_payment")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "record_payment", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertRecordPaymentTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertSendTx writes the typed-table portion of a send upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertSendTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO send (id, invoices_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET invoices_id = excluded.invoices_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "invoices_id"),
+	); err != nil {
+		return fmt.Errorf("insert into send: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertSend inserts or updates a send record with domain-specific columns.
+func (s *Store) UpsertSend(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling send: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for send")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "send", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertSendTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertVoidTx writes the typed-table portion of a void upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertVoidTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO void (id, invoices_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET invoices_id = excluded.invoices_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "invoices_id"),
+	); err != nil {
+		return fmt.Errorf("insert into void: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertVoid inserts or updates a void record with domain-specific columns.
+func (s *Store) UpsertVoid(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling void: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for void")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "void", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertVoidTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertLocationsCustomFieldsTx writes the typed-table portion of a locations_custom_fields upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertLocationsCustomFieldsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO locations_custom_fields (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into locations_custom_fields: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertLocationsCustomFields inserts or updates a locations_custom_fields record with domain-specific columns.
+func (s *Store) UpsertLocationsCustomFields(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling locations_custom_fields: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for locations_custom_fields")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "locations_custom_fields", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertLocationsCustomFieldsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertCustomValuesTx writes the typed-table portion of a custom_values upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertCustomValuesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO custom_values (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into custom_values: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertCustomValues inserts or updates a custom_values record with domain-specific columns.
+func (s *Store) UpsertCustomValues(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling custom_values: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for custom_values")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "custom_values", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertCustomValuesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertFeaturesTx writes the typed-table portion of a features upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertFeaturesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO features (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into features: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertFeatures inserts or updates a features record with domain-specific columns.
+func (s *Store) UpsertFeatures(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling features: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for features")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "features", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertFeaturesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertLocationsTagsTx writes the typed-table portion of a locations_tags upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertLocationsTagsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO locations_tags (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into locations_tags: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertLocationsTags inserts or updates a locations_tags record with domain-specific columns.
+func (s *Store) UpsertLocationsTags(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling locations_tags: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for locations_tags")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "locations_tags", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertLocationsTagsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertLocationsTasksTx writes the typed-table portion of a locations_tasks upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertLocationsTasksTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO locations_tasks (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into locations_tasks: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertLocationsTasks inserts or updates a locations_tasks record with domain-specific columns.
+func (s *Store) UpsertLocationsTasks(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling locations_tasks: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for locations_tasks")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "locations_tasks", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertLocationsTasksTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertTemplatesTx writes the typed-table portion of a templates upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertTemplatesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO templates (id, locations_id, data, synced_at, parent_id)
+		 VALUES (?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at, parent_id = excluded.parent_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+		lookupFieldValue(obj, "parent_id"),
+	); err != nil {
+		return fmt.Errorf("insert into templates: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertTemplates inserts or updates a templates record with domain-specific columns.
+func (s *Store) UpsertTemplates(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling templates: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for templates")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "templates", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertTemplatesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertTimezonesTx writes the typed-table portion of a timezones upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertTimezonesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO timezones (id, locations_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET locations_id = excluded.locations_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "locations_id"),
+	); err != nil {
+		return fmt.Errorf("insert into timezones: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertTimezones inserts or updates a timezones record with domain-specific columns.
+func (s *Store) UpsertTimezones(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling timezones: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for timezones")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "timezones", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertTimezonesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertRecordsTx writes the typed-table portion of a records upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertRecordsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO records (id, objects_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET objects_id = excluded.objects_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "objects_id"),
+	); err != nil {
+		return fmt.Errorf("insert into records: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertRecords inserts or updates a records record with domain-specific columns.
+func (s *Store) UpsertRecords(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling records: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for records")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "records", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertRecordsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertOpportunitiesTx writes the typed-table portion of a opportunities upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertOpportunitiesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO opportunities (id, data, synced_at, opportunity, total, color_render_mode, location_id, name, position, show_in_funnel, show_in_pie_chart, use_opportunity_probability, meta)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, opportunity = excluded.opportunity, total = excluded.total, color_render_mode = excluded.color_render_mode, location_id = excluded.location_id, name = excluded.name, position = excluded.position, show_in_funnel = excluded.show_in_funnel, show_in_pie_chart = excluded.show_in_pie_chart, use_opportunity_probability = excluded.use_opportunity_probability, meta = excluded.meta`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "opportunity"),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "color_render_mode"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "position"),
+		lookupFieldValue(obj, "show_in_funnel"),
+		lookupFieldValue(obj, "show_in_pie_chart"),
+		lookupFieldValue(obj, "use_opportunity_probability"),
+		lookupFieldValue(obj, "meta"),
+	); err != nil {
+		return fmt.Errorf("insert into opportunities: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertOpportunities inserts or updates a opportunities record with domain-specific columns.
+func (s *Store) UpsertOpportunities(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling opportunities: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for opportunities")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "opportunities", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertOpportunitiesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertOpportunitiesStatusTx writes the typed-table portion of a opportunities_status upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertOpportunitiesStatusTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO opportunities_status (id, opportunities_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET opportunities_id = excluded.opportunities_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "opportunities_id"),
+	); err != nil {
+		return fmt.Errorf("insert into opportunities_status: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertOpportunitiesStatus inserts or updates a opportunities_status record with domain-specific columns.
+func (s *Store) UpsertOpportunitiesStatus(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling opportunities_status: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for opportunities_status")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "opportunities_status", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertOpportunitiesStatusTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertPaymentsTx writes the typed-table portion of a payments upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertPaymentsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO payments (id, data, synced_at, alt_id, alt_type, apply_to_future_payments, apply_to_future_payments_config, code, created_at, discount_type, discount_value, end_date, limit_per_customer, name, start_date, status, trace_id, updated_at, usage_count, user_id, amount, amount_summary, automatic_taxes_calculated, contact_id, created_by, currency, fingerprint, fulfillment_status, live_mode, mark_as_test, source, tracking_id, canceled_at, canceled_by, entity_id, entity_source, entity_type, ip_address, schedule, subscription_id, amount_refunded, charge_id, invoice_id, is_parent, merged_from_contact_id, qbo_synced, receipt_id, contact_email, contact_name, coupon_code, discount, onetime_products, recurring_products, source_id, source_name, source_sub_type, source_type, subtotal, total_products, entity_source_id, entity_source_name, entity_source_type, payment_provider_connected_account, payment_provider_type, entity_source_sub_type, fulfilled_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, alt_id = excluded.alt_id, alt_type = excluded.alt_type, apply_to_future_payments = excluded.apply_to_future_payments, apply_to_future_payments_config = excluded.apply_to_future_payments_config, code = excluded.code, created_at = excluded.created_at, discount_type = excluded.discount_type, discount_value = excluded.discount_value, end_date = excluded.end_date, limit_per_customer = excluded.limit_per_customer, name = excluded.name, start_date = excluded.start_date, status = excluded.status, trace_id = excluded.trace_id, updated_at = excluded.updated_at, usage_count = excluded.usage_count, user_id = excluded.user_id, amount = excluded.amount, amount_summary = excluded.amount_summary, automatic_taxes_calculated = excluded.automatic_taxes_calculated, contact_id = excluded.contact_id, created_by = excluded.created_by, currency = excluded.currency, fingerprint = excluded.fingerprint, fulfillment_status = excluded.fulfillment_status, live_mode = excluded.live_mode, mark_as_test = excluded.mark_as_test, source = excluded.source, tracking_id = excluded.tracking_id, canceled_at = excluded.canceled_at, canceled_by = excluded.canceled_by, entity_id = excluded.entity_id, entity_source = excluded.entity_source, entity_type = excluded.entity_type, ip_address = excluded.ip_address, schedule = excluded.schedule, subscription_id = excluded.subscription_id, amount_refunded = excluded.amount_refunded, charge_id = excluded.charge_id, invoice_id = excluded.invoice_id, is_parent = excluded.is_parent, merged_from_contact_id = excluded.merged_from_contact_id, qbo_synced = excluded.qbo_synced, receipt_id = excluded.receipt_id, contact_email = excluded.contact_email, contact_name = excluded.contact_name, coupon_code = excluded.coupon_code, discount = excluded.discount, onetime_products = excluded.onetime_products, recurring_products = excluded.recurring_products, source_id = excluded.source_id, source_name = excluded.source_name, source_sub_type = excluded.source_sub_type, source_type = excluded.source_type, subtotal = excluded.subtotal, total_products = excluded.total_products, entity_source_id = excluded.entity_source_id, entity_source_name = excluded.entity_source_name, entity_source_type = excluded.entity_source_type, payment_provider_connected_account = excluded.payment_provider_connected_account, payment_provider_type = excluded.payment_provider_type, entity_source_sub_type = excluded.entity_source_sub_type, fulfilled_at = excluded.fulfilled_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "alt_id"),
+		lookupFieldValue(obj, "alt_type"),
+		lookupFieldValue(obj, "apply_to_future_payments"),
+		lookupFieldValue(obj, "apply_to_future_payments_config"),
+		lookupFieldValue(obj, "code"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "discount_type"),
+		lookupFieldValue(obj, "discount_value"),
+		lookupFieldValue(obj, "end_date"),
+		lookupFieldValue(obj, "limit_per_customer"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "start_date"),
+		lookupFieldValue(obj, "status"),
+		lookupFieldValue(obj, "trace_id"),
+		lookupFieldValue(obj, "updated_at"),
+		lookupFieldValue(obj, "usage_count"),
+		lookupFieldValue(obj, "user_id"),
+		lookupFieldValue(obj, "amount"),
+		lookupFieldValue(obj, "amount_summary"),
+		lookupFieldValue(obj, "automatic_taxes_calculated"),
+		lookupFieldValue(obj, "contact_id"),
+		lookupFieldValue(obj, "created_by"),
+		lookupFieldValue(obj, "currency"),
+		lookupFieldValue(obj, "fingerprint"),
+		lookupFieldValue(obj, "fulfillment_status"),
+		lookupFieldValue(obj, "live_mode"),
+		lookupFieldValue(obj, "mark_as_test"),
+		lookupFieldValue(obj, "source"),
+		lookupFieldValue(obj, "tracking_id"),
+		lookupFieldValue(obj, "canceled_at"),
+		lookupFieldValue(obj, "canceled_by"),
+		lookupFieldValue(obj, "entity_id"),
+		lookupFieldValue(obj, "entity_source"),
+		lookupFieldValue(obj, "entity_type"),
+		lookupFieldValue(obj, "ip_address"),
+		lookupFieldValue(obj, "schedule"),
+		lookupFieldValue(obj, "subscription_id"),
+		lookupFieldValue(obj, "amount_refunded"),
+		lookupFieldValue(obj, "charge_id"),
+		lookupFieldValue(obj, "invoice_id"),
+		lookupFieldValue(obj, "is_parent"),
+		lookupFieldValue(obj, "merged_from_contact_id"),
+		lookupFieldValue(obj, "qbo_synced"),
+		lookupFieldValue(obj, "receipt_id"),
+		lookupFieldValue(obj, "contact_email"),
+		lookupFieldValue(obj, "contact_name"),
+		lookupFieldValue(obj, "coupon_code"),
+		lookupFieldValue(obj, "discount"),
+		lookupFieldValue(obj, "onetime_products"),
+		lookupFieldValue(obj, "recurring_products"),
+		lookupFieldValue(obj, "source_id"),
+		lookupFieldValue(obj, "source_name"),
+		lookupFieldValue(obj, "source_sub_type"),
+		lookupFieldValue(obj, "source_type"),
+		lookupFieldValue(obj, "subtotal"),
+		lookupFieldValue(obj, "total_products"),
+		lookupFieldValue(obj, "entity_source_id"),
+		lookupFieldValue(obj, "entity_source_name"),
+		lookupFieldValue(obj, "entity_source_type"),
+		lookupFieldValue(obj, "payment_provider_connected_account"),
+		lookupFieldValue(obj, "payment_provider_type"),
+		lookupFieldValue(obj, "entity_source_sub_type"),
+		lookupFieldValue(obj, "fulfilled_at"),
+	); err != nil {
+		return fmt.Errorf("insert into payments: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertPayments inserts or updates a payments record with domain-specific columns.
+func (s *Store) UpsertPayments(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling payments: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for payments")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "payments", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertPaymentsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertProductsTx writes the typed-table portion of a products upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertProductsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO products (id, data, synced_at, automatic_tax_category_id, available_in_store, created_at, description, image, is_taxes_enabled, label, location_id, name, product_type, slug, statement_descriptor, updated_at)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, automatic_tax_category_id = excluded.automatic_tax_category_id, available_in_store = excluded.available_in_store, created_at = excluded.created_at, description = excluded.description, image = excluded.image, is_taxes_enabled = excluded.is_taxes_enabled, label = excluded.label, location_id = excluded.location_id, name = excluded.name, product_type = excluded.product_type, slug = excluded.slug, statement_descriptor = excluded.statement_descriptor, updated_at = excluded.updated_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "automatic_tax_category_id"),
+		lookupFieldValue(obj, "available_in_store"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "description"),
+		lookupFieldValue(obj, "image"),
+		lookupFieldValue(obj, "is_taxes_enabled"),
+		lookupFieldValue(obj, "label"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "product_type"),
+		lookupFieldValue(obj, "slug"),
+		lookupFieldValue(obj, "statement_descriptor"),
+		lookupFieldValue(obj, "updated_at"),
+	); err != nil {
+		return fmt.Errorf("insert into products: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertProducts inserts or updates a products record with domain-specific columns.
+func (s *Store) UpsertProducts(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling products: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for products")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "products", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertProductsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertPriceTx writes the typed-table portion of a price upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertPriceTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO price (id, products_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET products_id = excluded.products_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "products_id"),
+	); err != nil {
+		return fmt.Errorf("insert into price: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertPrice inserts or updates a price record with domain-specific columns.
+func (s *Store) UpsertPrice(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling price: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for price")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "price", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertPriceTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertProposalsTx writes the typed-table portion of a proposals upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertProposalsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO proposals (id, data, synced_at, total, white_label_base_url, white_label_base_url_for_invoice, created_at, deleted, doc_form_url, document_count, is_public_document, location_id, name, type, updated_at, updated_by, version)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, total = excluded.total, white_label_base_url = excluded.white_label_base_url, white_label_base_url_for_invoice = excluded.white_label_base_url_for_invoice, created_at = excluded.created_at, deleted = excluded.deleted, doc_form_url = excluded.doc_form_url, document_count = excluded.document_count, is_public_document = excluded.is_public_document, location_id = excluded.location_id, name = excluded.name, type = excluded.type, updated_at = excluded.updated_at, updated_by = excluded.updated_by, version = excluded.version`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "white_label_base_url"),
+		lookupFieldValue(obj, "white_label_base_url_for_invoice"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "deleted"),
+		lookupFieldValue(obj, "doc_form_url"),
+		lookupFieldValue(obj, "document_count"),
+		lookupFieldValue(obj, "is_public_document"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "type"),
+		lookupFieldValue(obj, "updated_at"),
+		lookupFieldValue(obj, "updated_by"),
+		lookupFieldValue(obj, "version"),
+	); err != nil {
+		return fmt.Errorf("insert into proposals: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertProposals inserts or updates a proposals record with domain-specific columns.
+func (s *Store) UpsertProposals(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling proposals: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for proposals")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "proposals", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertProposalsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertAccountsTx writes the typed-table portion of a accounts upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertAccountsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO accounts (id, social_media_posting_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET social_media_posting_id = excluded.social_media_posting_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "social_media_posting_id"),
+	); err != nil {
+		return fmt.Errorf("insert into accounts: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertAccounts inserts or updates a accounts record with domain-specific columns.
+func (s *Store) UpsertAccounts(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling accounts: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for accounts")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "accounts", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertAccountsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertCategoriesTx writes the typed-table portion of a categories upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertCategoriesTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO categories (id, social_media_posting_id, data, synced_at, parent_id)
+		 VALUES (?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET social_media_posting_id = excluded.social_media_posting_id, data = excluded.data, synced_at = excluded.synced_at, parent_id = excluded.parent_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "social_media_posting_id"),
+		lookupFieldValue(obj, "parent_id"),
+	); err != nil {
+		return fmt.Errorf("insert into categories: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertCategories inserts or updates a categories record with domain-specific columns.
+func (s *Store) UpsertCategories(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling categories: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for categories")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "categories", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertCategoriesTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertPostsTx writes the typed-table portion of a posts upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertPostsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO posts (id, social_media_posting_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET social_media_posting_id = excluded.social_media_posting_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "social_media_posting_id"),
+	); err != nil {
+		return fmt.Errorf("insert into posts: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertPosts inserts or updates a posts record with domain-specific columns.
+func (s *Store) UpsertPosts(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling posts: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for posts")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "posts", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertPostsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertSocialMediaPostingTagsTx writes the typed-table portion of a social_media_posting_tags upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertSocialMediaPostingTagsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO social_media_posting_tags (id, social_media_posting_id, data, synced_at, parent_id)
+		 VALUES (?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET social_media_posting_id = excluded.social_media_posting_id, data = excluded.data, synced_at = excluded.synced_at, parent_id = excluded.parent_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "social_media_posting_id"),
+		lookupFieldValue(obj, "parent_id"),
+	); err != nil {
+		return fmt.Errorf("insert into social_media_posting_tags: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertSocialMediaPostingTags inserts or updates a social_media_posting_tags record with domain-specific columns.
+func (s *Store) UpsertSocialMediaPostingTags(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling social_media_posting_tags: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for social_media_posting_tags")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "social_media_posting_tags", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertSocialMediaPostingTagsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertSurveysTx writes the typed-table portion of a surveys upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertSurveysTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO surveys (id, data, synced_at, total)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, total = excluded.total`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "total"),
+	); err != nil {
+		return fmt.Errorf("insert into surveys: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertSurveys inserts or updates a surveys record with domain-specific columns.
+func (s *Store) UpsertSurveys(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling surveys: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for surveys")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "surveys", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertSurveysTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertUsersTx writes the typed-table portion of a users upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertUsersTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO users (id, data, synced_at, email, extension, first_name, last_name, name, permissions, phone, platform_language, roles, scopes, count)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, email = excluded.email, extension = excluded.extension, first_name = excluded.first_name, last_name = excluded.last_name, name = excluded.name, permissions = excluded.permissions, phone = excluded.phone, platform_language = excluded.platform_language, roles = excluded.roles, scopes = excluded.scopes, count = excluded.count`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "email"),
+		lookupFieldValue(obj, "extension"),
+		lookupFieldValue(obj, "first_name"),
+		lookupFieldValue(obj, "last_name"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "permissions"),
+		lookupFieldValue(obj, "phone"),
+		lookupFieldValue(obj, "platform_language"),
+		lookupFieldValue(obj, "roles"),
+		lookupFieldValue(obj, "scopes"),
+		lookupFieldValue(obj, "count"),
+	); err != nil {
+		return fmt.Errorf("insert into users: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertUsers inserts or updates a users record with domain-specific columns.
+func (s *Store) UpsertUsers(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling users: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for users")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "users", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertUsersTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertWorkflowsTx writes the typed-table portion of a workflows upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertWorkflowsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO workflows (id, data, synced_at, count, location_id, skip, total)
+		 VALUES (?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, count = excluded.count, location_id = excluded.location_id, skip = excluded.skip, total = excluded.total`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "count"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "skip"),
+		lookupFieldValue(obj, "total"),
+	); err != nil {
+		return fmt.Errorf("insert into workflows: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertWorkflows inserts or updates a workflows record with domain-specific columns.
+func (s *Store) UpsertWorkflows(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling workflows: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for workflows")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "workflows", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertWorkflowsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertDefinitionTx writes the typed-table portion of a definition upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertDefinitionTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO definition (id, workflows_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET workflows_id = excluded.workflows_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "workflows_id"),
+	); err != nil {
+		return fmt.Errorf("insert into definition: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertDefinition inserts or updates a definition record with domain-specific columns.
+func (s *Store) UpsertDefinition(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling definition: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for definition")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "definition", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertDefinitionTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertLogsTx writes the typed-table portion of a logs upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertLogsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO logs (id, workflows_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET workflows_id = excluded.workflows_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "workflows_id"),
+	); err != nil {
+		return fmt.Errorf("insert into logs: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertLogs inserts or updates a logs record with domain-specific columns.
+func (s *Store) UpsertLogs(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling logs: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for logs")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "logs", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertLogsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertWorkflowsStatusTx writes the typed-table portion of a workflows_status upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertWorkflowsStatusTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO workflows_status (id, workflows_id, data, synced_at)
+		 VALUES (?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET workflows_id = excluded.workflows_id, data = excluded.data, synced_at = excluded.synced_at`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "workflows_id"),
+	); err != nil {
+		return fmt.Errorf("insert into workflows_status: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertWorkflowsStatus inserts or updates a workflows_status record with domain-specific columns.
+func (s *Store) UpsertWorkflowsStatus(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling workflows_status: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for workflows_status")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "workflows_status", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertWorkflowsStatusTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
 // resourceIDFieldOverrides projects per-resource IDField (set by the profiler
 // from x-resource-id or response-schema fallback) into a runtime lookup map.
 // UpsertBatch consults this first so the templated path wins over the
@@ -594,6 +3884,10 @@ func lookupFieldValue(obj map[string]any, snakeKey string) any {
 // child path-item annotated with x-resource-id resolves the same as a flat
 // path-item.
 var resourceIDFieldOverrides = map[string]string{
+	"categories":                "success",
+	"emails":                    "id",
+	"locations":                 "id",
+	"social_media_posting_tags": "success",
 }
 
 // genericIDFieldFallbacks is the runtime safety net for resources that did
@@ -665,6 +3959,182 @@ func (s *Store) UpsertBatch(resourceType string, items []json.RawMessage) (int, 
 		}
 
 		switch resourceType {
+		case "associations":
+			if err := s.upsertAssociationsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "blogs":
+			if err := s.upsertBlogsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "businesses":
+			if err := s.upsertBusinessesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "calendars":
+			if err := s.upsertCalendarsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "free_slots":
+			if err := s.upsertFreeSlotsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "notifications":
+			if err := s.upsertNotificationsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "contacts":
+			if err := s.upsertContactsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "appointments":
+			if err := s.upsertAppointmentsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "contacts_notes":
+			if err := s.upsertContactsNotesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "contacts_tags":
+			if err := s.upsertContactsTagsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "contacts_tasks":
+			if err := s.upsertContactsTasksTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "workflow":
+			if err := s.upsertWorkflowTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "conversations":
+			if err := s.upsertConversationsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "messages":
+			if err := s.upsertMessagesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "emails":
+			if err := s.upsertEmailsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "forms":
+			if err := s.upsertFormsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "invoices":
+			if err := s.upsertInvoicesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "record_payment":
+			if err := s.upsertRecordPaymentTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "send":
+			if err := s.upsertSendTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "void":
+			if err := s.upsertVoidTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "locations_custom_fields":
+			if err := s.upsertLocationsCustomFieldsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "custom_values":
+			if err := s.upsertCustomValuesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "features":
+			if err := s.upsertFeaturesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "locations_tags":
+			if err := s.upsertLocationsTagsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "locations_tasks":
+			if err := s.upsertLocationsTasksTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "templates":
+			if err := s.upsertTemplatesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "timezones":
+			if err := s.upsertTimezonesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "records":
+			if err := s.upsertRecordsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "opportunities":
+			if err := s.upsertOpportunitiesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "opportunities_status":
+			if err := s.upsertOpportunitiesStatusTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "payments":
+			if err := s.upsertPaymentsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "products":
+			if err := s.upsertProductsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "price":
+			if err := s.upsertPriceTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "proposals":
+			if err := s.upsertProposalsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "accounts":
+			if err := s.upsertAccountsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "categories":
+			if err := s.upsertCategoriesTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "posts":
+			if err := s.upsertPostsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "social_media_posting_tags":
+			if err := s.upsertSocialMediaPostingTagsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "surveys":
+			if err := s.upsertSurveysTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "users":
+			if err := s.upsertUsersTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "workflows":
+			if err := s.upsertWorkflowsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "definition":
+			if err := s.upsertDefinitionTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "logs":
+			if err := s.upsertLogsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "workflows_status":
+			if err := s.upsertWorkflowsStatusTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
 		}
 		stored++
 	}
@@ -679,6 +4149,118 @@ func (s *Store) UpsertBatch(resourceType string, items []json.RawMessage) (int, 
 		return 0, extractFailures, err
 	}
 	return stored, extractFailures, nil
+}
+
+// SearchConversations searches the conversations_fts index with optional filters.
+func (s *Store) SearchConversations(query string, limit int) ([]json.RawMessage, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	rows, err := s.db.Query(
+		`SELECT t.data FROM conversations t
+		 JOIN conversations_fts ON conversations_fts.rowid = t.rowid
+		 WHERE conversations_fts MATCH ?
+		 ORDER BY rank LIMIT ?`,
+		query, limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []json.RawMessage
+	for rows.Next() {
+		var data string
+		if err := rows.Scan(&data); err != nil {
+			return nil, err
+		}
+		results = append(results, json.RawMessage(data))
+	}
+	return results, rows.Err()
+}
+
+// SearchEmails searches the emails_fts index with optional filters.
+func (s *Store) SearchEmails(query string, limit int) ([]json.RawMessage, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	rows, err := s.db.Query(
+		`SELECT t.data FROM emails t
+		 JOIN emails_fts ON emails_fts.rowid = t.rowid
+		 WHERE emails_fts MATCH ?
+		 ORDER BY rank LIMIT ?`,
+		query, limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []json.RawMessage
+	for rows.Next() {
+		var data string
+		if err := rows.Scan(&data); err != nil {
+			return nil, err
+		}
+		results = append(results, json.RawMessage(data))
+	}
+	return results, rows.Err()
+}
+
+// SearchInvoices searches the invoices_fts index with optional filters.
+func (s *Store) SearchInvoices(query string, limit int) ([]json.RawMessage, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	rows, err := s.db.Query(
+		`SELECT t.data FROM invoices t
+		 JOIN invoices_fts ON invoices_fts.rowid = t.rowid
+		 WHERE invoices_fts MATCH ?
+		 ORDER BY rank LIMIT ?`,
+		query, limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []json.RawMessage
+	for rows.Next() {
+		var data string
+		if err := rows.Scan(&data); err != nil {
+			return nil, err
+		}
+		results = append(results, json.RawMessage(data))
+	}
+	return results, rows.Err()
+}
+
+// SearchProducts searches the products_fts index with optional filters.
+func (s *Store) SearchProducts(query string, limit int) ([]json.RawMessage, error) {
+	if limit <= 0 {
+		limit = 50
+	}
+	rows, err := s.db.Query(
+		`SELECT t.data FROM products t
+		 JOIN products_fts ON products_fts.rowid = t.rowid
+		 WHERE products_fts MATCH ?
+		 ORDER BY rank LIMIT ?`,
+		query, limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []json.RawMessage
+	for rows.Next() {
+		var data string
+		if err := rows.Scan(&data); err != nil {
+			return nil, err
+		}
+		results = append(results, json.RawMessage(data))
+	}
+	return results, rows.Err()
 }
 
 func (s *Store) SaveSyncState(resourceType, cursor string, count int) error {

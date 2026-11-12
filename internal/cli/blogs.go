@@ -10,13 +10,14 @@ import (
 func newBlogsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "blogs",
-		Short: "Operations on posts",
+		Short: "Manage blogs",
 	}
 
-	cmd.AddCommand(newBlogsGetPostsCmd(flags))
-	cmd.AddCommand(newBlogsListAuthorsCmd(flags))
-	cmd.AddCommand(newBlogsListCategoriesCmd(flags))
+	cmd.AddCommand(newBlogsCheckUrlSlugCmd(flags))
+	cmd.AddCommand(newBlogsGetAllAuthorsCmd(flags))
+	cmd.AddCommand(newBlogsGetAllCategoriesCmd(flags))
+	cmd.AddCommand(newBlogsGetPostCmd(flags))
+	cmd.AddCommand(newBlogsListCmd(flags))
 	cmd.AddCommand(newBlogsListPostsCmd(flags))
-	cmd.AddCommand(newBlogsListUrlSlugExistsCmd(flags))
 	return cmd
 }

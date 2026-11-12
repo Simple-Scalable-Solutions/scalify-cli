@@ -2,7 +2,7 @@
 name: scalify-cli
 description: >
   Use when the user wants to interact with the Scalify Platform via the CLI — managing contacts,
-  conversations, calendars, opportunities, invoices, users, locations, webhooks, or any other
+  conversations, calendars, opportunities, invoices, users, locations, workflows, emails, social posts, or any other
   Scalify resource. Trigger whenever the user mentions "scalify-cli", asks to list/get/create/update/
   delete any Scalify resource, wants to run a Scalify API operation, needs to set up auth or switch
   locations, or asks what CLI commands are available. Also trigger when the user asks to automate,
@@ -13,6 +13,12 @@ description: >
 
 `scalify-cli` is the command-line interface to the Scalify Platform. It wraps the Scalify API with
 structured output, caching, and agent-friendly flags.
+
+**Nothing gets deleted unless the user asked for that deletion.** This covers workflows, steps,
+triggers, emails, blocks, snapshots, items in a snapshot, contacts and any other CRM record. A
+general request ("tidy this up", "update the snapshot", "add these") is not an ask to delete.
+Before every save, read the preview: if it deletes, removes, replaces or overwrites anything the
+user didn't name, stop, tell them exactly what would go, and wait for a yes for those items.
 
 ## Installation
 
@@ -109,39 +115,45 @@ scalify-cli location list
 scalify-cli location show
 ```
 
-Override for one command: `SCALIFY_LOCATION_ID=<id> scalify-cli contacts list-contacts`
+Override for one command: `SCALIFY_LOCATION_ID=<id> scalify-cli contacts search --agent`
+
+Commands with a `--location-id` flag fill it from the active location when you leave it out. Commands
+that take the location as an argument (`scalify-cli emails list-templates <locationId>`) still need it
+typed.
 
 ## Resource Groups
 
-Each group has subcommands like `list-*`, `get-*`, `create-*`, `update-*`, `delete-*`:
+Subcommands follow the resource: `list`, `get`, `search`, `create`, `update`, `delete`, with nested
+groups for sub-resources (`contacts notes list`, `locations custom-values get`). `--help` on any group
+lists them.
 
 | Group | What it covers |
 |---|---|
-| `contacts` | CRM contacts, notes, tasks, tags, appointments, workflows |
-| `conversations` | Conversations, messages |
-| `opportunities` | Pipeline opportunities |
-| `calendars` | Calendars, appointments, slots |
-| `locations` | Location/sub-account records and custom fields |
-| `users` | User accounts |
-| `invoices` | Invoices, estimates |
-| `payments` | Transactions, subscriptions, orders |
-| `businesses` | Business records |
-| `blogs` | Blog posts and categories |
-| `forms` | Form definitions and submissions |
-| `surveys` | Survey definitions |
-| `funnels` | Funnels and pages |
-| `medias` | Media library files |
-| `objects` | Custom objects and records |
-| `webhooks` | Webhook subscriptions |
-| `social-media-posting` | Scheduled social posts |
-| `analytics` | Analytics data |
-| `documents` | Documents |
+| `contacts` | Search, count, lookup by email/phone, duplicates, bulk tags; notes, tasks, tags, appointments, workflow enrolment |
+| `conversations` | Search (with filters), messages, email messages, call recordings and transcripts, export |
+| `opportunities` | Search, pipelines, lost reasons, status |
+| `calendars` | Calendars, groups, events, appointments and their notes, blocked and free slots, notifications |
+| `locations` | Sub-account record, custom fields and values, tags, task search, SMS/email templates, timezones, features |
+| `custom-fields` | Field and folder definitions on custom objects (create, update, delete) |
+| `objects` | Custom object schemas; `objects records` get/search/create/update/delete |
+| `associations` | Associations and a record's relations |
+| `users` | Search, filter by email, get |
+| `workflows` | List; definition, logs, status, search, create, delete (limited availability, see below) |
+| `emails` | Email templates (list, get, create, update, delete, import) and campaigns with stats |
+| `social-media-posting` | Statistics (root command), `posts`, `accounts`, `categories`, `tags` |
+| `invoices` | Invoices, estimates, templates, schedules, settings, record payment, send, void |
+| `payments` | Orders (notes, fulfilments), transactions, subscriptions, coupons |
+| `products` | Products, prices, inventory, collections |
+| `funnels` | Funnels, pages, page count, URL redirects |
+| `blogs` | Blogs, posts, authors, categories, slug check |
+| `forms`, `surveys` | Definitions and submissions |
+| `businesses`, `medias`, `campaigns`, `links`, `courses`, `proposals`, `notes` | As named |
 
 ### Discover subcommands
 
 ```bash
 scalify-cli contacts --help
-scalify-cli contacts list-contacts --help
+scalify-cli contacts search --help
 ```
 
 ## Output Flags (available on every command)
@@ -161,20 +173,19 @@ scalify-cli contacts list-contacts --help
 Always use `--agent` when piping or scripting — it disables prompts and sets structured output:
 
 ```bash
-# List contacts as compact JSON
-scalify-cli contacts list-contacts --agent
+# Search contacts (page-limit is required, max 500)
+scalify-cli contacts search --page-limit 50 --query "jane" --agent
 
 # Get a specific contact
-scalify-cli contacts get-contacts <contact-id> --agent
+scalify-cli contacts get <contact-id> --agent
 
 # Create a contact
-scalify-cli contacts create-contacts --agent \
-  --firstName "Jane" --lastName "Doe" --email "jane@example.com"
+scalify-cli contacts create --agent \
+  --first-name "Jane" --last-name "Doe" --email "jane@example.com"
 
-# Pipe IDs into another command
-scalify-cli contacts list-contacts --agent --select id \
-  | jq -r '.[].id' \
-  | xargs -I{} scalify-cli contacts get-contacts {} --agent
+# Complex bodies (filters, nested objects): pipe JSON with --stdin
+echo '{"locationId":"<loc>","pageLimit":20,"filters":[{"field":"tags","operator":"eq","value":"vip"}]}' \
+  | scalify-cli contacts search --stdin --agent
 ```
 
 ## Other Useful Flags
@@ -198,7 +209,6 @@ scalify-cli contacts list-contacts --agent --select id \
 scalify-cli doctor              # Check auth + connectivity + cache health
 scalify-cli sync                # Pull data into local SQLite cache
 scalify-cli search <query>      # Full-text search over cached data
-scalify-cli export              # Export data
 scalify-cli tail                # Stream live events
 scalify-cli which <command>     # Show which binary will run
 ```
@@ -214,6 +224,50 @@ scalify-cli which <command>     # Show which binary will run
 | 5 | API error |
 | 7 | Rate limited |
 
+## Full API Reference
+
+`scalify-cli` wraps GHL's public API (base `services.leadconnectorhq.com`). **v3 is the current API
+version for every service**: send `Version: v3` on every request. Older dated versions (e.g.
+`2021-07-28`) still answer most calls, but some endpoints were removed in v3 (e.g.
+`/oauth/locationToken`, now `/oauth/location-token`), so go by the v3 docs. For anything not
+covered by a `--help` lookup — exact field shapes, auth scopes, a resource this CLI doesn't wrap yet —
+check the official docs. **Read them as text from the live index:
+https://marketplace.gohighlevel.com/docs/llms/v3/llms.txt** (each service links a compact `.md` file,
+e.g. `.../llms/v3/social-planner.md`, and each endpoint its own `.md` page). The site
+https://marketplace.gohighlevel.com/docs/ is a JS app that doesn't fetch as text, and the GitHub repo
+`GoHighLevel/highlevel-api-docs` is stale (not updated since Aug 2025): don't treat either as the
+source of truth for request fields. Example of what the stale copy missed: the social statistics
+endpoint takes a date range (`currentRange`), which the old spec didn't list. Top-level: **OAuth 2.0**
+(scopes, authorization, webhook auth) and **APIs** (40+ resource groups: Contacts, Conversations,
+Calendars, Opportunities, Payments, Workflows, etc.), plus **Webhook Events** and **Custom JS**. The
+old v1 API (`rest.gohighlevel.com`) is gone.
+
+**Known gap, confirmed against these docs**: there is no endpoint that lists a location's connected
+third-party integrations (Google Business Profile, Facebook Page, Stripe, etc.). The closest thing —
+Marketplace App Management's `installedLocations` — answers the opposite question (given *your app*,
+which locations installed it), not "what's connected to this location." Integration connection status
+is UI-only (`Settings → Integrations` in the app); don't keep searching for an API path to it.
+
+**Workflows API is limited availability**: `workflows list` works everywhere, but `workflows
+definition`, `logs`, `status`, `search`, `create` and `delete` only work on sub-accounts HighLevel has
+enabled; elsewhere they return 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION` (not a token problem). For
+those, use the `scalify-workflows` skill (MCP `builder_get_workflow`), which reads the builder through
+a logged-in browser profile.
+
+**Social statistics**: `scalify-cli social-media-posting --profile-ids '[...]' --current-range
+'{"startDate":"2026-10-01","endDate":"2026-10-31"}'`. Get the IDs from `social-media-posting accounts
+get <locationId>` and pass each account's `profileId` (not its `id`, which returns 400 "Invalid
+connected account ID").
+
+**Writes not yet tested live**: every endpoint's method, path and flags come from the v3 docs, and
+reads were checked against a real sub-account. Create/update/delete commands haven't been run live:
+`--dry-run` first and check the request.
+
+**When a call's behavior is genuinely murky** (undocumented error, unclear required headers/fields,
+auth scope confusion) and `--help` plus the top-level docs above don't resolve it, check
+**https://marketplace.gohighlevel.com/docs/Authorization/authorization_doc** — the authorization
+reference — before guessing at request shape.
+
 ## Common Workflows
 
 **Check everything is working:**
@@ -223,15 +277,15 @@ scalify-cli doctor
 
 **Find a contact:**
 ```bash
-scalify-cli contacts list-search --params "query=jane doe" --agent
-scalify-cli contacts list-contacts --agent --select id,name,email
+scalify-cli contacts search --page-limit 10 --query "jane doe" --agent
+scalify-cli contacts lookup-by-email-or-phone --email jane@example.com --agent
 ```
 
 **Switch locations for location-scoped work:**
 ```bash
 scalify-cli location add <loc-id> --token <pit>
 scalify-cli location use <loc-id>
-scalify-cli contacts list-contacts --agent   # now scoped to that location
+scalify-cli contacts search --page-limit 20 --agent   # now scoped to that location
 ```
 
 **Troubleshoot a 401:**

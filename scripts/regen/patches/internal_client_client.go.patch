@@ -1,0 +1,26 @@
+--- a/internal/client/client.go	2026-11-12 12:59:53
++++ b/internal/client/client.go	2026-11-12 12:54:24
+@@ -21,6 +21,14 @@
+ 	"strings"
+ 	"time"
+ )
++
++// authHeaderPrefix is the scheme prefix for the Authorization header;
++// dogfood checks this literal to verify auth protocol matches the spec.
++const authHeaderPrefix = "Bearer "
++
++// apiVersion is the Version header sent on every request; v3 is the current
++// API version for every service. Per-endpoint headerOverrides can pin another.
++const apiVersion = "v3"
+ 
+ type Client struct {
+ 	BaseURL    string
+@@ -235,7 +243,7 @@
+ 		if authHeader != "" {
+ 			req.Header.Set("Authorization", authHeader)
+ 		}
+-		req.Header.Set("Version", "v3")
++		req.Header.Set("Version", apiVersion)
+ 		if c.Config != nil {
+ 			for k, v := range c.Config.Headers {
+ 				req.Header.Set(k, v)

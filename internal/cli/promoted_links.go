@@ -6,39 +6,33 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 func newLinksPromotedCmd(flags *rootFlags) *cobra.Command {
-	var flagParams string
+	var flagLocationId string
 
 	cmd := &cobra.Command{
-		Use:   "links",
-		Short: "GET /links",
-		Long:  "Shortcut for 'links list_links'. GET /links",
-		Example: "  scalify-cli links",
-		Annotations: map[string]string{"pp:endpoint": "links.list_links", "pp:method": "GET", "pp:path": "/links", "mcp:read-only": "true"},
+		Use:         "links",
+		Short:       "Get Links",
+		Long:        "Shortcut for 'links list'. Get Links",
+		Example:     "  scalify-cli links --location-id 550e8400-e29b-41d4-a716-446655440000",
+		Annotations: map[string]string{"pp:endpoint": "links.list", "pp:method": "GET", "pp:path": "/links/", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if !cmd.Flags().Changed("location-id") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "location-id")
+			}
 			c, err := flags.newClient()
 			if err != nil {
 				return err
 			}
 
-			path := "/links"
+			path := "/links/"
 			params := map[string]string{}
-			if flagParams != "" {
-				// Parse as URL query string so each key becomes an individual query param.
-				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
-				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
-					for k, vals := range parsed {
-						if len(vals) > 0 {
-							params[k] = vals[0]
-						}
-					}
-				}
+			if flagLocationId != "" {
+				params["locationId"] = fmt.Sprintf("%v", flagLocationId)
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "links", false, path, params, nil)
 			if err != nil {
@@ -92,7 +86,7 @@ func newLinksPromotedCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagParams, "params", "", "")
+	cmd.Flags().StringVar(&flagLocationId, "location-id", "", "Location ID of the business profile")
 
 	// Wire sibling endpoints and sub-resources as subcommands
 

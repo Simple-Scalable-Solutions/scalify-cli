@@ -13,33 +13,33 @@ import (
 	"text/tabwriter"
 	"time"
 
+	"github.com/spf13/cobra"
 	"scalify-pp-cli/internal/client"
 	"scalify-pp-cli/internal/config"
-	"github.com/spf13/cobra"
 )
 
 var version = "1.0.0"
 
 type rootFlags struct {
-	asJSON       bool
-	compact      bool
-	csv          bool
-	plain        bool
-	quiet        bool
-	dryRun       bool
-	noCache      bool
-	noInput      bool
-	idempotent   bool
+	asJSON        bool
+	compact       bool
+	csv           bool
+	plain         bool
+	quiet         bool
+	dryRun        bool
+	noCache       bool
+	noInput       bool
+	idempotent    bool
 	ignoreMissing bool
-	yes          bool
-	agent        bool
-	selectFields string
-	configPath   string
-	profileName  string
-	deliverSpec  string
-	timeout      time.Duration
-	rateLimit    float64
-	dataSource   string
+	yes           bool
+	agent         bool
+	selectFields  string
+	configPath    string
+	profileName   string
+	deliverSpec   string
+	timeout       time.Duration
+	rateLimit     float64
+	dataSource    string
 	freshnessMeta any
 
 	// deliverBuf captures command output when --deliver is set to a
@@ -116,6 +116,7 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 	rootCmd.PersistentFlags().Float64Var(&flags.rateLimit, "rate-limit", 0, "Max requests per second (0 to disable)")
 
 	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+		applyLocationDefault(cmd, flags.configPath)
 		if flags.deliverSpec != "" {
 			sink, err := ParseDeliverSink(flags.deliverSpec)
 			if err != nil {
@@ -168,12 +169,14 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 		}
 		return nil
 	}
+	rootCmd.AddCommand(newAssociationsCmd(flags))
 	rootCmd.AddCommand(newBlogsCmd(flags))
 	rootCmd.AddCommand(newBusinessesCmd(flags))
 	rootCmd.AddCommand(newCalendarsCmd(flags))
 	rootCmd.AddCommand(newContactsCmd(flags))
 	rootCmd.AddCommand(newConversationsCmd(flags))
-	rootCmd.AddCommand(newDocumentsCmd(flags))
+	rootCmd.AddCommand(newCustomFieldsCmd(flags))
+	rootCmd.AddCommand(newEmailsCmd(flags))
 	rootCmd.AddCommand(newFormsCmd(flags))
 	rootCmd.AddCommand(newFunnelsCmd(flags))
 	rootCmd.AddCommand(newInvoicesCmd(flags))
@@ -182,10 +185,11 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 	rootCmd.AddCommand(newObjectsCmd(flags))
 	rootCmd.AddCommand(newOpportunitiesCmd(flags))
 	rootCmd.AddCommand(newPaymentsCmd(flags))
-	rootCmd.AddCommand(newSocialMediaPostingCmd(flags))
+	rootCmd.AddCommand(newProductsCmd(flags))
+	rootCmd.AddCommand(newProposalsCmd(flags))
 	rootCmd.AddCommand(newSurveysCmd(flags))
 	rootCmd.AddCommand(newUsersCmd(flags))
-	rootCmd.AddCommand(newWebhooksCmd(flags))
+	rootCmd.AddCommand(newWorkflowsCmd(flags))
 	rootCmd.AddCommand(newDoctorCmd(flags))
 	rootCmd.AddCommand(newAuthCmd(flags))
 	rootCmd.AddCommand(newLocationConfigCmd(flags))
@@ -193,7 +197,6 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 	rootCmd.AddCommand(newProfileCmd(flags))
 	rootCmd.AddCommand(newFeedbackCmd(flags))
 	rootCmd.AddCommand(newWhichCmd(flags))
-	rootCmd.AddCommand(newExportCmd(flags))
 	rootCmd.AddCommand(newImportCmd(flags))
 	rootCmd.AddCommand(newSearchCmd(flags))
 	rootCmd.AddCommand(newSyncCmd(flags))
@@ -203,9 +206,9 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 	rootCmd.AddCommand(newAPICmd(flags))
 	rootCmd.AddCommand(newCampaignsPromotedCmd(flags))
 	rootCmd.AddCommand(newCoursesPromotedCmd(flags))
-	rootCmd.AddCommand(newEmailsPromotedCmd(flags))
 	rootCmd.AddCommand(newLinksPromotedCmd(flags))
-	rootCmd.AddCommand(newWorkflowsPromotedCmd(flags))
+	rootCmd.AddCommand(newNotesPromotedCmd(flags))
+	rootCmd.AddCommand(newSocialMediaPostingPromotedCmd(flags))
 	rootCmd.AddCommand(newVersionCliCmd())
 
 	return rootCmd

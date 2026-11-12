@@ -10,17 +10,18 @@ import (
 func newPaymentsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "payments",
-		Short: "Operations on orders",
+		Short: "Manage payments",
 	}
 
-	cmd.AddCommand(newPaymentsCreateCouponsCmd(flags))
-	cmd.AddCommand(newPaymentsDeleteCouponsCmd(flags))
-	cmd.AddCommand(newPaymentsGetCouponsCmd(flags))
-	cmd.AddCommand(newPaymentsGetOrdersCmd(flags))
+	cmd.AddCommand(newPaymentsGetCouponCmd(flags))
+	cmd.AddCommand(newPaymentsGetOrderCmd(flags))
+	cmd.AddCommand(newPaymentsGetSubscriptionCmd(flags))
+	cmd.AddCommand(newPaymentsGetTransactionCmd(flags))
 	cmd.AddCommand(newPaymentsListCouponsCmd(flags))
+	cmd.AddCommand(newPaymentsListFulfillmentsCmd(flags))
+	cmd.AddCommand(newPaymentsListOrderNotesCmd(flags))
 	cmd.AddCommand(newPaymentsListOrdersCmd(flags))
 	cmd.AddCommand(newPaymentsListSubscriptionsCmd(flags))
 	cmd.AddCommand(newPaymentsListTransactionsCmd(flags))
-	cmd.AddCommand(newPaymentsUpdateCouponsCmd(flags))
 	return cmd
 }

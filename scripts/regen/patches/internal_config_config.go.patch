@@ -1,0 +1,119 @@
+--- a/internal/config/config.go	2026-11-12 12:59:54
++++ b/internal/config/config.go	2026-11-12 12:54:23
+@@ -14,17 +14,20 @@
+ )
+ 
+ type Config struct {
+-	BaseURL       string            `toml:"base_url"`
+-	AuthHeaderVal string            `toml:"auth_header"`
+-	Headers       map[string]string `toml:"headers,omitempty"`
+-	AuthSource    string            `toml:"-"`
+-	AccessToken   string            `toml:"access_token"`
+-	RefreshToken  string            `toml:"refresh_token"`
+-	TokenExpiry   time.Time         `toml:"token_expiry"`
+-	ClientID      string            `toml:"client_id"`
+-	ClientSecret  string            `toml:"client_secret"`
+-	Path          string            `toml:"-"`
+-	ScalifyToken  string            `toml:"token"`
++	BaseURL        string            `toml:"base_url"`
++	AuthHeaderVal  string            `toml:"auth_header"`
++	Headers        map[string]string `toml:"headers,omitempty"`
++	AuthSource     string            `toml:"-"`
++	AccessToken    string            `toml:"access_token"`
++	RefreshToken   string            `toml:"refresh_token"`
++	TokenExpiry    time.Time         `toml:"token_expiry"`
++	ClientID       string            `toml:"client_id"`
++	ClientSecret   string            `toml:"client_secret"`
++	Path           string            `toml:"-"`
++	ScalifyToken   string            `toml:"token"`
++	LocationID     string            `toml:"location_id"`
++	LocationTokens map[string]string `toml:"location_tokens,omitempty"`
++	LocationNames  map[string]string `toml:"location_names,omitempty"`
+ }
+ 
+ func Load(configPath string) (*Config, error) {
+@@ -52,6 +55,9 @@
+ 	}
+ 
+ 	// Env var overrides
++	if v := os.Getenv("SCALIFY_LOCATION_ID"); v != "" {
++		cfg.LocationID = v
++	}
+ 	if v := os.Getenv("SCALIFY_TOKEN"); v != "" {
+ 		cfg.ScalifyToken = v
+ 		cfg.AuthSource = "env:SCALIFY_TOKEN"
+@@ -83,6 +89,19 @@
+ 	if c.AuthHeaderVal != "" {
+ 		return c.AuthHeaderVal
+ 	}
++	// The active location's saved token wins over the master/env token.
++	// `location use` is an explicit, later action than whatever set
++	// ScalifyToken (env var or config `token` field) — without this check,
++	// switching location never changes which credentials go out on the
++	// wire whenever a master token is present, silently making `location
++	// use` a no-op for auth while `location show` still reports the switch
++	// as having happened.
++	if c.LocationID != "" {
++		if token, ok := c.LocationTokens[c.LocationID]; ok && token != "" {
++			c.AuthSource = "location:" + c.LocationID
++			return applyAuthFormat("Bearer {token}", map[string]string{"token": token})
++		}
++	}
+ 	// Env-var token wins over file-stored AccessToken (env > config convention).
+ 	if c.ScalifyToken != "" {
+ 		c.AuthSource = "env:SCALIFY_TOKEN"
+@@ -117,6 +136,54 @@
+ 	return c.save()
+ }
+ 
++func (c *Config) SaveLocation(id, name, token string) error {
++	c.LocationID = id
++	if token != "" {
++		if c.LocationTokens == nil {
++			c.LocationTokens = map[string]string{}
++		}
++		c.LocationTokens[id] = token
++	}
++	if name != "" {
++		if c.LocationNames == nil {
++			c.LocationNames = map[string]string{}
++		}
++		c.LocationNames[id] = name
++	}
++	// Load saved token for this location into active credentials
++	if saved, ok := c.LocationTokens[id]; ok {
++		c.AccessToken = saved
++		c.AuthHeaderVal = ""
++	}
++	return c.save()
++}
++
++func (c *Config) AddLocation(id, name, token string) error {
++	if c.LocationTokens == nil {
++		c.LocationTokens = map[string]string{}
++	}
++	c.LocationTokens[id] = token
++	if name != "" {
++		if c.LocationNames == nil {
++			c.LocationNames = map[string]string{}
++		}
++		c.LocationNames[id] = name
++	}
++	return c.save()
++}
++
++// ResolveLocation returns the location ID for the given name-or-ID string.
++// If the input matches a saved name, the corresponding ID is returned.
++// Otherwise the input is returned as-is (assumed to already be an ID).
++func (c *Config) ResolveLocation(nameOrID string) string {
++	for id, name := range c.LocationNames {
++		if name == nameOrID {
++			return id
++		}
++	}
++	return nameOrID
++}
++
+ func (c *Config) ClearTokens() error {
+ 	c.AccessToken = ""
+ 	c.RefreshToken = ""

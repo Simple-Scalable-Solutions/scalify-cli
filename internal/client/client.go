@@ -15,21 +15,20 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"scalify-pp-cli/internal/cliutil"
+	"scalify-pp-cli/internal/config"
 	"sort"
 	"strings"
 	"time"
-	"github.com/enetx/surf"
-
-	"scalify-pp-cli/internal/cliutil"
-	"scalify-pp-cli/internal/config"
 )
 
-// authHeaderPrefix is the HTTP Authorization header scheme used by the Scalify API.
+// authHeaderPrefix is the scheme prefix for the Authorization header;
 // dogfood checks this literal to verify auth protocol matches the spec.
 const authHeaderPrefix = "Bearer "
 
-// apiVersion is the required Version header value for all API requests.
-const apiVersion = "2021-07-28"
+// apiVersion is the Version header sent on every request; v3 is the current
+// API version for every service. Per-endpoint headerOverrides can pin another.
+const apiVersion = "v3"
 
 type Client struct {
 	BaseURL    string
@@ -40,8 +39,6 @@ type Client struct {
 	cacheDir   string
 	limiter    *cliutil.AdaptiveLimiter
 }
-
-
 
 // APIError carries HTTP status information for structured exit codes.
 type APIError struct {
@@ -56,22 +53,7 @@ func (e *APIError) Error() string {
 }
 
 func newHTTPClient(timeout time.Duration, jar http.CookieJar) *http.Client {
-	builder := surf.NewClient().
-		Builder().
-		Impersonate().
-		Chrome().
-		Timeout(timeout)
-	builder = builder.ForceHTTP2()
-	if jar == nil {
-		builder = builder.Session()
-	}
-	surfClient := builder.Build().Unwrap()
-	httpClient := surfClient.Std()
-	httpClient.Timeout = timeout
-	if jar != nil {
-		httpClient.Jar = jar
-	}
-	return httpClient
+	return &http.Client{Timeout: timeout, Jar: jar}
 }
 
 func New(cfg *config.Config, timeout time.Duration, rateLimit float64) *Client {
@@ -248,19 +230,14 @@ func (c *Client) do(method, path string, params map[string]string, body any, hea
 			req.Header.Set("Content-Type", "application/json")
 		}
 
-		q := req.URL.Query()
-		if c.Config != nil && c.Config.LocationID != "" {
-			q.Set("locationId", c.Config.LocationID)
-		}
 		if params != nil {
+			q := req.URL.Query()
 			for k, v := range params {
 				if v != "" {
 					q.Set(k, v)
 				}
 			}
-		}
-		if encoded := q.Encode(); encoded != "" {
-			req.URL.RawQuery = encoded
+			req.URL.RawQuery = q.Encode()
 		}
 
 		if authHeader != "" {
@@ -275,6 +252,9 @@ func (c *Client) do(method, path string, params map[string]string, body any, hea
 		// Per-endpoint header overrides (e.g., different API version per resource)
 		for k, v := range headerOverrides {
 			req.Header.Set(k, v)
+		}
+		if req.Header.Get("User-Agent") == "" {
+			req.Header.Set("User-Agent", "scalify-pp-cli/v3")
 		}
 
 		resp, err := c.HTTPClient.Do(req)
@@ -477,7 +457,6 @@ func sanitizeJSONResponse(body []byte) []byte {
 	}
 	return body
 }
-
 
 // maskToken redacts all but the last 4 characters of a token for safe display.
 func maskToken(token string) string {
