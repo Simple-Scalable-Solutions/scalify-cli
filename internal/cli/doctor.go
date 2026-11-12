@@ -16,10 +16,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/spf13/cobra"
 	"scalify-pp-cli/internal/client"
 	"scalify-pp-cli/internal/config"
 	"scalify-pp-cli/internal/store"
-	"github.com/spf13/cobra"
 )
 
 // looksLikeDoctorInterstitial reports whether the response body matches a known
@@ -130,9 +130,9 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "doctor",
 		Short: "Check CLI health",
-		Example: `  scalify-pp-cli doctor
-  scalify-pp-cli doctor --json
-  scalify-pp-cli doctor --fail-on warn`,
+		Example: `  scalify-cli doctor
+  scalify-cli doctor --json
+  scalify-cli doctor --fail-on warn`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			report := map[string]any{}
 
@@ -143,6 +143,7 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 			} else {
 				report["config"] = "ok"
 				report["config_path"] = cfg.Path
+				report["base_url"] = cfg.BaseURL
 			}
 
 			// Check auth
@@ -303,7 +304,7 @@ func newDoctorCmd(flags *rootFlags) *cobra.Command {
 				fmt.Fprintf(w, "  %s %s: %s\n", indicator, ck.label, s)
 			}
 			// Print info keys without status indicator
-			for _, key := range []string{"config_path", "auth_source", "version"} {
+			for _, key := range []string{"config_path", "base_url", "auth_source", "version"} {
 				if v, ok := report[key]; ok {
 					fmt.Fprintf(w, "  %s: %v\n", key, v)
 				}
@@ -389,7 +390,7 @@ func collectCacheReport(ctx context.Context, staleAfterSpec string) map[string]a
 	if err != nil {
 		if os.IsNotExist(err) {
 			report["status"] = "unknown"
-			report["hint"] = "Database not created yet; run 'scalify-pp-cli sync' to hydrate."
+			report["hint"] = "Database not created yet; run 'scalify-cli sync' to hydrate."
 			return report
 		}
 		report["status"] = "error"
@@ -422,7 +423,7 @@ func collectCacheReport(ctx context.Context, staleAfterSpec string) map[string]a
 		// sync_state may not exist on a fresh DB that has migrated but not
 		// yet had any sync runs — treat as unknown rather than error.
 		report["status"] = "unknown"
-		report["hint"] = "No sync state recorded; run 'scalify-pp-cli sync' to populate."
+		report["hint"] = "No sync state recorded; run 'scalify-cli sync' to populate."
 		return report
 	}
 	defer rows.Close()
@@ -462,13 +463,13 @@ func collectCacheReport(ctx context.Context, staleAfterSpec string) map[string]a
 	switch {
 	case !haveAny && len(resources) == 0:
 		report["status"] = "unknown"
-		report["hint"] = "sync_state is empty; run 'scalify-pp-cli sync' to hydrate."
+		report["hint"] = "sync_state is empty; run 'scalify-cli sync' to hydrate."
 	case fresh:
 		report["status"] = "fresh"
 	default:
 		report["status"] = "stale"
 		report["oldest_age"] = oldest.Round(time.Minute).String()
-		report["hint"] = "Some resources are older than stale_after; run 'scalify-pp-cli sync' to refresh."
+		report["hint"] = "Some resources are older than stale_after; run 'scalify-cli sync' to refresh."
 	}
 	return report
 }

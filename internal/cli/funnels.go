@@ -10,11 +10,15 @@ import (
 func newFunnelsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "funnels",
-		Short: "Operations on list",
+		Short: "Manage funnels",
 	}
 
-	cmd.AddCommand(newFunnelsListFunnelsCmd(flags))
-	cmd.AddCommand(newFunnelsListListCmd(flags))
-	cmd.AddCommand(newFunnelsListPageCmd(flags))
+	cmd.AddCommand(newFunnelsCountPagesCmd(flags))
+	cmd.AddCommand(newFunnelsCreateRedirectCmd(flags))
+	cmd.AddCommand(newFunnelsDeleteRedirectCmd(flags))
+	cmd.AddCommand(newFunnelsListCmd(flags))
+	cmd.AddCommand(newFunnelsListPagesCmd(flags))
+	cmd.AddCommand(newFunnelsListRedirectsCmd(flags))
+	cmd.AddCommand(newFunnelsUpdateRedirectCmd(flags))
 	return cmd
 }

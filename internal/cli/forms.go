@@ -10,10 +10,10 @@ import (
 func newFormsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "forms",
-		Short: "Operations on forms",
+		Short: "Manage forms",
 	}
 
-	cmd.AddCommand(newFormsListFormsCmd(flags))
-	cmd.AddCommand(newFormsListSubmissionsCmd(flags))
+	cmd.AddCommand(newFormsGetSubmissionsCmd(flags))
+	cmd.AddCommand(newFormsListCmd(flags))
 	return cmd
 }

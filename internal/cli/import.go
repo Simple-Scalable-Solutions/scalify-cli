@@ -26,13 +26,13 @@ func newImportCmd(flags *rootFlags) *cobra.Command {
 Each line must be a valid JSON object. Failed records are logged to stderr
 but do not stop the import.`,
 		Example: `  # Import from a JSONL file
-  scalify-pp-cli import <resource> --input data.jsonl
+  scalify-cli import <resource> --input data.jsonl
 
   # Dry-run to preview without sending
-  scalify-pp-cli import <resource> --input data.jsonl --dry-run
+  scalify-cli import <resource> --input data.jsonl --dry-run
 
   # Import from stdin
-  cat data.jsonl | scalify-pp-cli import <resource> --input -`,
+  cat data.jsonl | scalify-cli import <resource> --input -`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()

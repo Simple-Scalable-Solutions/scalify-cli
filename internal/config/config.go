@@ -13,21 +13,17 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
-// AuthScheme is the token format prefix; dogfood and scorecard use this constant
-// to verify the generated client matches the spec's securitySchemes declaration.
-const AuthScheme = "Bearer"
-
 type Config struct {
-	BaseURL        string `toml:"base_url"`
-	AuthHeaderVal  string `toml:"auth_header"`
+	BaseURL        string            `toml:"base_url"`
+	AuthHeaderVal  string            `toml:"auth_header"`
 	Headers        map[string]string `toml:"headers,omitempty"`
-	AuthSource     string `toml:"-"`
-	AccessToken    string `toml:"access_token"`
-	RefreshToken   string `toml:"refresh_token"`
-	TokenExpiry    time.Time `toml:"token_expiry"`
-	ClientID       string `toml:"client_id"`
-	ClientSecret   string `toml:"client_secret"`
-	Path           string `toml:"-"`
+	AuthSource     string            `toml:"-"`
+	AccessToken    string            `toml:"access_token"`
+	RefreshToken   string            `toml:"refresh_token"`
+	TokenExpiry    time.Time         `toml:"token_expiry"`
+	ClientID       string            `toml:"client_id"`
+	ClientSecret   string            `toml:"client_secret"`
+	Path           string            `toml:"-"`
 	ScalifyToken   string            `toml:"token"`
 	LocationID     string            `toml:"location_id"`
 	LocationTokens map[string]string `toml:"location_tokens,omitempty"`
@@ -109,14 +105,11 @@ func (c *Config) AuthHeader() string {
 	// Env-var token wins over file-stored AccessToken (env > config convention).
 	if c.ScalifyToken != "" {
 		c.AuthSource = "env:SCALIFY_TOKEN"
-		return applyAuthFormat("Bearer {token}", map[string]string{
-			"token": c.ScalifyToken,
-			"SCALIFY_TOKEN": c.ScalifyToken,
-		})
+		return "Bearer " + c.ScalifyToken
 	}
 	if c.AccessToken != "" {
 		c.AuthSource = "oauth2"
-		return applyAuthFormat("Bearer {token}", map[string]string{"access_token": c.AccessToken, "token": c.AccessToken})
+		return "Bearer " + c.AccessToken
 	}
 	return ""
 }

@@ -25,10 +25,10 @@ agents that need full API coverage.
 Run 'api' with no arguments to list all interfaces.
 Run 'api <interface>' to see that interface's methods.`,
 		Example: `  # List all available interfaces
-  scalify-pp-cli api
+  scalify-cli api
 
   # Show methods for a specific interface
-  scalify-pp-cli api <interface-name>`,
+  scalify-cli api <interface-name>`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			root := cmd.Root()
 

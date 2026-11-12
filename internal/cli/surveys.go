@@ -10,10 +10,10 @@ import (
 func newSurveysCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "surveys",
-		Short: "Operations on surveys",
+		Short: "Manage surveys",
 	}
 
-	cmd.AddCommand(newSurveysListSubmissionsCmd(flags))
-	cmd.AddCommand(newSurveysListSurveysCmd(flags))
+	cmd.AddCommand(newSurveysGetSubmissionsCmd(flags))
+	cmd.AddCommand(newSurveysListCmd(flags))
 	return cmd
 }

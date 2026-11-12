@@ -10,10 +10,10 @@ import (
 func newMediasCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "medias",
-		Short: "Operations on files",
+		Short: "Manage medias",
 	}
 
-	cmd.AddCommand(newMediasDeleteMediasCmd(flags))
+	cmd.AddCommand(newMediasDeleteFileCmd(flags))
 	cmd.AddCommand(newMediasListFilesCmd(flags))
 	return cmd
 }

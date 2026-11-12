@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strings"
 
-	"scalify-pp-cli/internal/store"
 	"github.com/spf13/cobra"
+	"scalify-pp-cli/internal/store"
 )
 
 // isNilOrEmpty checks whether a JSON object has nil or empty values for
@@ -95,30 +95,30 @@ otherwise searches local data. Falls back to local on network failure.
 In live mode: uses the API search endpoint only.
 In local mode: searches locally synced data only.`,
 		Example: `  # Search (uses API endpoint if available, local FTS otherwise)
-  scalify-pp-cli search "error timeout"
+  scalify-cli search "error timeout"
 
   # Force local search only
-  scalify-pp-cli search "payment failed" --data-source local
+  scalify-cli search "payment failed" --data-source local
 
   # Search a specific resource type locally
-  scalify-pp-cli search "critical" --type transactions --data-source local
+  scalify-cli search "critical" --type transactions --data-source local
 
   # JSON output for piping
-  scalify-pp-cli search "critical" --json --limit 20`,
+  scalify-cli search "critical" --json --limit 20`,
 		Annotations: map[string]string{"mcp:hidden": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return cmd.Help()
 			}
 			query := args[0]
-			// This API has a search endpoint: GET /locations/search
+			// This API has a search endpoint: GET /users/search
 			if flags.dataSource != "local" {
 				c, err := flags.newClient()
 				if err != nil {
 					return err
 				}
-				data, getErr := c.Get("/locations/search", map[string]string{
-					"q": query,
+				data, getErr := c.Get("/users/search", map[string]string{
+					"query": query,
 				})
 				if getErr == nil {
 					// Live search succeeded
@@ -141,16 +141,76 @@ In local mode: searches locally synced data only.`,
 
 			db, err := store.OpenWithContext(cmd.Context(), dbPath)
 			if err != nil {
-				return fmt.Errorf("opening local database: %w\nRun 'scalify-pp-cli sync' first to populate the local database.", err)
+				return fmt.Errorf("opening local database: %w\nRun 'scalify-cli sync' first to populate the local database.", err)
 			}
 			defer db.Close()
 
 			var results []json.RawMessage
 			switch resourceType {
+			case "conversations":
+				results, err = db.SearchConversations(query, limit)
+			case "emails":
+				results, err = db.SearchEmails(query, limit)
+			case "invoices":
+				results, err = db.SearchInvoices(query, limit)
+			case "products":
+				results, err = db.SearchProducts(query, limit)
 			case "":
 				// Search all FTS-enabled tables individually to avoid duplicates.
 				seen := make(map[string]bool)
 				_ = seen // prevent unused error when no FTS tables exist
+				{
+					partial, searchErr := db.SearchConversations(query, limit)
+					if searchErr != nil {
+						return fmt.Errorf("search conversations failed: %w", searchErr)
+					}
+					for _, r := range partial {
+						key := string(r)
+						if !seen[key] {
+							seen[key] = true
+							results = append(results, r)
+						}
+					}
+				}
+				{
+					partial, searchErr := db.SearchEmails(query, limit)
+					if searchErr != nil {
+						return fmt.Errorf("search emails failed: %w", searchErr)
+					}
+					for _, r := range partial {
+						key := string(r)
+						if !seen[key] {
+							seen[key] = true
+							results = append(results, r)
+						}
+					}
+				}
+				{
+					partial, searchErr := db.SearchInvoices(query, limit)
+					if searchErr != nil {
+						return fmt.Errorf("search invoices failed: %w", searchErr)
+					}
+					for _, r := range partial {
+						key := string(r)
+						if !seen[key] {
+							seen[key] = true
+							results = append(results, r)
+						}
+					}
+				}
+				{
+					partial, searchErr := db.SearchProducts(query, limit)
+					if searchErr != nil {
+						return fmt.Errorf("search products failed: %w", searchErr)
+					}
+					for _, r := range partial {
+						key := string(r)
+						if !seen[key] {
+							seen[key] = true
+							results = append(results, r)
+						}
+					}
+				}
 			default:
 				// Unrecognized type — fall back to generic search
 				results, err = db.Search(query, limit)

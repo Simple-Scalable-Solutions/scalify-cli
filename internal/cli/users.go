@@ -10,10 +10,11 @@ import (
 func newUsersCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "users",
-		Short: "Operations on users",
+		Short: "Manage users",
 	}
 
-	cmd.AddCommand(newUsersGetUsersCmd(flags))
-	cmd.AddCommand(newUsersListUsersCmd(flags))
+	cmd.AddCommand(newUsersFilterByEmailCmd(flags))
+	cmd.AddCommand(newUsersGetCmd(flags))
+	cmd.AddCommand(newUsersSearchCmd(flags))
 	return cmd
 }

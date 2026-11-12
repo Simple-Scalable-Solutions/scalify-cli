@@ -10,16 +10,21 @@ import (
 func newCalendarsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "calendars",
-		Short: "Operations on calendars",
+		Short: "Manage calendars",
 	}
 
-	cmd.AddCommand(newCalendarsCreateAppointmentsCmd(flags))
-	cmd.AddCommand(newCalendarsCreateCalendarsCmd(flags))
-	cmd.AddCommand(newCalendarsDeleteCalendarsCmd(flags))
-	cmd.AddCommand(newCalendarsGetCalendarsCmd(flags))
-	cmd.AddCommand(newCalendarsGetFreeSlotsCmd(flags))
-	cmd.AddCommand(newCalendarsListCalendarsCmd(flags))
+	cmd.AddCommand(newCalendarsCreateCmd(flags))
+	cmd.AddCommand(newCalendarsCreateAppointmentCmd(flags))
+	cmd.AddCommand(newCalendarsDeleteCmd(flags))
+	cmd.AddCommand(newCalendarsGetCmd(flags))
+	cmd.AddCommand(newCalendarsGetAppointmentCmd(flags))
+	cmd.AddCommand(newCalendarsGetBlockedSlotsCmd(flags))
+	cmd.AddCommand(newCalendarsListCmd(flags))
+	cmd.AddCommand(newCalendarsListAppointmentNotesCmd(flags))
 	cmd.AddCommand(newCalendarsListEventsCmd(flags))
-	cmd.AddCommand(newCalendarsUpdateCalendarsCmd(flags))
+	cmd.AddCommand(newCalendarsListGroupsCmd(flags))
+	cmd.AddCommand(newCalendarsUpdateCmd(flags))
+	cmd.AddCommand(newCalendarsFreeSlotsCmd(flags))
+	cmd.AddCommand(newCalendarsNotificationsCmd(flags))
 	return cmd
 }

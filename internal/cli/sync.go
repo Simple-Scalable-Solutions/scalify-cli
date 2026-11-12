@@ -6,16 +6,16 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/cobra"
 	"net/url"
 	"os"
 	"regexp"
+	"scalify-pp-cli/internal/store"
 	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
-	"scalify-pp-cli/internal/store"
-	"github.com/spf13/cobra"
 )
 
 // syncResult holds the outcome of syncing a single resource.
@@ -58,22 +58,22 @@ Exit codes & warnings:
   --strict to exit non-zero on any per-resource failure. Exit is always
   non-zero when every selected resource failed, regardless of --strict.`,
 		Example: `  # Sync all resources
-  scalify-pp-cli sync
+  scalify-cli sync
 
   # Sync specific resources only
-  scalify-pp-cli sync --resources channels,messages
+  scalify-cli sync --resources channels,messages
 
   # Full resync (ignore previous checkpoint)
-  scalify-pp-cli sync --full
+  scalify-cli sync --full
 
   # Incremental sync: only records from the last 7 days
-  scalify-pp-cli sync --since 7d
+  scalify-cli sync --since 7d
 
   # Parallel sync with 8 workers
-  scalify-pp-cli sync --concurrency 8
+  scalify-cli sync --concurrency 8
 
   # Latest-only: refresh head of each resource, no historical backfill
-  scalify-pp-cli sync --latest-only`,
+  scalify-cli sync --latest-only`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			c, err := flags.newClient()
 			if err != nil {
@@ -175,6 +175,30 @@ Exit codes & warnings:
 			var warnCount int
 			var successCount int
 			for res := range results {
+				if res.Err != nil {
+					if humanFriendly {
+						fmt.Fprintf(os.Stderr, "  %s: error: %v\n", res.Resource, res.Err)
+					}
+					errCount++
+					if criticalResources[res.Resource] {
+						criticalErrCount++
+					}
+				} else if res.Warn != nil {
+					if humanFriendly {
+						fmt.Fprintf(os.Stderr, "  %s: warning: %v\n", res.Resource, res.Warn)
+					}
+					warnCount++
+				} else {
+					if humanFriendly {
+						fmt.Fprintf(os.Stderr, "  %s: %d synced (done)\n", res.Resource, res.Count)
+					}
+					totalSynced += res.Count
+					successCount++
+				}
+			}
+			// Sync dependent (parent-child) resources sequentially after flat resources.
+			depResults := syncDependentResources(c, db, sinceTS, full, maxPages)
+			for _, res := range depResults {
 				if res.Err != nil {
 					if humanFriendly {
 						fmt.Fprintf(os.Stderr, "  %s: error: %v\n", res.Resource, res.Err)
@@ -499,7 +523,7 @@ type paginationDefaults struct {
 // Values are detected from the API spec by the profiler at generation time.
 func determinePaginationDefaults() paginationDefaults {
 	return paginationDefaults{
-		cursorParam: "after",
+		cursorParam: "offset",
 		limitParam:  "limit",
 		limit:       100,
 	}
@@ -689,8 +713,7 @@ type discriminatorDispatch struct {
 	Values map[string]string
 }
 
-var discriminatorDispatchers = map[string]discriminatorDispatch{
-}
+var discriminatorDispatchers = map[string]discriminatorDispatch{}
 
 func upsertResourceBatch(db *store.Store, resource string, items []json.RawMessage) (int, int, error) {
 	if _, ok := discriminatorDispatchers[resource]; !ok {
@@ -754,6 +777,94 @@ func upsertSingleObject(db *store.Store, resource string, data json.RawMessage) 
 	}
 
 	switch resource {
+	case "associations":
+		return db.UpsertAssociations(data)
+	case "blogs":
+		return db.UpsertBlogs(data)
+	case "businesses":
+		return db.UpsertBusinesses(data)
+	case "calendars":
+		return db.UpsertCalendars(data)
+	case "free_slots":
+		return db.UpsertFreeSlots(data)
+	case "notifications":
+		return db.UpsertNotifications(data)
+	case "contacts":
+		return db.UpsertContacts(data)
+	case "appointments":
+		return db.UpsertAppointments(data)
+	case "contacts_notes":
+		return db.UpsertContactsNotes(data)
+	case "contacts_tags":
+		return db.UpsertContactsTags(data)
+	case "contacts_tasks":
+		return db.UpsertContactsTasks(data)
+	case "workflow":
+		return db.UpsertWorkflow(data)
+	case "conversations":
+		return db.UpsertConversations(data)
+	case "messages":
+		return db.UpsertMessages(data)
+	case "emails":
+		return db.UpsertEmails(data)
+	case "forms":
+		return db.UpsertForms(data)
+	case "invoices":
+		return db.UpsertInvoices(data)
+	case "record_payment":
+		return db.UpsertRecordPayment(data)
+	case "send":
+		return db.UpsertSend(data)
+	case "void":
+		return db.UpsertVoid(data)
+	case "locations_custom_fields":
+		return db.UpsertLocationsCustomFields(data)
+	case "custom_values":
+		return db.UpsertCustomValues(data)
+	case "features":
+		return db.UpsertFeatures(data)
+	case "locations_tags":
+		return db.UpsertLocationsTags(data)
+	case "locations_tasks":
+		return db.UpsertLocationsTasks(data)
+	case "templates":
+		return db.UpsertTemplates(data)
+	case "timezones":
+		return db.UpsertTimezones(data)
+	case "records":
+		return db.UpsertRecords(data)
+	case "opportunities":
+		return db.UpsertOpportunities(data)
+	case "opportunities_status":
+		return db.UpsertOpportunitiesStatus(data)
+	case "payments":
+		return db.UpsertPayments(data)
+	case "products":
+		return db.UpsertProducts(data)
+	case "price":
+		return db.UpsertPrice(data)
+	case "proposals":
+		return db.UpsertProposals(data)
+	case "accounts":
+		return db.UpsertAccounts(data)
+	case "categories":
+		return db.UpsertCategories(data)
+	case "posts":
+		return db.UpsertPosts(data)
+	case "social_media_posting_tags":
+		return db.UpsertSocialMediaPostingTags(data)
+	case "surveys":
+		return db.UpsertSurveys(data)
+	case "users":
+		return db.UpsertUsers(data)
+	case "workflows":
+		return db.UpsertWorkflows(data)
+	case "definition":
+		return db.UpsertDefinition(data)
+	case "logs":
+		return db.UpsertLogs(data)
+	case "workflows_status":
+		return db.UpsertWorkflowsStatus(data)
 	default:
 		return db.Upsert(resource, id, data)
 	}
@@ -790,41 +901,7 @@ func parseSinceDuration(s string) (time.Time, error) {
 
 func defaultSyncResources() []string {
 	return []string{
-		"blogs",
-		"blogs-authors",
-		"blogs-categories",
-		"blogs-posts-url-slug-exists",
-		"businesses",
-		"calendars",
-		"calendars-events",
-		"campaigns",
-		"contacts",
-		"conversations",
-		"courses",
-		"documents",
-		"emails",
-		"forms",
-		"forms-submissions",
-		"funnels",
-		"funnels-page",
-		"invoices",
-		"invoices-estimate",
-		"links",
 		"locations",
-		"medias",
-		"objects",
-		"opportunities",
-		"opportunities-pipelines",
-		"payments",
-		"payments-coupons",
-		"payments-subscriptions",
-		"payments-transactions",
-		"social-media-posting",
-		"surveys",
-		"surveys-submissions",
-		"users",
-		"webhooks",
-		"workflows",
 	}
 }
 
@@ -833,46 +910,229 @@ func defaultSyncResources() []string {
 // this preserves the actual endpoint path like "/ISteamApps/GetAppList/v2".
 func syncResourcePath(resource string) (string, error) {
 	paths := map[string]string{
-		"blogs": "/blogs/posts",
-		"blogs-authors": "/blogs/authors",
-		"blogs-categories": "/blogs/categories",
-		"blogs-posts-url-slug-exists": "/blogs/posts/url-slug-exists",
-		"businesses": "/businesses",
-		"calendars": "/calendars",
-		"calendars-events": "/calendars/events",
-		"campaigns": "/campaigns",
-		"contacts": "/contacts",
-		"conversations": "/conversations/search",
-		"courses": "/courses",
-		"documents": "/documents",
-		"emails": "/emails",
-		"forms": "/forms",
-		"forms-submissions": "/forms/submissions",
-		"funnels": "/funnels",
-		"funnels-page": "/funnels/page",
-		"invoices": "/invoices",
-		"invoices-estimate": "/invoices/estimate",
-		"links": "/links",
-		"locations": "/locations",
-		"medias": "/medias/files",
-		"objects": "/objects",
-		"opportunities": "/opportunities/search",
-		"opportunities-pipelines": "/opportunities/pipelines",
-		"payments": "/payments/orders",
-		"payments-coupons": "/payments/coupons",
-		"payments-subscriptions": "/payments/subscriptions",
-		"payments-transactions": "/payments/transactions",
-		"social-media-posting": "/social-media-posting",
-		"surveys": "/surveys",
-		"surveys-submissions": "/surveys/submissions",
-		"users": "/users",
-		"webhooks": "/webhooks",
-		"workflows": "/workflows",
+		"locations": "/locations/search",
 	}
 	if p, ok := paths[resource]; ok {
 		return p, nil
 	}
 	return "", fmt.Errorf("unknown sync resource %q", resource)
+}
+
+// dependentResourceDef describes a child resource that requires iterating parent IDs to sync.
+type dependentResourceDef struct {
+	Name          string
+	ParentTable   string
+	ParentIDParam string
+	PathTemplate  string
+}
+
+func dependentResourceDefs() []dependentResourceDef {
+	return []dependentResourceDef{
+		{Name: "categories", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/social-media-posting/{locationId}/categories"},
+		{Name: "emails", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/emails/locations/{locationId}/campaigns/bulk-actions"},
+		{Name: "social_media_posting_tags", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/social-media-posting/{locationId}/tags"},
+		{Name: "templates", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/locations/{locationId}/templates"},
+	}
+}
+
+// syncDependentResources iterates parent tables and syncs child resources per parent ID.
+func syncDependentResources(c interface {
+	Get(string, map[string]string) (json.RawMessage, error)
+	RateLimit() float64
+}, db *store.Store, sinceTS string, full bool, maxPages int) []syncResult {
+	var results []syncResult
+	for _, dep := range dependentResourceDefs() {
+		res := syncDependentResource(c, db, dep, sinceTS, full, maxPages)
+		results = append(results, res)
+	}
+	return results
+}
+
+// syncDependentResource syncs a single child resource by iterating all parent IDs.
+func syncDependentResource(c interface {
+	Get(string, map[string]string) (json.RawMessage, error)
+	RateLimit() float64
+}, db *store.Store, dep dependentResourceDef, sinceTS string, full bool, maxPages int) syncResult {
+	started := time.Now()
+
+	// Query parent table for all IDs
+	parentIDs, err := db.ListIDs(dep.ParentTable)
+	if err != nil || len(parentIDs) == 0 {
+		if len(parentIDs) == 0 {
+			if humanFriendly {
+				fmt.Fprintf(os.Stderr, "  %s: skipping (parent table %s is empty, sync it first)\n", dep.Name, dep.ParentTable)
+			}
+			return syncResult{Resource: dep.Name, Duration: time.Since(started)}
+		}
+		return syncResult{Resource: dep.Name, Err: fmt.Errorf("querying parent table %s: %w", dep.ParentTable, err), Duration: time.Since(started)}
+	}
+
+	if humanFriendly {
+		fmt.Fprintf(os.Stderr, "  %s: syncing for %d %s parents\n", dep.Name, len(parentIDs), dep.ParentTable)
+	}
+
+	var totalCount int
+	var deniedParents int
+	var firstDenial *accessWarning
+	pageSize := determinePaginationDefaults()
+	// Per-resource extract-failure tracking for the F4b symptom probe and
+	// per-item primary_key_unresolved warning. See syncResource for the
+	// concurrency rationale (one goroutine per resource → no race).
+	var depExtractFailureTotal int
+	var depConsumedTotal int
+	depAnomalyEmitted := false
+
+	for idx, parentID := range parentIDs {
+		// Build child endpoint path by replacing the param placeholder
+		path := strings.Replace(dep.PathTemplate, "{"+dep.ParentIDParam+"}", parentID, 1)
+
+		if humanFriendly {
+			fmt.Fprintf(os.Stderr, "\r  %s: syncing for %s (%d/%d parents)", dep.Name, dep.ParentTable, idx+1, len(parentIDs))
+		}
+
+		cursor := ""
+		pagesFetched := 0
+		lastNextCursor := ""
+
+		for {
+			params := map[string]string{}
+			params[pageSize.limitParam] = strconv.Itoa(pageSize.limit)
+			if cursor != "" {
+				params[pageSize.cursorParam] = cursor
+			}
+			if sinceTS != "" {
+				params[determineSinceParam()] = sinceTS
+			}
+
+			data, err := c.Get(path, params)
+			if err != nil {
+				// Non-fatal per parent: log and continue to next parent.
+				// Track access-denial separately so an all-denied dependent
+				// resource can surface as a Warn rather than silent success.
+				if w, ok := isSyncAccessWarning(err); ok {
+					deniedParents++
+					if firstDenial == nil {
+						firstDenial = w
+					}
+					if humanFriendly {
+						fmt.Fprintf(os.Stderr, "\n  %s: access denied for parent %s: %s\n", dep.Name, parentID, w.Reason)
+					} else {
+						fmt.Fprintf(os.Stdout, `{"event":"sync_warning","resource":"%s","parent":"%s","status":%d,"reason":"%s","message":"%s"}`+"\n",
+							dep.Name, parentID, w.Status, w.Reason, strings.ReplaceAll(w.Message, `"`, `\"`))
+					}
+				} else if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\n  %s: error for parent %s: %v\n", dep.Name, parentID, err)
+				}
+				break
+			}
+
+			items, nextCursor, hasMore := extractPageItems(data, pageSize.cursorParam)
+			if len(items) == 0 {
+				break
+			}
+
+			// Inject parent_id into each item before upserting
+			for i, item := range items {
+				var obj map[string]json.RawMessage
+				if err := json.Unmarshal(item, &obj); err == nil {
+					parentIDJSON, _ := json.Marshal(parentID)
+					obj["parent_id"] = parentIDJSON
+					if modified, err := json.Marshal(obj); err == nil {
+						items[i] = modified
+					}
+				}
+			}
+
+			stored, extractFailures, err := upsertResourceBatch(db, dep.Name, items)
+			if err != nil {
+				if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\n  %s: upsert error for parent %s: %v\n", dep.Name, parentID, err)
+				}
+				break
+			}
+
+			depConsumedTotal += len(items)
+			depExtractFailureTotal += extractFailures
+			// Order matches the flat path (syncResource): all-fail first,
+			// then partial-fail. The all-fail case dominates — if stored==0
+			// with at least one item, the resource is broken regardless of
+			// how many extractions failed individually.
+			if len(items) > 0 && stored == 0 && !depAnomalyEmitted {
+				if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\nwarning: %s returned %d items for parent %s but stored 0 — likely scalar item shape or unrecognized primary-key field name.\n", dep.Name, len(items), parentID)
+				} else {
+					fmt.Fprintf(os.Stdout, `{"event":"sync_anomaly","resource":"%s","parent":"%s","consumed":%d,"stored":0,"reason":"all_items_failed_id_extraction"}`+"\n", dep.Name, parentID, len(items))
+				}
+				depAnomalyEmitted = true
+			} else if extractFailures > 0 && stored > 0 && !depAnomalyEmitted {
+				if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\nwarning: %s had %d item(s) with no extractable primary key — those rows were dropped silently. Annotate the spec with x-resource-id to fix.\n", dep.Name, extractFailures)
+				} else {
+					fmt.Fprintf(os.Stdout, `{"event":"sync_anomaly","resource":"%s","parent":"%s","consumed":%d,"stored":%d,"count":%d,"reason":"primary_key_unresolved"}`+"\n", dep.Name, parentID, len(items), stored, extractFailures)
+				}
+				depAnomalyEmitted = true
+			}
+
+			totalCount += stored
+			pagesFetched++
+
+			if maxPages > 0 && pagesFetched >= maxPages {
+				if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\n  %s: reached --max-pages limit (%d pages, %d items) for parent %s\n", dep.Name, maxPages, totalCount, parentID)
+				} else {
+					fmt.Fprintf(os.Stdout, `{"event":"sync_warning","resource":"%s","parent":"%s","reason":"max_pages_cap_hit","message":"reached --max-pages cap of %d; data may be truncated. Re-run with --max-pages 0 (unlimited) or higher to verify."}`+"\n", dep.Name, parentID, maxPages)
+				}
+				break
+			}
+			// Sticky-cursor detector: see syncResource for rationale. Same shape
+			// here so dependent-resource page loops cannot burn the budget on a
+			// non-advancing next cursor.
+			if nextCursor != "" && nextCursor == lastNextCursor {
+				if humanFriendly {
+					fmt.Fprintf(os.Stderr, "\n  %s: API returned the same next cursor across two pages for parent %s; aborting to prevent budget waste.\n", dep.Name, parentID)
+				} else {
+					fmt.Fprintf(os.Stdout, `{"event":"sync_warning","resource":"%s","parent":"%s","reason":"stuck_pagination","message":"API returned the same next cursor across two pages for resource %s; aborting to prevent budget waste."}`+"\n", dep.Name, parentID, dep.Name)
+				}
+				break
+			}
+			lastNextCursor = nextCursor
+			if !hasMore || len(items) < pageSize.limit || nextCursor == "" {
+				break
+			}
+			cursor = nextCursor
+		}
+
+		// Brief rate-limit pause between parents to avoid hammering the API
+		time.Sleep(100 * time.Millisecond)
+	}
+
+	if humanFriendly {
+		fmt.Fprintf(os.Stderr, "\n")
+	}
+
+	_ = db.SaveSyncState(dep.Name, "", totalCount)
+
+	// F4b symptom probe: items consumed and extracted but nothing landed.
+	// See syncResource for rationale.
+	if depConsumedTotal > 0 && totalCount == 0 && depExtractFailureTotal < depConsumedTotal {
+		if humanFriendly {
+			fmt.Fprintf(os.Stderr, "\nwarning: %s consumed %d items, extracted %d primary keys, but stored 0 rows — extraction succeeded yet nothing landed. Investigate FTS triggers / transaction rollback / encoding.\n", dep.Name, depConsumedTotal, depConsumedTotal-depExtractFailureTotal)
+		} else {
+			fmt.Fprintf(os.Stdout, `{"event":"sync_anomaly","resource":"%s","consumed":%d,"stored":0,"extract_failures":%d,"reason":"stored_count_zero_after_extraction"}`+"\n", dep.Name, depConsumedTotal, depExtractFailureTotal)
+		}
+	}
+
+	// If every parent was access-denied and nothing was synced, surface as a
+	// warning so the run-level summary and exit code reflect insufficient access.
+	if deniedParents == len(parentIDs) && totalCount == 0 && firstDenial != nil {
+		return syncResult{
+			Resource: dep.Name,
+			Count:    0,
+			Warn:     fmt.Errorf("skipped %s: %s on all %d parents", dep.Name, firstDenial.Reason, len(parentIDs)),
+			Duration: time.Since(started),
+		}
+	}
+	return syncResult{Resource: dep.Name, Count: totalCount, Duration: time.Since(started)}
 }
 
 // resourceIDFieldOverrides projects per-resource IDField (set by the profiler
@@ -885,6 +1145,10 @@ func syncResourcePath(resource string) (string, error) {
 // annotations on a child path-item are honored at runtime, not just on
 // flat paths.
 var resourceIDFieldOverrides = map[string]string{
+	"categories":                "success",
+	"emails":                    "id",
+	"locations":                 "id",
+	"social_media_posting_tags": "success",
 }
 
 // genericIDFieldFallbacks is the runtime safety net for resources that did
@@ -900,8 +1164,7 @@ var genericIDFieldFallbacks = []string{"id", "ID", "name", "uuid", "slug", "key"
 // Includes both flat resources and dependent (parent-child) resources so a
 // failed child sync flagged x-critical: true exits non-zero just like a
 // flat-resource critical failure.
-var criticalResources = map[string]bool{
-}
+var criticalResources = map[string]bool{}
 
 // extractID resolves an item's primary-key field. It consults the
 // per-resource templated override first; on miss, it falls through to the

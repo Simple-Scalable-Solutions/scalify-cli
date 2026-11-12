@@ -10,14 +10,18 @@ import (
 func newOpportunitiesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "opportunities",
-		Short: "Operations on search",
+		Short: "Manage opportunities",
 	}
 
-	cmd.AddCommand(newOpportunitiesCreateOpportunitiesCmd(flags))
-	cmd.AddCommand(newOpportunitiesDeleteOpportunitiesCmd(flags))
-	cmd.AddCommand(newOpportunitiesGetOpportunitiesCmd(flags))
+	cmd.AddCommand(newOpportunitiesCreateCmd(flags))
+	cmd.AddCommand(newOpportunitiesDeleteCmd(flags))
+	cmd.AddCommand(newOpportunitiesGetCmd(flags))
+	cmd.AddCommand(newOpportunitiesGetLostReasonCmd(flags))
+	cmd.AddCommand(newOpportunitiesGetPipelineCmd(flags))
 	cmd.AddCommand(newOpportunitiesListPipelinesCmd(flags))
-	cmd.AddCommand(newOpportunitiesListSearchCmd(flags))
-	cmd.AddCommand(newOpportunitiesUpdateOpportunitiesCmd(flags))
+	cmd.AddCommand(newOpportunitiesSearchCmd(flags))
+	cmd.AddCommand(newOpportunitiesSearchLegacyCmd(flags))
+	cmd.AddCommand(newOpportunitiesUpdateCmd(flags))
+	cmd.AddCommand(newOpportunitiesStatusCmd(flags))
 	return cmd
 }

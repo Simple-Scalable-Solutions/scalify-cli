@@ -7,19 +7,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"io"
 	"os"
 	"path/filepath"
 	"regexp"
+	"scalify-pp-cli/internal/client"
+	"scalify-pp-cli/internal/cliutil"
 	"sort"
 	"strings"
 	"text/tabwriter"
 	"time"
 	"unicode"
-	"scalify-pp-cli/internal/cliutil"
-	"scalify-pp-cli/internal/client"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
 )
 
 var As = errors.As
@@ -93,11 +93,11 @@ type cliError struct {
 func (e *cliError) Error() string { return e.err.Error() }
 func (e *cliError) Unwrap() error { return e.err }
 
-func usageErr(err error) error    { return &cliError{code: 2, err: err} }
-func notFoundErr(err error) error { return &cliError{code: 3, err: err} }
-func authErr(err error) error     { return &cliError{code: 4, err: err} }
-func apiErr(err error) error      { return &cliError{code: 5, err: err} }
-func configErr(err error) error   { return &cliError{code: 10, err: err} }
+func usageErr(err error) error     { return &cliError{code: 2, err: err} }
+func notFoundErr(err error) error  { return &cliError{code: 3, err: err} }
+func authErr(err error) error      { return &cliError{code: 4, err: err} }
+func apiErr(err error) error       { return &cliError{code: 5, err: err} }
+func configErr(err error) error    { return &cliError{code: 10, err: err} }
 func rateLimitErr(err error) error { return &cliError{code: 7, err: err} }
 
 // dryRunOK reports whether the command should short-circuit without doing any
@@ -231,17 +231,17 @@ func classifyAPIError(err error, flags *rootFlags) error {
 	case strings.Contains(msg, "HTTP 400") && cliutil.LooksLikeAuthError(msg):
 		return authErr(fmt.Errorf("%w\nhint: the API rejected the request — this usually means auth is missing or invalid."+
 			"\n      Set your API key: export SCALIFY_TOKEN=<your-key>"+
-			"\n      Run 'scalify-pp-cli doctor' to check auth status."+
+			"\n      Run 'scalify-cli doctor' to check auth status."+
 			"\n      Response: "+cliutil.SanitizeErrorBody(msg), err))
 	case strings.Contains(msg, "HTTP 401"):
-		return authErr(fmt.Errorf("%w\nhint: check your token. Set it with: scalify-pp-cli auth set-token <token>"+
+		return authErr(fmt.Errorf("%w\nhint: check your token. Set it with: scalify-cli auth set-token <token>"+
 			"\n      or: export SCALIFY_TOKEN=<your-token>"+
-			"\n      Run 'scalify-pp-cli doctor' to check auth status.", err))
+			"\n      Run 'scalify-cli doctor' to check auth status.", err))
 	case strings.Contains(msg, "HTTP 403"):
 		return authErr(fmt.Errorf("%w\nhint: permission denied. Your credentials are valid but lack access to this resource."+
 			"\n      Check that your API key has the required permissions."+
 			"\n      Set it with: export SCALIFY_TOKEN=<your-key>"+
-			"\n      Run 'scalify-pp-cli doctor' to check auth status.", err))
+			"\n      Run 'scalify-cli doctor' to check auth status.", err))
 	case strings.Contains(msg, "HTTP 404"):
 		return notFoundErr(fmt.Errorf("%w\nhint: resource not found. Run the 'list' command to see available items", err))
 	case strings.Contains(msg, "HTTP 429"):
@@ -250,6 +250,7 @@ func classifyAPIError(err error, flags *rootFlags) error {
 		return apiErr(err)
 	}
 }
+
 // classifyDeleteError maps DELETE errors and supports explicit idempotent no-op handling.
 func classifyDeleteError(err error, flags *rootFlags) error {
 	msg := err.Error()
@@ -274,26 +275,6 @@ func newTabWriter(w io.Writer) *tabwriter.Writer {
 }
 func replacePathParam(path, name, value string) string {
 	return strings.ReplaceAll(path, "{"+name+"}", value)
-}
-
-// replacePathParamSequential fills repeated same-named path placeholders
-// (e.g. "/locations/{id}/customValues/{id}") left-to-right from distinct
-// values, one per occurrence. Endpoints whose upstream spec reused a
-// parameter name for two different path segments (parent id, then
-// sub-resource id) must not use replacePathParam for those params: a
-// global ReplaceAll collapses every occurrence to the same value, silently
-// pointing the request at the wrong resource. Panics if fewer values than
-// occurrences are supplied — callers must validate arg count first.
-func replacePathParamSequential(path, name string, values ...string) string {
-	placeholder := "{" + name + "}"
-	for _, v := range values {
-		idx := strings.Index(path, placeholder)
-		if idx == -1 {
-			break
-		}
-		path = path[:idx] + v + path[idx+len(placeholder):]
-	}
-	return path
 }
 
 // paginatedGet fetches pages and concatenates array results. The headers
@@ -1189,12 +1170,13 @@ func findField(obj map[string]any, names ...string) string {
 	}
 	return ""
 }
+
 // DataProvenance describes where data came from and when it was last synced.
 type DataProvenance struct {
 	Source       string     `json:"source"`                  // "live" or "local"
-	SyncedAt    *time.Time `json:"synced_at,omitempty"`     // when local data was last synced
-	Reason      string     `json:"reason,omitempty"`        // why local was used: "user_requested", "api_unreachable", "no_search_endpoint"
-	ResourceType string    `json:"resource_type,omitempty"` // which resource type was queried
+	SyncedAt     *time.Time `json:"synced_at,omitempty"`     // when local data was last synced
+	Reason       string     `json:"reason,omitempty"`        // why local was used: "user_requested", "api_unreachable", "no_search_endpoint"
+	ResourceType string     `json:"resource_type,omitempty"` // which resource type was queried
 	Freshness    any        `json:"freshness,omitempty"`     // optional machine-owned freshness metadata for covered command paths
 }
 

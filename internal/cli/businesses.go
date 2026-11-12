@@ -10,13 +10,13 @@ import (
 func newBusinessesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "businesses",
-		Short: "Operations on businesses",
+		Short: "Manage businesses",
 	}
 
-	cmd.AddCommand(newBusinessesCreateBusinessesCmd(flags))
-	cmd.AddCommand(newBusinessesDeleteBusinessesCmd(flags))
-	cmd.AddCommand(newBusinessesGetBusinessesCmd(flags))
-	cmd.AddCommand(newBusinessesListBusinessesCmd(flags))
-	cmd.AddCommand(newBusinessesUpdateBusinessesCmd(flags))
+	cmd.AddCommand(newBusinessesCreateCmd(flags))
+	cmd.AddCommand(newBusinessesDeleteCmd(flags))
+	cmd.AddCommand(newBusinessesGetCmd(flags))
+	cmd.AddCommand(newBusinessesListCmd(flags))
+	cmd.AddCommand(newBusinessesUpdateCmd(flags))
 	return cmd
 }
