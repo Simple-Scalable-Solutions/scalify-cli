@@ -38,7 +38,8 @@ Generated Go CLI project following printing-press conventions:
 - `internal/cli/` — one file per resource + compound commands (`sync`, `search`, `workflow`, etc.)
 - `internal/client/` — HTTP client wrapping the Scalify API; `authHeaderPrefix = "Bearer "` constant is required for dogfood auth-protocol check
 - `internal/config/` — TOML config + env-var auth (`SCALIFY_TOKEN`); `AuthScheme = "Bearer"` constant
-- `internal/mcp/` — runtime Cobra-tree MCP surface mirror
+- `internal/mcp/` — MCP server: `scalify_search` + `scalify_execute` cover every endpoint
+  (`code_orch_scalify.go`, hand-owned), plus the CLI's utility tools mirrored from the Cobra tree
 - `internal/store/` — SQLite cache with FTS5 full-text search
 
 Config file: `~/.config/scalify-pp-cli/config.toml`  
@@ -77,7 +78,7 @@ go test ./... && git diff --stat
 - `scripts/regen/renames.tsv` gives clumsy generated command names a readable name.
 - Hand fixes are re-applied on every run: `scripts/regen/patches/*.patch` (location switching, auth,
   doctor update check, `Version: v3` header), plus the hand-owned files `internal/cli/location_config.go`,
-  `internal/cli/location_default.go` and `internal/client/query.go`. Change those files, then refresh the
+  `internal/cli/location_default.go`, `internal/client/query.go` and `internal/mcp/code_orch_scalify.go`. Change those files, then refresh the
   matching patch, or the next regen undoes your change.
 - `spec.json` is the merged OpenAPI input the CLI was generated from; it's an output of the script.
 
@@ -97,24 +98,27 @@ Never run `goreleaser release --clean` without `--parallelism 2`.
 
 ## CLI/MCP Surface Parity — read this before touching path params or headers
 
-`internal/cli/*.go` (the Cobra commands) and `internal/mcp/tools.go` (the typed MCP tool
-registry) each carry their own copy of every endpoint's path, params and headers. Both are
-generated from `spec.json`, so **fix endpoint shapes in the regen pipeline, not by hand**: an
+`internal/cli/*.go` (the Cobra commands) and `internal/mcp/` (`code_orch.go` + `code_orch_meta.go`,
+behind `scalify_search` / `scalify_execute`) each carry their own copy of every endpoint's path and
+params. Both are generated from `spec.json`, so **fix endpoint shapes in the regen pipeline, not by hand**: an
 edit to one generated file doesn't reach the other surface and is lost on the next regen.
 
 - Endpoint data wrong (path, method, params): it comes from the live docs. Re-run
   `scripts/regen/regen.sh`; if the docs themselves are wrong, adjust `scripts/regen/merge.py`.
 - Behaviour every command needs (headers, query handling): put it in a hand-owned file or a
-  patch under `scripts/regen/`, and make sure it covers `makeAPIHandler` in `tools.go` too.
-  Example: `client.WithQuery` sends query params on POST/PUT/DELETE, and
-  `scripts/regen/fix_write_query.py` wires it into both surfaces.
+  patch under `scripts/regen/`, and make sure it covers `scalifyExecute` in `code_orch_scalify.go` too.
+  Example: `client.WithQuery` sends query params on POST/PUT/DELETE: `fix_write_query.py` wires it
+  into the CLI, `scalifyExecute` uses it for the MCP.
 - Then `GOTOOLCHAIN=go1.26.3 go build ./... && go vet ./... && go test ./...`.
 
 If you only fix one surface, say so in the commit message under a "Known gap" note.
 
 ## Current Quality
 
-Scorecard: **84/100 Grade A** (printing-press v4.2.2, 2026-11-12 regen from the live v3 docs)
+Scorecard: **89/100 Grade A** (printing-press v4.2.2, 2026-11-12 regen from the live v3 docs, MCP on
+search + execute)
 
-Remaining improvement areas: MCP surface strategy (195 endpoint tools, about 62k tokens of tool
-definitions; switch to search + execute orchestration), insight commands, cache freshness.
+MCP tool definitions: about 8.3k tokens (was about 62.6k with one tool per endpoint). `scalify_search`
+and `scalify_execute` are about 375 of that; the rest is the CLI's utility tools.
+
+Remaining improvement areas: insight commands, cache freshness, MCP remote transport.

@@ -68610,6 +68610,10 @@
    }
   }
  },
+ "x-mcp": {
+  "orchestration": "code",
+  "endpoint_tools": "hidden"
+ },
  "security": [
   {
    "bearer": []
