@@ -1,7 +1,9 @@
 import json,re,sys,os,glob
 pages=sys.argv[1]; out=sys.argv[2]
 spec={"openapi":"3.0.0","info":{"title":"Scalify","version":"v3"},
-      "servers":[{"url":"https://services.leadconnectorhq.com"}],"paths":{},"components":{"schemas":{},"securitySchemes":{}}}
+      "servers":[{"url":"https://services.leadconnectorhq.com"}],"paths":{},"components":{"schemas":{},"securitySchemes":{}},
+      # MCP: a search + execute pair instead of one tool per endpoint (~62k tokens)
+      "x-mcp":{"orchestration":"code","endpoint_tools":"hidden"}}
 conflicts=[];bad=[];renamed=[]
 for f in sorted(glob.glob(pages+"/*")):
     t=open(f).read()
@@ -46,6 +48,31 @@ for p,ops in spec["paths"].items():
                 notes.append(LEVEL.get(k,k)+(" (scopes: "+", ".join(sc)+")" if sc else ""))
 spec["components"]["securitySchemes"]={"bearer":{"type":"http","scheme":"bearer","bearerFormat":"JWT"}}
 spec["security"]=[{"bearer":[]}]
+# Fix doc gaps the generator trips on:
+# - a path placeholder the page doesn't declare is sent literally ("/conversations/messages/{id}")
+# - an enum path param becomes a flag while the code still reads the next argument by position
+# - payments endpoints that take altId need altType too (the API rejects the call without it)
+# - a path param listed after query params is read from the wrong argument (args[5] for the 6th param)
+fixed=[]
+for p_,ops in spec["paths"].items():
+    for m_,op in ops.items():
+        params=op.setdefault("parameters",[])
+        names={x.get("name") for x in params}
+        for ph in re.findall(r"{(\w+)}",p_):
+            if ph not in names:
+                params.insert(0,{"name":ph,"in":"path","required":True,"schema":{"type":"string"}}); fixed.append((m_,p_,ph))
+        for x in params:
+            sch=x.get("schema",{})
+            if x.get("in")=="path" and "enum" in sch:
+                x["description"]=(x.get("description","")+" One of: "+", ".join(map(str,sch.pop("enum")))).strip()
+                fixed.append((m_,p_,x["name"]+" enum"))
+        order=[x.get("in")=="path" for x in params]
+        if order!=sorted(order,reverse=True):
+            params.sort(key=lambda x:x.get("in")!="path"); fixed.append((m_,p_,"path params first"))
+        if "altId" in names and "altType" not in names:
+            params.append({"name":"altType","in":"query","required":True,"description":"Always location","schema":{"type":"string","enum":["location"]}})
+            fixed.append((m_,p_,"altType"))
+print("doc gaps fixed",len(fixed)); [print(" ",*x) for x in fixed]
 # Readable command names: override operationIds that produce clumsy commands.
 ren={}
 for line in open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"renames.tsv")):

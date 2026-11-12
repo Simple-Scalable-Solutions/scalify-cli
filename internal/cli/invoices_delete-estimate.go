@@ -31,7 +31,24 @@ func newInvoicesDeleteEstimateCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/invoices/estimate/{estimateId}"
 			path = replacePathParam(path, "estimateId", args[0])
-			data, statusCode, err := c.Delete(path)
+			body := map[string]any{}
+			if bodyAltId != "" {
+				var parsed any
+				if json.Unmarshal([]byte(bodyAltId), &parsed) == nil {
+					body["altId"] = parsed
+				} else {
+					body["altId"] = bodyAltId
+				}
+			}
+			if bodyAltType != "" {
+				var parsed any
+				if json.Unmarshal([]byte(bodyAltType), &parsed) == nil {
+					body["altType"] = parsed
+				} else {
+					body["altType"] = bodyAltType
+				}
+			}
+			data, statusCode, err := c.DeleteWithBody(path, body)
 			if err != nil {
 				return classifyDeleteError(err, flags)
 			}

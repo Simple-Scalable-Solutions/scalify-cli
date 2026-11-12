@@ -107,6 +107,14 @@
     "description": "Get all relations by record Id",
     "parameters": [
      {
+      "name": "recordId",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -116,14 +124,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "recordId",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -998,6 +998,15 @@
     "description": "Delete Business",
     "parameters": [
      {
+      "name": "businessId",
+      "required": true,
+      "in": "path",
+      "example": "5DP4iH6HLkQsiKESj6rh",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1007,15 +1016,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "businessId",
-      "required": true,
-      "in": "path",
-      "example": "5DP4iH6HLkQsiKESj6rh",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -1068,6 +1068,15 @@
     "description": "Get Business",
     "parameters": [
      {
+      "name": "businessId",
+      "required": true,
+      "in": "path",
+      "example": "5DP4iH6HLkQsiKESj6rh",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1077,15 +1086,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "businessId",
-      "required": true,
-      "in": "path",
-      "example": "5DP4iH6HLkQsiKESj6rh",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -1138,6 +1138,15 @@
     "description": "Update Business",
     "parameters": [
      {
+      "name": "businessId",
+      "required": true,
+      "in": "path",
+      "example": "5DP4iH6HLkQsiKESj6rh",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1147,15 +1156,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "businessId",
-      "required": true,
-      "in": "path",
-      "example": "5DP4iH6HLkQsiKESj6rh",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -1428,6 +1428,16 @@
     "description": "Delete calendar by ID",
     "parameters": [
      {
+      "name": "calendarId",
+      "required": true,
+      "in": "path",
+      "description": "Calendar Id",
+      "schema": {
+       "example": "ocQHyuzHvysMo5N5VsXc",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1437,16 +1447,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "calendarId",
-      "required": true,
-      "in": "path",
-      "description": "Calendar Id",
-      "schema": {
-       "example": "ocQHyuzHvysMo5N5VsXc",
-       "type": "string"
       }
      }
     ],
@@ -1489,6 +1489,16 @@
     "description": "Get calendar by ID",
     "parameters": [
      {
+      "name": "calendarId",
+      "required": true,
+      "in": "path",
+      "description": "Calendar Id",
+      "schema": {
+       "example": "ocQHyuzHvysMo5N5VsXc",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1498,16 +1508,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "calendarId",
-      "required": true,
-      "in": "path",
-      "description": "Calendar Id",
-      "schema": {
-       "example": "ocQHyuzHvysMo5N5VsXc",
-       "type": "string"
       }
      }
     ],
@@ -1550,6 +1550,16 @@
     "description": "Update calendar by ID: name, description, duration, slot interval, buffers, minimum notice, booking window, daily limit, seats, auto-confirm, reschedule/cancel, meeting location, booking link (widgetSlug) and team members (hosts). teamMembers replaces the whole list. Collective calendars: every update must include teamMembers, with at least one host isPrimary: true.",
     "parameters": [
      {
+      "name": "calendarId",
+      "required": true,
+      "in": "path",
+      "description": "Calendar Id",
+      "schema": {
+       "example": "ocQHyuzHvysMo5N5VsXc",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1559,16 +1569,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "calendarId",
-      "required": true,
-      "in": "path",
-      "description": "Calendar Id",
-      "schema": {
-       "example": "ocQHyuzHvysMo5N5VsXc",
-       "type": "string"
       }
      }
     ],
@@ -1623,6 +1623,16 @@
     "description": "Get Appointment Notes",
     "parameters": [
      {
+      "name": "appointmentId",
+      "required": true,
+      "in": "path",
+      "description": "Appointment ID",
+      "schema": {
+       "type": "string",
+       "example": "ocQHyuzHvysMo5N5VsXc"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -1654,16 +1664,6 @@
        "minimum": 0,
        "example": 0,
        "type": "number"
-      }
-     },
-     {
-      "name": "appointmentId",
-      "required": true,
-      "in": "path",
-      "description": "Appointment ID",
-      "schema": {
-       "type": "string",
-       "example": "ocQHyuzHvysMo5N5VsXc"
       }
      }
     ],
@@ -1708,18 +1708,6 @@
     "description": "Get appointment by ID",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "eventId",
       "required": true,
       "in": "path",
@@ -1737,6 +1725,18 @@
       "schema": {
        "type": "string",
        "example": "ocQHyuzHvysMo5N5VsXc"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -2007,6 +2007,16 @@
     "description": "Get calendar notifications based on query",
     "parameters": [
      {
+      "name": "calendarId",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string",
+       "example": "ocQHyuzHvysMo5N5VsXc"
+      },
+      "description": "Calendar ID"
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2017,16 +2027,6 @@
         "v3"
        ]
       }
-     },
-     {
-      "name": "calendarId",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string",
-       "example": "ocQHyuzHvysMo5N5VsXc"
-      },
-      "description": "Calendar ID"
      },
      {
       "name": "isActive",
@@ -2175,6 +2175,16 @@
     "description": "Get free slots for a calendar between a date range. Optionally a consumer can also request free slots in a particular timezone and also for a particular user. The response is keyed by date (YYYY-MM-DD). A date with no free slots (closed, blocked or fully booked) is left out of the response.",
     "parameters": [
      {
+      "name": "calendarId",
+      "required": true,
+      "in": "path",
+      "description": "Calendar Id",
+      "schema": {
+       "example": "ocQHyuzHvysMo5N5VsXc",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2184,16 +2194,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "calendarId",
-      "required": true,
-      "in": "path",
-      "description": "Calendar Id",
-      "schema": {
-       "example": "ocQHyuzHvysMo5N5VsXc",
-       "type": "string"
       }
      },
      {
@@ -2384,18 +2384,6 @@
     "description": "Add Contact to Workflow",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "contactId",
       "required": true,
       "in": "path",
@@ -2413,6 +2401,18 @@
       "schema": {
        "type": "string",
        "example": "f5a2ab74-4c1c-4ede-9c43-2ef1e01e0b38"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -2475,18 +2475,6 @@
     "description": "Delete Contact from Workflow",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "contactId",
       "required": true,
       "in": "path",
@@ -2504,6 +2492,18 @@
       "schema": {
        "type": "string",
        "example": "f5a2ab74-4c1c-4ede-9c43-2ef1e01e0b38"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -2568,6 +2568,16 @@
     "description": "Add Tags",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2577,16 +2587,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -2649,6 +2649,16 @@
     "description": "Remove Tags",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2658,16 +2668,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -2801,6 +2801,16 @@
     "description": "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts",
     "parameters": [
      {
+      "name": "type",
+      "required": true,
+      "in": "path",
+      "description": "Whether the given tags are added to or removed from the contacts. Must be either 'add' or 'remove' One of: add, remove",
+      "schema": {
+       "type": "string",
+       "example": "add"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2810,20 +2820,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "type",
-      "required": true,
-      "in": "path",
-      "description": "Whether the given tags are added to or removed from the contacts. Must be either 'add' or 'remove'",
-      "schema": {
-       "type": "string",
-       "enum": [
-        "add",
-        "remove"
-       ],
-       "example": "add"
       }
      }
     ],
@@ -2951,6 +2947,16 @@
     "description": "Create Note",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -2960,16 +2966,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3032,6 +3028,16 @@
     "description": "Get All Notes",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3041,16 +3047,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3095,6 +3091,16 @@
     "description": "Create Task",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3104,16 +3110,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3176,6 +3172,16 @@
     "description": "Get all Tasks",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3185,16 +3191,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3239,6 +3235,16 @@
     "description": "Delete Contact",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3248,16 +3254,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3310,6 +3306,16 @@
     "description": "Retrieves a contact by its unique identifier.",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Unique identifier of the contact",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3319,16 +3325,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Unique identifier of the contact",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -3381,6 +3377,16 @@
     "description": "Update a contact using contactId\n\n> \u26a0\ufe0f **When updating additional emails/phones, always include the current primary `email`/`phone` in the same request. Otherwise, the existing primary value may be lost.**",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Unique identifier of the contact",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3390,16 +3396,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Unique identifier of the contact",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -3464,6 +3460,16 @@
     "description": "Get Appointments for Contact",
     "parameters": [
      {
+      "name": "contactId",
+      "required": true,
+      "in": "path",
+      "description": "Contact Id",
+      "schema": {
+       "type": "string",
+       "example": "ve9EPM428h8vShlRW1KT"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -3473,16 +3479,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "contactId",
-      "required": true,
-      "in": "path",
-      "description": "Contact Id",
-      "schema": {
-       "type": "string",
-       "example": "ve9EPM428h8vShlRW1KT"
       }
      }
     ],
@@ -3620,18 +3616,6 @@
     "description": "Get Note",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "contactId",
       "required": true,
       "in": "path",
@@ -3649,6 +3633,18 @@
       "schema": {
        "type": "string",
        "example": "ocQHyuzHvysMo5N5VsXc"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -3703,18 +3699,6 @@
     "description": "Get Task",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "contactId",
       "required": true,
       "in": "path",
@@ -3732,6 +3716,18 @@
       "schema": {
        "type": "string",
        "example": "ocQHyuzHvysMo5N5VsXc"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -4302,6 +4298,16 @@
     "description": "Get the conversation details based on the conversation ID",
     "parameters": [
      {
+      "name": "conversationId",
+      "required": true,
+      "in": "path",
+      "description": "Conversation ID as string",
+      "schema": {
+       "example": "tDtDnQdgm2LXpyiqYvZ6",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -4311,16 +4317,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "conversationId",
-      "required": true,
-      "in": "path",
-      "description": "Conversation ID as string",
-      "schema": {
-       "example": "tDtDnQdgm2LXpyiqYvZ6",
-       "type": "string"
       }
      }
     ],
@@ -4365,6 +4361,14 @@
     "description": "Get email by Id",
     "parameters": [
      {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "required": true,
@@ -4398,18 +4402,6 @@
     "description": "Get the recording for a message by passing the message id",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -4427,6 +4419,18 @@
       "schema": {
        "example": "tDtDnQdgm2LXpyiqYvZ6",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -4472,18 +4476,6 @@
     "description": "Get the recording transcription for a message by passing the message id",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -4501,6 +4493,18 @@
       "schema": {
        "example": "tDtDnQdgm2LXpyiqYvZ6",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -4544,6 +4548,14 @@
     "operationId": "getMessage",
     "description": "Get message by message id.",
     "parameters": [
+     {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
      {
       "name": "Version",
       "in": "header",
@@ -4598,6 +4610,16 @@
     "description": "Get messages by conversation id.",
     "parameters": [
      {
+      "name": "conversationId",
+      "required": true,
+      "in": "path",
+      "description": "Conversation ID as string",
+      "schema": {
+       "example": "tDtDnQdgm2LXpyiqYvZ6",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -4607,16 +4629,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "conversationId",
-      "required": true,
-      "in": "path",
-      "description": "Conversation ID as string",
-      "schema": {
-       "example": "tDtDnQdgm2LXpyiqYvZ6",
-       "type": "string"
       }
      },
      {
@@ -5106,6 +5118,16 @@
     "description": "Post the necessary fields for the API to update message status.",
     "parameters": [
      {
+      "name": "messageId",
+      "required": true,
+      "in": "path",
+      "description": "Message Id",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5115,16 +5137,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "messageId",
-      "required": true,
-      "in": "path",
-      "description": "Message Id",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -5407,6 +5419,14 @@
     "description": "\n Create Custom Field Folder  \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5416,14 +5436,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -5476,6 +5488,14 @@
     "description": "\n  Create Custom Field Folder  \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5485,14 +5505,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -5547,6 +5559,14 @@
     "description": "\n  Delete Custom Field By Id  \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5556,14 +5576,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -5606,6 +5618,14 @@
     "description": "\n Get Custom Field / Folder By Id. \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5615,14 +5635,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -5665,6 +5677,14 @@
     "description": "\n  Update Custom Field By Id  \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5674,14 +5694,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -5736,6 +5748,16 @@
     "description": "\n  Get Custom Fields By Object Key  \n  \n :::info\n Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.\n :::",
     "parameters": [
      {
+      "name": "objectKey",
+      "required": true,
+      "in": "path",
+      "description": "key of the Object. Must include \"custom_objects.\" prefix for custom objects. Available on the Custom Objects details Page under settings",
+      "example": "custom_objects.pet",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -5745,16 +5767,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "objectKey",
-      "required": true,
-      "in": "path",
-      "description": "key of the Object. Must include \"custom_objects.\" prefix for custom objects. Available on the Custom Objects details Page under settings",
-      "example": "custom_objects.pet",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -6637,14 +6649,9 @@
       "name": "source",
       "required": true,
       "in": "path",
-      "description": "Source type: email-campaigns, workflow-campaigns, or bulk-actions",
+      "description": "Source type: email-campaigns, workflow-campaigns, or bulk-actions One of: email-campaigns, workflow-campaigns, bulk-actions",
       "schema": {
        "example": "email-campaigns",
-       "enum": [
-        "email-campaigns",
-        "workflow-campaigns",
-        "bulk-actions"
-       ],
        "type": "string"
       }
      },
@@ -7797,6 +7804,14 @@
     "description": "The \"Delete Redirect By Id\" API Allows deletion of a URL redirect from the system using its unique identifier. Use this endpoint to delete a URL redirect with the specified ID using details provided in the request payload.",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -7806,14 +7821,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -7848,6 +7855,14 @@
     "description": "The \"Update Redirect By Id\" API Allows updating an existing URL redirect in the system. Use this endpoint to modify a URL redirect with the specified ID using details provided in the request payload.",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -7857,14 +7872,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -8541,6 +8548,16 @@
     "description": "Delete an existing estimate",
     "parameters": [
      {
+      "name": "estimateId",
+      "required": true,
+      "in": "path",
+      "description": "Estimate Id",
+      "schema": {
+       "example": "5f9d6d8b1b2d2c001f2d9e4b",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -8550,16 +8567,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "estimateId",
-      "required": true,
-      "in": "path",
-      "description": "Estimate Id",
-      "schema": {
-       "example": "5f9d6d8b1b2d2c001f2d9e4b",
-       "type": "string"
       }
      }
     ],
@@ -8622,6 +8629,16 @@
     "description": "Update an existing estimate with new details",
     "parameters": [
      {
+      "name": "estimateId",
+      "required": true,
+      "in": "path",
+      "description": "Estimate Id",
+      "schema": {
+       "example": "5f9d6d8b1b2d2c001f2d9e4b",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -8631,16 +8648,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "estimateId",
-      "required": true,
-      "in": "path",
-      "description": "Estimate Id",
-      "schema": {
-       "example": "5f9d6d8b1b2d2c001f2d9e4b",
-       "type": "string"
       }
      }
     ],
@@ -8705,6 +8712,16 @@
     "description": "API to delete invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -8714,16 +8731,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      },
      {
@@ -8810,6 +8817,16 @@
     "description": "API to get invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -8819,16 +8836,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      },
      {
@@ -8904,6 +8911,16 @@
     "description": "API to update invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -8913,16 +8930,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      }
     ],
@@ -9668,6 +9675,16 @@
     "description": "API to record manual payment for an invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -9677,16 +9694,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      }
     ],
@@ -9751,6 +9758,16 @@
     "description": "API to send estimate by estimate id",
     "parameters": [
      {
+      "name": "estimateId",
+      "required": true,
+      "in": "path",
+      "description": "Estimate Id",
+      "schema": {
+       "example": "5f9d6d8b1b2d2c001f2d9e4b",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -9760,16 +9777,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "estimateId",
-      "required": true,
-      "in": "path",
-      "description": "Estimate Id",
-      "schema": {
-       "example": "5f9d6d8b1b2d2c001f2d9e4b",
-       "type": "string"
       }
      }
     ],
@@ -9834,6 +9841,16 @@
     "description": "API to send invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -9843,16 +9860,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      }
     ],
@@ -9917,6 +9924,16 @@
     "description": "API to delete invoice by invoice id",
     "parameters": [
      {
+      "name": "invoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Invoice Id",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -9926,16 +9943,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "invoiceId",
-      "required": true,
-      "in": "path",
-      "description": "Invoice Id",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      }
     ],
@@ -10080,6 +10087,16 @@
     "description": "Create Custom Field",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10089,16 +10106,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -10161,6 +10168,16 @@
     "description": "Get Custom Fields",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10170,16 +10187,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -10249,6 +10256,16 @@
     "description": "Create Custom Value",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10258,16 +10275,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -10330,6 +10337,16 @@
     "description": "Get Custom Values",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10339,16 +10356,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -10393,6 +10400,16 @@
     "description": "Create tag",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10402,16 +10419,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -10474,6 +10481,16 @@
     "description": "Get Sub-Account (Formerly Location) Tags",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -10483,16 +10500,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -10547,18 +10554,6 @@
     "description": "Delete Custom Field",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -10576,6 +10571,18 @@
       "example": "00NhGCcN1tlO8ZHcu7Wb",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -10628,18 +10635,6 @@
     "description": "Get Custom Field",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -10666,6 +10661,18 @@
       },
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -10718,18 +10725,6 @@
     "description": "Update Custom Field",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -10747,6 +10742,18 @@
       "example": "00NhGCcN1tlO8ZHcu7Wb",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -10811,18 +10818,6 @@
     "description": "Delete Custom Value",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -10840,6 +10835,18 @@
       "example": "kOBjMVAJhFuUeYIojVet",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -10892,18 +10899,6 @@
     "description": "Get Custom Value",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -10921,6 +10916,18 @@
       "example": "kOBjMVAJhFuUeYIojVet",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -10973,18 +10980,6 @@
     "description": "Update Custom Value",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -11002,6 +10997,18 @@
       "example": "kOBjMVAJhFuUeYIojVet",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -11066,18 +11073,6 @@
     "description": "Delete tag",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -11095,6 +11090,18 @@
       "example": "flGwEuzsfJOia1i1ikRN",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -11147,18 +11154,6 @@
     "description": "Update tag",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -11176,6 +11171,18 @@
       "example": "flGwEuzsfJOia1i1ikRN",
       "schema": {
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -11240,6 +11247,16 @@
     "description": "GET all or email/sms templates",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11303,16 +11320,6 @@
       "schema": {
        "type": "string"
       }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
-      }
      }
     ],
     "responses": {
@@ -11366,6 +11373,16 @@
     "description": "Fetch the features enabled for a Sub-Account (Formerly Location) via the feature-permissions framework. Replaces the deprecated `GET /locations/{locationId}/permissions` endpoint.",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11375,16 +11392,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -11439,6 +11446,16 @@
     "description": "Get details of a Sub-Account (Formerly Location) by passing the sub-account id",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11448,16 +11465,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -11510,6 +11517,16 @@
     "description": "Update a Sub-Account (Formerly Location) based on the data provided",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11519,16 +11536,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -11582,6 +11589,14 @@
     "operationId": "listTimezones",
     "description": "Fetch the available timezones",
     "parameters": [
+     {
+      "name": "locationId",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string"
+      }
+     },
      {
       "name": "Version",
       "in": "header",
@@ -11754,6 +11769,16 @@
     "description": "Task Search",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "example": "ve9EPM428h8vShlRW1KT",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11763,16 +11788,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "example": "ve9EPM428h8vShlRW1KT",
-      "schema": {
-       "type": "string"
       }
      }
     ],
@@ -11837,6 +11852,14 @@
     "description": "Deletes specific file or folder from the media storage",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -11846,14 +11869,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "type": "string"
       }
      },
      {
@@ -12026,6 +12041,16 @@
     "description": "Create a Custom Object Record. Supported Objects business and custom objects.",
     "parameters": [
      {
+      "name": "schemaKey",
+      "required": true,
+      "in": "path",
+      "description": "The key of the Custom Object / Standard Object Schema. For custom objects, the key must include the \u201ccustom_objects.\u201d prefix, while standard objects use their respective object keys. This information is available on the Custom Objects Details page under Settings.",
+      "schema": {
+       "example": "custom_objects.pet or business.email (for company's email)",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -12035,16 +12060,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "schemaKey",
-      "required": true,
-      "in": "path",
-      "description": "The key of the Custom Object / Standard Object Schema. For custom objects, the key must include the \u201ccustom_objects.\u201d prefix, while standard objects use their respective object keys. This information is available on the Custom Objects Details page under Settings.",
-      "schema": {
-       "example": "custom_objects.pet or business.email (for company's email)",
-       "type": "string"
       }
      }
     ],
@@ -12099,18 +12114,6 @@
     "description": "Delete Record By Id . Supported Objects are business and custom objects.",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "schemaKey",
       "required": true,
       "in": "path",
@@ -12128,6 +12131,18 @@
       "schema": {
        "example": "632c34b4c9b7da3358ac9891",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -12170,18 +12185,6 @@
     "description": "Allows you to get a Standard Object like business and custom object record by Id",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "schemaKey",
       "required": true,
       "in": "path",
@@ -12199,6 +12202,18 @@
       "schema": {
        "example": "632c34b4c9b7da3358ac9891",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -12241,18 +12256,6 @@
     "description": "Update a Custom Object Record by Id. Supported Objects are business and custom objects.",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "schemaKey",
       "required": true,
       "in": "path",
@@ -12270,6 +12273,18 @@
       "schema": {
        "example": "632c34b4c9b7da3358ac9891",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      },
      {
@@ -12405,6 +12420,16 @@
     "description": "Retrieve Object Schema by key or ID. This will return the schema of the custom object, including all its fields and properties. Supported objects include contact, opportunity, business and custom objects.To understand objects and records, please have a look the documentation here : https://doc.clickup.com/8631005/d/h/87cpx-277156/93bf0c2e23177b0",
     "parameters": [
      {
+      "name": "key",
+      "required": true,
+      "in": "path",
+      "description": "key of the custom or standard object. For custom objects, the key must include the prefix \u201ccustom_objects.\u201d. This key can be found on the Object Details page under Settings in the UI.",
+      "schema": {
+       "example": "custom_objects.pet",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -12414,16 +12439,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "key",
-      "required": true,
-      "in": "path",
-      "description": "key of the custom or standard object. For custom objects, the key must include the prefix \u201ccustom_objects.\u201d. This key can be found on the Object Details page under Settings in the UI.",
-      "schema": {
-       "example": "custom_objects.pet",
-       "type": "string"
       }
      },
      {
@@ -12571,6 +12586,16 @@
     "description": "Supported Objects are custom objects and standard objects like \"business\".",
     "parameters": [
      {
+      "name": "schemaKey",
+      "required": false,
+      "in": "path",
+      "description": "custom object key",
+      "schema": {
+       "example": "632c34b4c9b7da3358ac9891",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -12580,16 +12605,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "schemaKey",
-      "required": false,
-      "in": "path",
-      "description": "custom object key",
-      "schema": {
-       "example": "632c34b4c9b7da3358ac9891",
-       "type": "string"
       }
      }
     ],
@@ -12717,6 +12732,16 @@
     "description": "Delete Opportunity",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "description": "Opportunity Id",
+      "schema": {
+       "example": "yWQobCRIhRguQtD2llvk",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -12726,16 +12751,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "description": "Opportunity Id",
-      "schema": {
-       "example": "yWQobCRIhRguQtD2llvk",
-       "type": "string"
       }
      }
     ],
@@ -12788,6 +12803,16 @@
     "description": "Get Opportunity",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "description": "Opportunity Id",
+      "schema": {
+       "example": "yWQobCRIhRguQtD2llvk",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -12797,16 +12822,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "description": "Opportunity Id",
-      "schema": {
-       "example": "yWQobCRIhRguQtD2llvk",
-       "type": "string"
       }
      }
     ],
@@ -12859,6 +12874,16 @@
     "description": "Update an opportunity. Unless the location allows duplicate opportunities (`allowDuplicateOpportunity`), a contact can have only one opportunity per pipeline. Opportunities without a contact are never treated as duplicates. Moving an opportunity to a pipeline where its contact already has an opportunity returns 400 with `code: OPPORTUNITY_NO_DUPLICATE`.",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "description": "Opportunity Id",
+      "schema": {
+       "example": "yWQobCRIhRguQtD2llvk",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -12868,16 +12893,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "description": "Opportunity Id",
-      "schema": {
-       "example": "yWQobCRIhRguQtD2llvk",
-       "type": "string"
       }
      }
     ],
@@ -13080,6 +13095,16 @@
     "description": "Retrieves a single pipeline by its ID, including all its stages and configuration.",
     "parameters": [
      {
+      "name": "pipelineId",
+      "required": true,
+      "in": "path",
+      "description": "The unique identifier of the pipeline",
+      "schema": {
+       "example": "aWdODOBVOlH1RUFKWQke",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -13089,16 +13114,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "pipelineId",
-      "required": true,
-      "in": "path",
-      "description": "The unique identifier of the pipeline",
-      "schema": {
-       "example": "aWdODOBVOlH1RUFKWQke",
-       "type": "string"
       }
      }
     ],
@@ -13559,6 +13574,16 @@
     "description": "Update Opportunity Status",
     "parameters": [
      {
+      "name": "id",
+      "required": true,
+      "in": "path",
+      "description": "Opportunity Id",
+      "schema": {
+       "example": "yWQobCRIhRguQtD2llvk",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -13568,16 +13593,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "id",
-      "required": true,
-      "in": "path",
-      "description": "Opportunity Id",
-      "schema": {
-       "example": "yWQobCRIhRguQtD2llvk",
-       "type": "string"
       }
      }
     ],
@@ -13728,6 +13743,16 @@
     "description": "The \"Get Order by ID\" API allows to retrieve information for a specific order using its unique identifier. Use this endpoint to fetch details for a single order based on the provided order ID.",
     "parameters": [
      {
+      "name": "orderId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the order that needs to be returned",
+      "schema": {
+       "example": "653f5e0cde5a1314e62a837c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -13737,16 +13762,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "orderId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the order that needs to be returned",
-      "schema": {
-       "example": "653f5e0cde5a1314e62a837c",
-       "type": "string"
       }
      },
      {
@@ -13767,6 +13782,18 @@
       "schema": {
        "example": "3SwdhCu3svxI8AKsPJt6",
        "type": "string"
+      }
+     },
+     {
+      "name": "altType",
+      "in": "query",
+      "required": true,
+      "description": "Always location",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "location"
+       ]
       }
      }
     ],
@@ -13821,6 +13848,16 @@
     "description": "The \"Get Subscription by ID\" API allows to retrieve information for a specific subscription using its unique identifier. Use this endpoint to fetch details for a single subscription based on the provided subscription ID.",
     "parameters": [
      {
+      "name": "subscriptionId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the subscription that needs to be returned",
+      "schema": {
+       "example": "6322e9c9e39fc14ab3ed7042",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -13830,16 +13867,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "subscriptionId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the subscription that needs to be returned",
-      "schema": {
-       "example": "6322e9c9e39fc14ab3ed7042",
-       "type": "string"
       }
      },
      {
@@ -13917,6 +13944,16 @@
     "description": "The \"Get Transaction by ID\" API allows to retrieve information for a specific transaction using its unique identifier. Use this endpoint to fetch details for a single transaction based on the provided transaction ID.",
     "parameters": [
      {
+      "name": "transactionId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the transaction that needs to be returned",
+      "schema": {
+       "example": "61dd0feac077f72010f78804",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -13926,16 +13963,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "transactionId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the transaction that needs to be returned",
-      "schema": {
-       "example": "61dd0feac077f72010f78804",
-       "type": "string"
       }
      },
      {
@@ -14133,6 +14160,16 @@
     "description": "List all fulfillment history of an order",
     "parameters": [
      {
+      "name": "orderId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the order that needs to be returned",
+      "schema": {
+       "example": "653f5e0cde5a1314e62a837c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -14162,16 +14199,6 @@
        "enum": [
         "location"
        ],
-       "type": "string"
-      }
-     },
-     {
-      "name": "orderId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the order that needs to be returned",
-      "schema": {
-       "example": "653f5e0cde5a1314e62a837c",
        "type": "string"
       }
      }
@@ -14227,6 +14254,16 @@
     "description": "List all notes of an order",
     "parameters": [
      {
+      "name": "orderId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the order that needs to be returned",
+      "schema": {
+       "example": "653f5e0cde5a1314e62a837c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -14256,16 +14293,6 @@
        "enum": [
         "location"
        ],
-       "type": "string"
-      }
-     },
-     {
-      "name": "orderId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the order that needs to be returned",
-      "schema": {
-       "example": "653f5e0cde5a1314e62a837c",
        "type": "string"
       }
      }
@@ -14461,6 +14488,18 @@
        "default": 0,
        "example": 0,
        "type": "number"
+      }
+     },
+     {
+      "name": "altType",
+      "in": "query",
+      "required": true,
+      "description": "Always location",
+      "schema": {
+       "type": "string",
+       "enum": [
+        "location"
+       ]
       }
      }
     ],
@@ -15034,18 +15073,6 @@
     "description": "The \"Get Price by ID for a Product\" API allows retrieving information for a specific price associated with a particular product using its unique identifier. Use this endpoint to fetch details for a single price based on the provided price ID and product ID.",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "productId",
       "required": true,
       "in": "path",
@@ -15063,6 +15090,18 @@
       "schema": {
        "example": "6578278e879ad2646715ba9c",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      },
      {
@@ -15127,6 +15166,16 @@
     "description": "The \"Get Product by ID\" API allows to retrieve information for a specific product using its unique identifier. Use this endpoint to fetch details for a single product based on the provided product ID.",
     "parameters": [
      {
+      "name": "productId",
+      "required": true,
+      "in": "path",
+      "description": "ID or the slug of the product that needs to be returned",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -15136,16 +15185,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "productId",
-      "required": true,
-      "in": "path",
-      "description": "ID or the slug of the product that needs to be returned",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      },
      {
@@ -15539,6 +15578,16 @@
     "description": "The \"List Prices for a Product\" API allows retrieving a paginated list of prices associated with a specific product. Customize your results by filtering prices or paginate through the list using the provided query parameters.",
     "parameters": [
      {
+      "name": "productId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the product that needs to be used",
+      "schema": {
+       "example": "6578278e879ad2646715ba9c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -15548,16 +15597,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "productId",
-      "required": true,
-      "in": "path",
-      "description": "ID of the product that needs to be used",
-      "schema": {
-       "example": "6578278e879ad2646715ba9c",
-       "type": "string"
       }
      },
      {
@@ -15922,6 +15961,16 @@
     "description": "Deletes multiple posts based on the provided list of post IDs. \n                  This operation is useful for clearing up large numbers of posts efficiently. \n                  \nNote: \n                  \n1.The maximum number of posts that can be deleted in a single request is '50'.\n                  \n2.However, It will only get deleted in the platform database but still\n                   it is recommended to be cautious of this operation.",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID (also known as Sub-Account ID) for the business location.",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -15931,16 +15980,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location ID (also known as Sub-Account ID) for the business location.",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -16011,6 +16050,16 @@
     "description": "Create posts for all supported platforms. It is possible to create customized posts per channel by using the same platform account IDs in a request and hitting the create post API multiple times with different summaries and account IDs per platform.\n\nThe content and media limitations, as well as platform rate limiters corresponding to the respective platforms, are provided in the following reference link:\n\n  Link: Platform Limitations",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID (also known as Sub-Account ID) for the business location.",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -16020,16 +16069,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location ID (also known as Sub-Account ID) for the business location.",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -16094,18 +16133,6 @@
     "description": "Delete Post",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -16123,6 +16150,18 @@
       "schema": {
        "example": "65fac446d599990d1313c1dd",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -16175,18 +16214,6 @@
     "description": "Create posts for all supported platforms. It is possible to create customized posts per channel by using the same platform account IDs in a request and hitting the create post API multiple times with different summaries and account IDs per platform.\n\nThe content and media limitations, as well as platform rate limiters corresponding to the respective platforms, are provided in the following reference link:\n\n  Link: Platform Limitations",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -16204,6 +16231,18 @@
       "schema": {
        "example": "65fac446d599990d1313c1dd",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -16266,18 +16305,6 @@
     "description": "Get post",
     "parameters": [
      {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     },
-     {
       "name": "locationId",
       "required": true,
       "in": "path",
@@ -16295,6 +16322,18 @@
       "schema": {
        "example": "65fac446d599990d1313c1dd",
        "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
       }
      }
     ],
@@ -16349,6 +16388,16 @@
     "description": "Get list of accounts and groups",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -16358,16 +16407,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -16422,6 +16461,16 @@
     "description": "Retrieve all categories for a specific location with optional search and pagination",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -16431,16 +16480,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      },
      {
@@ -16525,6 +16564,16 @@
     "description": "Get Posts",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID (also known as Sub-Account ID) for the business location.",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -16534,16 +16583,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location ID (also known as Sub-Account ID) for the business location.",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      }
     ],
@@ -16691,6 +16730,16 @@
     "description": "Retrieve all tags for a specific location with optional search and pagination",
     "parameters": [
      {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location Id",
+      "schema": {
+       "example": "ve9EPM428h8vShlRW1KT",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version",
@@ -16700,16 +16749,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "locationId",
-      "required": true,
-      "in": "path",
-      "description": "Location Id",
-      "schema": {
-       "example": "ve9EPM428h8vShlRW1KT",
-       "type": "string"
       }
      },
      {
@@ -17789,6 +17828,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nDelete a workflow. This also ends any enrollments in progress, so contacts currently moving through the workflow stop where they are. Treat it as permanent.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID",
+      "schema": {
+       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -17798,16 +17847,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID",
-      "schema": {
-       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
-       "type": "string"
       }
      },
      {
@@ -17941,6 +17980,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nRead a workflow as a complete definition. The `definition` object is accepted verbatim by Update Workflow Definition, so it round-trips.\n\nThe definition's `version` is the workflow's own counter. Leave it as it comes back: sending it unchanged on update is what stops a concurrent edit in the builder from being silently overwritten.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID",
+      "schema": {
+       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -17950,16 +17999,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID",
-      "schema": {
-       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
-       "type": "string"
       }
      },
      {
@@ -18091,6 +18130,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nReplace a workflow definition in full. **This is a complete overwrite** \u2014 any step absent from the request is deleted, so always read the current definition first and send it back modified \u2014 the definition carries its own `version`, so sending back what you read keeps you protected against overwriting a concurrent edit. A stale `version` is rejected with 422 and nothing is written.\n\n**Draft only.** A published workflow is rejected with 409: the overwrite would replace steps under contacts currently moving through it. Set the workflow to draft with Update Workflow Status, update it, then publish it again.\n\n**Order matters.** Changing status advances the `version`, so read the definition *after* setting the workflow to draft: draft \u2192 read \u2192 update \u2192 publish. Reading first and drafting second leaves you holding a stale `version`.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID",
+      "schema": {
+       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -18100,16 +18149,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID",
-      "schema": {
-       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
-       "type": "string"
       }
      },
      {
@@ -18499,6 +18538,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nCount the log records of one workflow, grouped by one or more dimensions. It answers how many: enrollments, completions, failures per step, why contacts left, and trends over time. To answer who, use Get Workflow Logs.\n\n**Before you call it.** Get `workflowId` from Search Workflows. Never pass a workflow name.\n\n**Grouping.** Each row holds one value for every dimension in `groupBy`, plus `count`. Grouping by `week`, `day` or `hour` adds `bucket`, the start of each interval in `timezone`. `startDate` and `endDate` always stay UTC. Rows are sorted by the grouped values in ascending order (`status`, then `type`, `stepId`, `removedReason` and `bucket`), not by count.\n\n**Finding filter values.** Group by a dimension to see which values this workflow has, then filter on them. For example, `groupBy=removedReason` lists the reasons present, and those values work in `removedReasons`.\n\n**Steps.** Rows grouped by `stepId` also carry `stepName`, the name of that step on its most recent log record in the date range. `stepId` matches `actions[].id` in Get Workflow Definition. A step count includes the `remove_from_workflow` record written when a contact leaves the workflow at that step, so group by `stepId` and `type` together to count how often the step itself ran.\n\n**Common questions.**\n- Enrollments: `statuses=added_to_workflow`\n- Completions: `removedReasons=end_of_workflow`. Divide by enrollments for a completion rate\n- Failures per step: `statuses=error,failed,failed_retry_limit_reached&groupBy=stepId`\n- Why contacts left: `types=remove_from_workflow&groupBy=removedReason`\n- Stopped because the contact replied: `removedReasons=contact_reply_stop_response`\n- Goal reached: `types=workflow_goal&statuses=success`\n- Enrollment trend: `statuses=added_to_workflow&groupBy=week` (or `day`)\n- Change over time: call twice with back-to-back windows of equal length and compare\n\nCompletions in a window can include contacts who enrolled before it, so a completion rate can exceed 100%. With fewer than about 30 enrollments, rates swing widely. Zero is a real answer. A `workflowId` that does not exist in the sub-account returns 404.\n\n**Limits.** The range defaults to the last 30 days and must not exceed 30 days. Logs are available for the last 60 days. A grouping that produces more rows than `limit` is refused with 422 rather than truncated, because a truncated count reports wrong totals.\n\n**Compatibility.** New optional fields and new values of `status`, `type` and `removedReason` can appear at any time. Ignore fields you do not know, and treat an unknown value as other.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID. Get it from Search Workflows. Never pass a workflow name",
+      "schema": {
+       "example": "a7321e66-8b68-4c10-afc7-4cc9744f17af",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -18508,16 +18557,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID. Get it from Search Workflows. Never pass a workflow name",
-      "schema": {
-       "example": "a7321e66-8b68-4c10-afc7-4cc9744f17af",
-       "type": "string"
       }
      },
      {
@@ -18762,6 +18801,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nList the step-by-step execution history of one workflow, newest first. Each record is one step of one run for one contact or record, with its outcome and timing. It answers who and what: who entered, what happened to a contact, which steps failed and for whom. To answer how many, use Get Workflow Log Statistics.\n\n**Before you call it.** Get `workflowId` from Search Workflows. Never pass a workflow name. To see what each step is, call Get Workflow Definition: its `actions[].id` matches `stepId` here.\n\n**Step details.** `meta` says how the contact entered, why a step was skipped or failed, what a step did, whether a wait timed out, and why the contact left. A key is left out when it does not apply. Only the keys documented under `meta` are returned. New keys may be added later (see Compatibility).\n\n**Paging.** The response holds `logs`, their `count`, and `nextCursor`. The first call (`action=first`, the default) returns the newest page. For the next (older) page, send `action=next` with `referenceId` and `referenceCreatedAt` from `nextCursor`, unchanged, and keep the same filters and dates. `nextCursor` is null when there are no more records. A cursor that does not match returns 422. A page holds at most 100 records, 15 by default.\n\n**Dates.** Send `startDate` and `endDate` together (ISO 8601, UTC, at most 30 days apart). Without them, the last 30 days are returned. Logs are available for the last 60 days.\n\n**Common questions.**\n- Who entered the workflow: `statuses=added_to_workflow`\n- Which steps failed, and for whom: `statuses=error,failed,failed_retry_limit_reached`\n- What happened to one contact: `contactId=`\n- Every step of one run: `executionId=`\n\nAn empty `logs` list is a real answer: nothing matched in that window. A `workflowId` that does not exist in the sub-account, or is a folder, returns 404.\n\n**Compatibility.** New optional fields, including new `meta` keys, and new values of `status`, `type` and `recordType` can appear at any time. Ignore fields you do not know, and treat an unknown value as other.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID. Get it from Search Workflows. Never pass a workflow name",
+      "schema": {
+       "example": "a7321e66-8b68-4c10-afc7-4cc9744f17af",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -18771,16 +18820,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID. Get it from Search Workflows. Never pass a workflow name",
-      "schema": {
-       "example": "a7321e66-8b68-4c10-afc7-4cc9744f17af",
-       "type": "string"
       }
      },
      {
@@ -19456,6 +19495,16 @@
     "description": "**Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other sub-account receives 403 `WORKFLOW_API_NOT_ENABLED_FOR_LOCATION`.\n\nPublish a workflow or send it back to draft. Publishing validates the definition in full and activates the triggers; a definition that fails validation is rejected with 422 and the workflow stays as it was. Locked and scheduled-paused workflows cannot change status and return 409.",
     "parameters": [
      {
+      "name": "workflowId",
+      "required": true,
+      "in": "path",
+      "description": "Workflow ID",
+      "schema": {
+       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
+       "type": "string"
+      }
+     },
+     {
       "name": "Version",
       "in": "header",
       "description": "API Version. Send `v3`.",
@@ -19465,16 +19514,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "workflowId",
-      "required": true,
-      "in": "path",
-      "description": "Workflow ID",
-      "schema": {
-       "example": "b1b0de82-3efb-4d63-83f6-13c50aef208c",
-       "type": "string"
       }
      },
      {
@@ -68609,6 +68648,10 @@
     "bearerFormat": "JWT"
    }
   }
+ },
+ "x-mcp": {
+  "orchestration": "code",
+  "endpoint_tools": "hidden"
  },
  "security": [
   {

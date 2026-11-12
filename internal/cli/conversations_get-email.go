@@ -14,17 +14,21 @@ import (
 func newConversationsGetEmailCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:         "get-email",
+		Use:         "get-email <id>",
 		Short:       "Get email by Id",
-		Example:     "  scalify-cli conversations get-email",
+		Example:     "  scalify-cli conversations get-email 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "conversations.get-email", "pp:method": "GET", "pp:path": "/conversations/messages/email/{id}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return cmd.Help()
+			}
 			c, err := flags.newClient()
 			if err != nil {
 				return err
 			}
 
 			path := "/conversations/messages/email/{id}"
+			path = replacePathParam(path, "id", args[0])
 			params := map[string]string{}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "conversations", false, path, params, nil)
 			if err != nil {

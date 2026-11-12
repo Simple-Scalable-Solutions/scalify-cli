@@ -3893,7 +3893,7 @@ var resourceIDFieldOverrides = map[string]string{
 // genericIDFieldFallbacks is the runtime safety net for resources that did
 // NOT receive a templated IDField. API-specific names belong in spec
 // annotations (x-resource-id), not this list.
-var genericIDFieldFallbacks = []string{"id", "ID", "name", "uuid", "slug", "key", "code", "uid"}
+var genericIDFieldFallbacks = []string{"id", "_id", "ID", "name", "uuid", "slug", "key", "code", "uid"}
 
 // UpsertBatch inserts or replaces multiple records in a single transaction
 // and returns (stored, extractFailures, err). stored counts rows actually

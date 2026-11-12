@@ -12,30 +12,16 @@ import (
 )
 
 func newEmailsGetCampaignStatsCmd(flags *rootFlags) *cobra.Command {
-	var flagSource string
 	var flagSubSourceId string
 
 	cmd := &cobra.Command{
-		Use:         "get-campaign-stats <locationId> <sourceId>",
+		Use:         "get-campaign-stats <locationId> <source> <sourceId>",
 		Short:       "Get statistics for email campaigns, workflows, or bulk actions",
-		Example:     "  scalify-cli emails get-campaign-stats 550e8400-e29b-41d4-a716-446655440000 550e8400-e29b-41d4-a716-446655440000",
+		Example:     "  scalify-cli emails get-campaign-stats 550e8400-e29b-41d4-a716-446655440000 example-value 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "emails.get-campaign-stats", "pp:method": "GET", "pp:path": "/emails/locations/{locationId}/campaigns/stats/{source}/{sourceId}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
 				return cmd.Help()
-			}
-			if cmd.Flags().Changed("source") {
-				allowedSource := []string{"email-campaigns", "workflow-campaigns", "bulk-actions"}
-				validSource := false
-				for _, v := range allowedSource {
-					if flagSource == v {
-						validSource = true
-						break
-					}
-				}
-				if !validSource {
-					fmt.Fprintf(os.Stderr, "warning: --%s %q not in allowed set %v\n", "source", flagSource, allowedSource)
-				}
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -44,11 +30,14 @@ func newEmailsGetCampaignStatsCmd(flags *rootFlags) *cobra.Command {
 
 			path := "/emails/locations/{locationId}/campaigns/stats/{source}/{sourceId}"
 			path = replacePathParam(path, "locationId", args[0])
+			if len(args) < 2 {
+				return usageErr(fmt.Errorf("source is required\nUsage: %s <%s>", cmd.CommandPath(), "source"))
+			}
+			path = replacePathParam(path, "source", args[1])
 			if len(args) < 3 {
 				return usageErr(fmt.Errorf("sourceId is required\nUsage: %s <%s>", cmd.CommandPath(), "sourceId"))
 			}
 			path = replacePathParam(path, "sourceId", args[2])
-			path = replacePathParam(path, "source", fmt.Sprintf("%v", flagSource))
 			params := map[string]string{}
 			if flagSubSourceId != "" {
 				params["subSourceId"] = fmt.Sprintf("%v", flagSubSourceId)
@@ -95,7 +84,6 @@ func newEmailsGetCampaignStatsCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagSource, "source", "email-campaigns", "Source type: email-campaigns, workflow-campaigns, or bulk-actions (one of: email-campaigns, workflow-campaigns, bulk-actions)")
 	cmd.Flags().StringVar(&flagSubSourceId, "sub-source-id", "", "Workflow action ID. Only valid when source is `workflow-campaigns`")
 
 	return cmd

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-12T06:06:12.766167Z",
+  "generated_at": "2026-11-12T11:06:58.302795Z",
   "printing_press_version": "4.2.2",
   "api_name": "scalify",
   "display_name": "Scalify",
@@ -9,7 +9,7 @@
   "spec_url": "https://marketplace.gohighlevel.com/docs/llms/v3/llms.txt",
   "spec_path": "spec.json",
   "spec_format": "openapi3",
-  "spec_checksum": "sha256:aaf4ff1f2edef21b08141c0d8b92ce2593d62c53fe92294c52b3cbaafe1a95c6",
+  "spec_checksum": "sha256:60c6a985d968b52a3a35d655b3e871f46fcb7002408f160c7c87b192afd3fc54",
   "mcp_binary": "scalify-pp-mcp",
   "mcp_tool_count": 195,
   "mcp_ready": "full",
