@@ -14,12 +14,13 @@ import (
 func newPaymentsGetOrderCmd(flags *rootFlags) *cobra.Command {
 	var flagLocationId string
 	var flagAltId string
+	var flagAltType string
 
 	cmd := &cobra.Command{
 		Use:         "get-order <orderId>",
 		Aliases:     []string{"get"},
 		Short:       "The 'Get Order by ID' API allows to retrieve information for a specific order using its unique identifier. Use this...",
-		Example:     "  scalify-cli payments get-order 550e8400-e29b-41d4-a716-446655440000 --alt-id 550e8400-e29b-41d4-a716-446655440000",
+		Example:     "  scalify-cli payments get-order 550e8400-e29b-41d4-a716-446655440000 --alt-id 550e8400-e29b-41d4-a716-446655440000 --alt-type example-value",
 		Annotations: map[string]string{"pp:endpoint": "payments.get-order", "pp:method": "GET", "pp:path": "/payments/orders/{orderId}", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
@@ -27,6 +28,22 @@ func newPaymentsGetOrderCmd(flags *rootFlags) *cobra.Command {
 			}
 			if !cmd.Flags().Changed("alt-id") && !flags.dryRun {
 				return fmt.Errorf("required flag \"%s\" not set", "alt-id")
+			}
+			if !cmd.Flags().Changed("alt-type") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "alt-type")
+			}
+			if cmd.Flags().Changed("alt-type") {
+				allowedAltType := []string{"location"}
+				validAltType := false
+				for _, v := range allowedAltType {
+					if flagAltType == v {
+						validAltType = true
+						break
+					}
+				}
+				if !validAltType {
+					fmt.Fprintf(os.Stderr, "warning: --%s %q not in allowed set %v\n", "alt-type", flagAltType, allowedAltType)
+				}
 			}
 			c, err := flags.newClient()
 			if err != nil {
@@ -41,6 +58,9 @@ func newPaymentsGetOrderCmd(flags *rootFlags) *cobra.Command {
 			}
 			if flagAltId != "" {
 				params["altId"] = fmt.Sprintf("%v", flagAltId)
+			}
+			if flagAltType != "" {
+				params["altType"] = fmt.Sprintf("%v", flagAltType)
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "payments", false, path, params, nil)
 			if err != nil {
@@ -86,6 +106,7 @@ func newPaymentsGetOrderCmd(flags *rootFlags) *cobra.Command {
 	}
 	cmd.Flags().StringVar(&flagLocationId, "location-id", "", "LocationId is the id of the sub-account.")
 	cmd.Flags().StringVar(&flagAltId, "alt-id", "", "AltId is the unique identifier e.g: location id.")
+	cmd.Flags().StringVar(&flagAltType, "alt-type", "", "Always location (one of: location)")
 
 	return cmd
 }

@@ -13,7 +13,6 @@ import (
 )
 
 func newContactsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
-	var flagType string
 	var bodyContacts string
 	var bodyLocationId string
 	var bodyRemoveAllTags bool
@@ -21,23 +20,13 @@ func newContactsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 	var stdinBody bool
 
 	cmd := &cobra.Command{
-		Use:         "update-tags",
+		Use:         "update-tags <type>",
 		Short:       "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts",
-		Example:     "  scalify-cli contacts update-tags --location-id 550e8400-e29b-41d4-a716-446655440000",
+		Example:     "  scalify-cli contacts update-tags example-value --location-id 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.update-tags", "pp:method": "POST", "pp:path": "/contacts/bulk/tags/update/{type}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if cmd.Flags().Changed("type") {
-				allowedType := []string{"add", "remove"}
-				validType := false
-				for _, v := range allowedType {
-					if flagType == v {
-						validType = true
-						break
-					}
-				}
-				if !validType {
-					fmt.Fprintf(os.Stderr, "warning: --%s %q not in allowed set %v\n", "type", flagType, allowedType)
-				}
+			if len(args) == 0 {
+				return cmd.Help()
 			}
 			if !stdinBody {
 				if !cmd.Flags().Changed("contacts") && !flags.dryRun {
@@ -56,7 +45,7 @@ func newContactsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/contacts/bulk/tags/update/{type}"
-			path = replacePathParam(path, "type", fmt.Sprintf("%v", flagType))
+			path = replacePathParam(path, "type", args[0])
 			var body map[string]any
 			if stdinBody {
 				stdinData, err := io.ReadAll(os.Stdin)
@@ -158,7 +147,6 @@ func newContactsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagType, "type", "add", "Whether the given tags are added to or removed from the contacts. Must be either 'add' or 'remove' (one of: add, remove)")
 	cmd.Flags().StringVar(&bodyContacts, "contacts", "", "list of contact ids to be processed")
 	cmd.Flags().StringVar(&bodyLocationId, "location-id", "", "location id from where the bulk request is executed")
 	cmd.Flags().BoolVar(&bodyRemoveAllTags, "remove-all-tags", false, "Option to implement remove all tags. if true, all tags will be removed from the contacts. Can only be used with...")

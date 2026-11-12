@@ -14,18 +14,22 @@ import (
 func newLocationsTimezonesListCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
-		Use:         "list",
+		Use:         "list <locationId>",
 		Aliases:     []string{"get"},
 		Short:       "Fetch the available timezones",
-		Example:     "  scalify-cli locations timezones list",
+		Example:     "  scalify-cli locations timezones list 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "timezones.list", "pp:method": "GET", "pp:path": "/locations/{locationId}/timezones", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return cmd.Help()
+			}
 			c, err := flags.newClient()
 			if err != nil {
 				return err
 			}
 
 			path := "/locations/{locationId}/timezones"
+			path = replacePathParam(path, "locationId", args[0])
 			params := map[string]string{}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "timezones", false, path, params, nil)
 			if err != nil {

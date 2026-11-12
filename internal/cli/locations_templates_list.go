@@ -51,10 +51,7 @@ func newLocationsTemplatesListCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/locations/{locationId}/templates"
-			if len(args) < 6 {
-				return usageErr(fmt.Errorf("locationId is required\nUsage: %s <%s>", cmd.CommandPath(), "locationId"))
-			}
-			path = replacePathParam(path, "locationId", args[5])
+			path = replacePathParam(path, "locationId", args[0])
 			data, prov, err := resolvePaginatedRead(cmd.Context(), c, flags, "templates", path, map[string]string{
 				"deleted":  fmt.Sprintf("%v", flagDeleted),
 				"skip":     fmt.Sprintf("%v", flagSkip),

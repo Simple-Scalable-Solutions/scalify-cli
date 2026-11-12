@@ -37,10 +37,7 @@ func newCalendarsListAppointmentNotesCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/calendars/appointments/{appointmentId}/notes"
-			if len(args) < 3 {
-				return usageErr(fmt.Errorf("appointmentId is required\nUsage: %s <%s>", cmd.CommandPath(), "appointmentId"))
-			}
-			path = replacePathParam(path, "appointmentId", args[2])
+			path = replacePathParam(path, "appointmentId", args[0])
 			data, prov, err := resolvePaginatedRead(cmd.Context(), c, flags, "calendars", path, map[string]string{
 				"limit":  fmt.Sprintf("%v", flagLimit),
 				"offset": fmt.Sprintf("%v", flagOffset),
