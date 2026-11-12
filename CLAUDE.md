@@ -22,8 +22,8 @@ go test ./...
 golangci-lint run ./...
 
 # Verify structural quality
-printing-press dogfood --dir . --spec ./spec.yaml
-printing-press scorecard --dir . --spec ./spec.yaml
+printing-press dogfood --dir . --spec ./spec.json
+printing-press scorecard --dir . --spec ./spec.json
 
 # Check CLI health (requires SCALIFY_TOKEN)
 ./build/stage/bin/scalify-pp-cli doctor
@@ -62,31 +62,24 @@ The `internal/config/config.go` `BaseURL` points at the underlying API endpoint 
 
 ## Regenerating the CLI
 
+Generated from the **live v3 API docs** (https://marketplace.gohighlevel.com/docs/llms/v3/llms.txt), not
+a community spec. Everything lives in `scripts/regen/` (see its README):
+
 ```shell
-# Crowd-sniff fresh endpoints from the GHL npm SDK
-printing-press crowd-sniff --api gohighlevel --output /tmp/ghl-spec.yaml
+# printing-press v4.2.2 (same version that wrote this repo)
+GOTOOLCHAIN=go1.26.3 GOBIN=$HOME/bin go install github.com/mvanhorn/cli-printing-press/v4/cmd/printing-press@v4.2.2
 
-# Regenerate (preserves hand-edited internal/cli/*.go files)
-printing-press generate \
-  --spec /tmp/ghl-spec.yaml \
-  --name scalify \
-  --owner "Scalify" \
-  --output . \
-  --spec-source community \
-  --force
-
-# After regeneration: re-run branding cleanup
-find . -type f \( -name "*.go" -o -name "*.md" -o -name "*.json" -o -name "*.yaml" \) \
-  ! -path "./.git/*" ! -name "go.sum" | xargs sed -i '' \
-  -e 's/GOHIGHLEVEL_TOKEN/SCALIFY_TOKEN/g' \
-  -e 's/gohighlevel_token/scalify_token/g' \
-  -e 's/GohighlevelToken/ScalifyToken/g' \
-  -e 's/GoHighLevel/Scalify/g' -e 's/gohighlevel/scalify/g' \
-  -e 's/HighLevel/Scalify/g' -e 's/highlevel/scalify/g'
-
-# Re-add the authHeaderPrefix constant to internal/client/client.go
-# (required for dogfood auth-protocol MATCH — see checkAuth in printing-press source)
+PRINTING_PRESS=$HOME/bin/printing-press ./scripts/regen/regen.sh
+go test ./... && git diff --stat
 ```
+
+- `scripts/regen/endpoints.txt` is the list of endpoints the CLI wraps. Add a line, re-run.
+- `scripts/regen/renames.tsv` gives clumsy generated command names a readable name.
+- Hand fixes are re-applied on every run: `scripts/regen/patches/*.patch` (location switching, auth,
+  doctor update check, `Version: v3` header), plus the hand-owned files `internal/cli/location_config.go`,
+  `internal/cli/location_default.go` and `internal/client/query.go`. Change those files, then refresh the
+  matching patch, or the next regen undoes your change.
+- `spec.json` is the merged OpenAPI input the CLI was generated from; it's an output of the script.
 
 ## Releasing
 
@@ -104,47 +97,24 @@ Never run `goreleaser release --clean` without `--parallelism 2`.
 
 ## CLI/MCP Surface Parity — read this before touching path params or headers
 
-`internal/cli/*.go` (the Cobra commands) and `internal/mcp/tools.go` (the typed MCP
-tool registry, `RegisterTools`) each hand-encode their own copy of every endpoint's
-path template, path-param bindings, and per-endpoint header overrides. They are
-**not generated from a shared source and do not stay in sync automatically** — a
-fix applied to one surface has no effect on the other.
+`internal/cli/*.go` (the Cobra commands) and `internal/mcp/tools.go` (the typed MCP tool
+registry) each carry their own copy of every endpoint's path, params and headers. Both are
+generated from `spec.json`, so **fix endpoint shapes in the regen pipeline, not by hand**: an
+edit to one generated file doesn't reach the other surface and is lost on the next regen.
 
-This has already caused a real bug: a fix to 11 commands whose path reuses the same
-`{id}` placeholder twice (e.g. `/locations/{id}/customValues/{id}`) was applied to
-`internal/cli/*.go` and `internal/cli/helpers.go` (`replacePathParamSequential`) but
-missed `internal/mcp/tools.go`, which kept silently collapsing both `{id}` slots to
-one value — the CLI got fixed, the MCP surface stayed broken, and the two surfaces
-diverged. Same story for path/header quirks discovered per-endpoint (e.g. a
-trailing-slash 404, a required non-default API-version header): fixing
-`internal/cli/data_source.go`'s `resolveRead`/`resolvePaginatedRead` headers plumbing
-does not touch `makeAPIHandler` in `internal/mcp/tools.go` at all.
+- Endpoint data wrong (path, method, params): it comes from the live docs. Re-run
+  `scripts/regen/regen.sh`; if the docs themselves are wrong, adjust `scripts/regen/merge.py`.
+- Behaviour every command needs (headers, query handling): put it in a hand-owned file or a
+  patch under `scripts/regen/`, and make sure it covers `makeAPIHandler` in `tools.go` too.
+  Example: `client.WithQuery` sends query params on POST/PUT/DELETE, and
+  `scripts/regen/fix_write_query.py` wires it into both surfaces.
+- Then `GOTOOLCHAIN=go1.26.3 go build ./... && go vet ./... && go test ./...`.
 
-**Whenever a fix touches how a command builds its path, path params, or headers,
-check both surfaces before calling it done:**
-
-1. `internal/cli/<resource>_<action>.go` — the Cobra command's `RunE`.
-2. `internal/mcp/tools.go` — search for the same path template string (e.g.
-   `grep -n '"/locations/{id}/customValues/{id}"' internal/mcp/tools.go`) and check
-   the `mcpParamBinding` list and `makeAPIHandler(...)` call for the same endpoint.
-   A path with a repeated placeholder name needs one `mcpParamBinding` per
-   occurrence, in the order they appear in the path (`makeAPIHandler` fills path
-   placeholders left-to-right, one per binding, via a single-occurrence
-   `strings.Replace`). A header override needs the variadic `headers
-   map[string]string` argument on `makeAPIHandler` (added specifically so the other
-   ~100 call sites don't need touching).
-3. `go build ./... && go vet ./... && go test ./...` — with `GOTOOLCHAIN=go1.26.3`
-   if your local Go is newer than the pinned `go 1.26.3` in `go.mod` (a newer local
-   toolchain hits an unrelated incompatibility in `github.com/enetx/http2` v1.0.26
-   that is not related to CLI/MCP changes).
-
-If you only have time to fix one surface, say so explicitly in the commit message
-under a "Known gap" note — don't let the divergence go undocumented like the
-workflows/users trailing-slash fix's MCP gap did.
+If you only fix one surface, say so in the commit message under a "Known gap" note.
 
 ## Current Quality
 
-Scorecard: **81/100 Grade A** (printing-press v4.2.2)  
-Dogfood: **PASS** (auth protocol match, 0 dead flags, 0 dead functions)
+Scorecard: **84/100 Grade A** (printing-press v4.2.2, 2026-11-12 regen from the live v3 docs)
 
-Remaining improvement areas: MCP surface strategy (101 endpoint tools → should use orchestration mode), insight commands, cache freshness.
+Remaining improvement areas: MCP surface strategy (195 endpoint tools, about 62k tokens of tool
+definitions; switch to search + execute orchestration), insight commands, cache freshness.

@@ -34,196 +34,221 @@ This CLI makes direct HTTP requests to the Scalify REST API. It does not require
 
 ## Command Reference
 
-**blogs** — Operations on posts
+**associations** — Manage associations
 
-- `scalify-cli blogs get-posts` — GET /blogs/{id}/posts/{id}
-- `scalify-cli blogs list-authors` — GET /blogs/authors
-- `scalify-cli blogs list-categories` — GET /blogs/categories
-- `scalify-cli blogs list-posts` — GET /blogs/posts
-- `scalify-cli blogs list-url-slug-exists` — GET /blogs/posts/url-slug-exists
+- `scalify-cli associations list` — Get all associations for a sub-account / location
+- `scalify-cli associations list-relations` — Get all relations by record Id
 
-**businesses** — Operations on businesses
+**blogs** — Manage blogs
 
-- `scalify-cli businesses create-businesses` — POST /businesses
-- `scalify-cli businesses delete-businesses` — DELETE /businesses/{id}
-- `scalify-cli businesses get-businesses` — GET /businesses/{id}
-- `scalify-cli businesses list-businesses` — GET /businesses
-- `scalify-cli businesses update-businesses` — PUT /businesses/{id}
+- `scalify-cli blogs check-url-slug` — The 'Check url slug' API checks whether a blog post url slug is already in use for the location. Call it before...
+- `scalify-cli blogs get-all-authors` — The 'Get all blog authors' API returns the blog authors for a given location ID.
+- `scalify-cli blogs get-all-categories` — The 'Get all blog categories' API returns the blog categories for a given location ID.
+- `scalify-cli blogs get-post` — The 'Get Blog Post by ID' API returns a single published blog post, including its content/body, for the given location.
+- `scalify-cli blogs list` — The 'Get Blogs by Location ID' API allows you get blogs using Location ID.
+- `scalify-cli blogs list-posts` — The 'Get Blog posts by Blog ID' API returns the blog posts for a given blog site. Use searchTerm to search across...
 
-**calendars** — Operations on calendars
+**businesses** — Manage businesses
 
-- `scalify-cli calendars create-appointments` — POST /calendars/events/appointments
-- `scalify-cli calendars create-calendars` — POST /calendars
-- `scalify-cli calendars delete-calendars` — DELETE /calendars/{id}
-- `scalify-cli calendars get-calendars` — GET /calendars/{id}
-- `scalify-cli calendars get-free-slots` — GET /calendars/{id}/free-slots
-- `scalify-cli calendars list-calendars` — GET /calendars
-- `scalify-cli calendars list-events` — GET /calendars/events
-- `scalify-cli calendars update-calendars` — PUT /calendars/{id}
+- `scalify-cli businesses create` — Create Business
+- `scalify-cli businesses delete` — Delete Business
+- `scalify-cli businesses get` — Get Business
+- `scalify-cli businesses list` — Get Businesses by Location
+- `scalify-cli businesses update` — Update Business
 
-**campaigns** — Operations on campaigns
+**calendars** — Manage calendars
 
-- `scalify-cli campaigns` — GET /campaigns
+- `scalify-cli calendars create` — Create calendar in a location.
+- `scalify-cli calendars create-appointment` — Create appointment
+- `scalify-cli calendars delete` — Delete calendar by ID
+- `scalify-cli calendars get` — Get calendar by ID
+- `scalify-cli calendars get-appointment` — Get appointment by ID
+- `scalify-cli calendars get-blocked-slots` — Get Blocked Slots. calendarId finds blocks set on an event calendar only. Blocks set on a host (assignedUserId) are...
+- `scalify-cli calendars list` — Get all calendars in a location.
+- `scalify-cli calendars list-appointment-notes` — Get Appointment Notes
+- `scalify-cli calendars list-events` — Get Calendar Events
+- `scalify-cli calendars list-groups` — Get all calendar groups in a location.
+- `scalify-cli calendars update` — Update calendar by ID: name, description, duration, slot interval, buffers, minimum notice, booking window, daily...
 
-**contacts** — Operations on contacts
+**campaigns** — Manage campaigns
 
-- `scalify-cli contacts create-contacts` — POST /contacts
-- `scalify-cli contacts create-notes` — POST /contacts/{id}/notes
-- `scalify-cli contacts create-tags` — POST /contacts/{id}/tags
-- `scalify-cli contacts create-tasks` — POST /contacts/{id}/tasks
-- `scalify-cli contacts create-upsert` — POST /contacts/upsert
-- `scalify-cli contacts create-workflow` — POST /contacts/{id}/workflow/{id}
-- `scalify-cli contacts delete-contacts` — DELETE /contacts/{id}
-- `scalify-cli contacts delete-tags` — DELETE /contacts/{id}/tags
-- `scalify-cli contacts get-appointments` — GET /contacts/{id}/appointments
-- `scalify-cli contacts get-contacts` — GET /contacts/{id}
-- `scalify-cli contacts get-notes` — GET /contacts/{id}/notes
-- `scalify-cli contacts get-tasks` — GET /contacts/{id}/tasks
-- `scalify-cli contacts list-contacts` — GET /contacts
-- `scalify-cli contacts list-search` — GET /contacts/search
-- `scalify-cli contacts update-contacts` — PUT /contacts/{id}
+- `scalify-cli campaigns` — Get Campaigns
 
-**conversations** — Operations on conversations
+**contacts** — Manage contacts
 
-- `scalify-cli conversations create-conversations` — POST /conversations
-- `scalify-cli conversations create-inbound` — POST /conversations/messages/inbound
-- `scalify-cli conversations create-messages` — POST /conversations/messages
-- `scalify-cli conversations get-conversations` — GET /conversations/{id}
-- `scalify-cli conversations get-messages` — GET /conversations/{id}/messages
-- `scalify-cli conversations get-messages-2` — GET /conversations/messages/{id}
-- `scalify-cli conversations list-search` — GET /conversations/search
-- `scalify-cli conversations update-status` — PUT /conversations/messages/{id}/status
+- `scalify-cli contacts count` — Count the contacts that match a search, without returning them. Takes the same `query` and `filters` as Search...
+- `scalify-cli contacts create` — Create a new contact
+- `scalify-cli contacts delete` — Delete Contact
+- `scalify-cli contacts get` — Retrieves a contact by its unique identifier.
+- `scalify-cli contacts get-duplicate` — Get Duplicate Contact. If `Allow Duplicate Contact` is disabled under Settings, the global unique identifier will be...
+- `scalify-cli contacts lookup-by-email-or-phone` — Look up contacts matching an exact `email` or `phone`, scoped to a location, up to `limit` contacts (max 20) per...
+- `scalify-cli contacts search` — Search contacts based on combinations of advanced filters.
+- `scalify-cli contacts update` — Update a contact using contactId > ⚠️ **When updating additional emails/phones, always include the current...
+- `scalify-cli contacts update-tags` — Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts
+- `scalify-cli contacts upsert` — The Upsert API will adhere to the configuration defined under the 'Allow Duplicate Contact' setting at the Location...
 
-**courses** — Operations on courses
+**conversations** — Manage conversations
 
-- `scalify-cli courses` — GET /courses
+- `scalify-cli conversations add-inbound-message` — Post the necessary fields for the API to add a new inbound message. **Note:** Either `conversationId` or `contactId`...
+- `scalify-cli conversations create` — Creates a new conversation with the data provided
+- `scalify-cli conversations export-messages` — Export messages for a specific location with cursor-based pagination support. **Channel Filtering Behavior:** -...
+- `scalify-cli conversations get` — Get the conversation details based on the conversation ID
+- `scalify-cli conversations get-email` — Get email by Id
+- `scalify-cli conversations get-message` — Get message by message id.
+- `scalify-cli conversations get-recording` — Get the recording for a message by passing the message id
+- `scalify-cli conversations get-transcription` — Get the recording transcription for a message by passing the message id
+- `scalify-cli conversations search` — Returns a list of all conversations matching the search criteria along with the sort and filter options selected.
+- `scalify-cli conversations send-message` — Post the necessary fields for the API to send a new message.
+- `scalify-cli conversations update-message-status` — Post the necessary fields for the API to update message status.
 
-**documents** — Operations on documents
+**courses** — Manage courses
 
-- `scalify-cli documents create-send` — POST /documents/{id}/send
-- `scalify-cli documents delete-documents` — DELETE /documents/{id}
-- `scalify-cli documents get-documents` — GET /documents/{id}
-- `scalify-cli documents list-documents` — GET /documents
+- `scalify-cli courses` — List courses in the location. Requires a Location token with courses.readonly. Send Version: v3. Each item is the...
 
-**emails** — Operations on emails
+**custom-fields** — Manage custom fields
 
-- `scalify-cli emails` — GET /emails
+- `scalify-cli custom-fields create` — Create Custom Field :::info Only supports Custom Objects and Company (Business) today. Will be extended to other...
+- `scalify-cli custom-fields create-folder` — Create Custom Field Folder :::info Only supports Custom Objects and Company (Business) today. Will be extended to...
+- `scalify-cli custom-fields delete` — Delete Custom Field By Id :::info Only supports Custom Objects and Company (Business) today. Will be extended to...
+- `scalify-cli custom-fields delete-folder` — Create Custom Field Folder :::info Only supports Custom Objects and Company (Business) today. Will be extended to...
+- `scalify-cli custom-fields get` — Get Custom Field / Folder By Id. :::info Only supports Custom Objects and Company (Business) today. Will be extended...
+- `scalify-cli custom-fields get-by-object-key` — Get Custom Fields By Object Key :::info Only supports Custom Objects and Company (Business) today. Will be extended...
+- `scalify-cli custom-fields rename-folder` — Create Custom Field Folder :::info Only supports Custom Objects and Company (Business) today. Will be extended to...
+- `scalify-cli custom-fields update` — Update Custom Field By Id :::info Only supports Custom Objects and Company (Business) today. Will be extended to...
 
-**forms** — Operations on forms
+**emails** — Manage emails
 
-- `scalify-cli forms list-forms` — GET /forms
-- `scalify-cli forms list-submissions` — GET /forms/submissions
+- `scalify-cli emails create-template` — Create a new email template
+- `scalify-cli emails create-template-folder` — Create a new template folder
+- `scalify-cli emails delete-template` — Delete a template
+- `scalify-cli emails get-bulk-action-campaign` — Get a single bulk action campaign by its ID
+- `scalify-cli emails get-campaign` — Get a single email campaign by its ID
+- `scalify-cli emails get-campaign-stats` — Get statistics for email campaigns, workflows, or bulk actions
+- `scalify-cli emails get-template` — Get a single email template by its ID
+- `scalify-cli emails get-workflow-campaign` — Get a single workflow campaign by its ID
+- `scalify-cli emails import-template` — Import a template from a provider URL
+- `scalify-cli emails list-bulk-action-campaigns` — Get list of bulk action campaigns for a location
+- `scalify-cli emails list-campaigns` — Get list of email campaigns for a location
+- `scalify-cli emails list-templates` — Get list of templates by location
+- `scalify-cli emails list-workflow-campaigns` — Get list of workflow campaigns for a location
+- `scalify-cli emails update-template` — Update an email template
 
-**funnels** — Operations on funnels
+**forms** — Manage forms
 
-- `scalify-cli funnels list-funnels` — GET /funnels
-- `scalify-cli funnels list-list` — GET /funnels/funnel/list
-- `scalify-cli funnels list-page` — GET /funnels/page
+- `scalify-cli forms get-submissions` — Get Forms Submissions
+- `scalify-cli forms list` — Get Forms
 
-**invoices** — Operations on invoices
+**funnels** — Manage funnels
 
-- `scalify-cli invoices create-estimate` — POST /invoices/estimate
-- `scalify-cli invoices create-invoices` — POST /invoices
-- `scalify-cli invoices create-record-payment` — POST /invoices/{id}/record-payment
-- `scalify-cli invoices create-send` — POST /invoices/{id}/send
-- `scalify-cli invoices create-send-2` — POST /invoices/estimate/{id}/send
-- `scalify-cli invoices create-void` — POST /invoices/{id}/void
-- `scalify-cli invoices delete-estimate` — DELETE /invoices/estimate/{id}
-- `scalify-cli invoices delete-invoices` — DELETE /invoices/{id}
-- `scalify-cli invoices get-estimate` — GET /invoices/estimate/{id}
-- `scalify-cli invoices get-invoices` — GET /invoices/{id}
-- `scalify-cli invoices list-estimate` — GET /invoices/estimate
-- `scalify-cli invoices list-invoices` — GET /invoices
-- `scalify-cli invoices update-estimate` — PUT /invoices/estimate/{id}
-- `scalify-cli invoices update-invoices` — PUT /invoices/{id}
+- `scalify-cli funnels count-pages` — Retrieves count of all funnel pages based on the given query parameters.
+- `scalify-cli funnels create-redirect` — The 'Create Redirect' API Allows adding a new url redirect to the system. Use this endpoint to create a url redirect...
+- `scalify-cli funnels delete-redirect` — The 'Delete Redirect By Id' API Allows deletion of a URL redirect from the system using its unique identifier. Use...
+- `scalify-cli funnels list` — Retrieves a list of all funnels based on the given query parameters.
+- `scalify-cli funnels list-pages` — Retrieves a list of all funnel pages based on the given query parameters.
+- `scalify-cli funnels list-redirects` — Retrieves a list of all URL redirects based on the given query parameters.
+- `scalify-cli funnels update-redirect` — The 'Update Redirect By Id' API Allows updating an existing URL redirect in the system. Use this endpoint to modify...
 
-**links** — Operations on links
+**invoices** — Manage invoices
 
-- `scalify-cli links` — GET /links
+- `scalify-cli invoices create` — API to create an invoice
+- `scalify-cli invoices create-estimate` — Create a new estimate with the provided details
+- `scalify-cli invoices delete` — API to delete invoice by invoice id
+- `scalify-cli invoices delete-estimate` — Delete an existing estimate
+- `scalify-cli invoices get` — API to get invoice by invoice id
+- `scalify-cli invoices get-settings` — Get the invoice settings for the given location
+- `scalify-cli invoices list` — API to get list of invoices
+- `scalify-cli invoices list-estimate-templates` — Get a list of estimate templates or a specific template by ID
+- `scalify-cli invoices list-estimates` — Get a paginated list of estimates
+- `scalify-cli invoices list-schedules` — API to get list of schedules
+- `scalify-cli invoices list-templates` — API to get list of templates
+- `scalify-cli invoices send-estimate` — API to send estimate by estimate id
+- `scalify-cli invoices update` — API to update invoice by invoice id
+- `scalify-cli invoices update-estimate` — Update an existing estimate with new details
 
-**locations** — Operations on locations
+**links** — Manage links
 
-- `scalify-cli locations create-customFields` — POST /locations/{id}/customFields
-- `scalify-cli locations create-customValues` — POST /locations/{id}/customValues
-- `scalify-cli locations create-tags` — POST /locations/{id}/tags
-- `scalify-cli locations delete-customFields` — DELETE /locations/{id}/customFields/{id}
-- `scalify-cli locations delete-customValues` — DELETE /locations/{id}/customValues/{id}
-- `scalify-cli locations delete-tags` — DELETE /locations/{id}/tags/{id}
-- `scalify-cli locations get-customFields` — GET /locations/{id}/customFields
-- `scalify-cli locations get-customValues` — GET /locations/{id}/customValues
-- `scalify-cli locations get-locations` — GET /locations/{id}
-- `scalify-cli locations get-tags` — GET /locations/{id}/tags
-- `scalify-cli locations list-locations` — GET /locations
-- `scalify-cli locations list-search` — GET /locations/search
-- `scalify-cli locations update-customFields` — PUT /locations/{id}/customFields/{id}
-- `scalify-cli locations update-customValues` — PUT /locations/{id}/customValues/{id}
-- `scalify-cli locations update-locations` — PUT /locations/{id}
-- `scalify-cli locations update-tags` — PUT /locations/{id}/tags/{id}
+- `scalify-cli links` — Get Links
 
-**medias** — Operations on files
+**locations** — Manage locations
 
-- `scalify-cli medias delete-medias` — DELETE /medias/{id}
-- `scalify-cli medias list-files` — GET /medias/files
+- `scalify-cli locations get` — Get details of a Sub-Account (Formerly Location) by passing the sub-account id
+- `scalify-cli locations search` — Search Sub-Account (Formerly Location)
+- `scalify-cli locations update` — Update a Sub-Account (Formerly Location) based on the data provided
 
-**objects** — Operations on objects
+**medias** — Manage medias
 
-- `scalify-cli objects create-records` — POST /objects/{id}/records
-- `scalify-cli objects delete-records` — DELETE /objects/{id}/records/{id}
-- `scalify-cli objects get-objects` — GET /objects/{id}
-- `scalify-cli objects get-records` — GET /objects/{id}/records
-- `scalify-cli objects get-records-2` — GET /objects/{id}/records/{id}
-- `scalify-cli objects list-objects` — GET /objects
-- `scalify-cli objects update-records` — PUT /objects/{id}/records/{id}
+- `scalify-cli medias delete-file` — Deletes specific file or folder from the media storage
+- `scalify-cli medias list-files` — Fetches list of files and folders from the media storage
 
-**opportunities** — Operations on opportunities
+**notes** — Manage notes
 
-- `scalify-cli opportunities create-opportunities` — POST /opportunities
-- `scalify-cli opportunities delete-opportunities` — DELETE /opportunities/{id}
-- `scalify-cli opportunities get-opportunities` — GET /opportunities/{id}
-- `scalify-cli opportunities list-pipelines` — GET /opportunities/pipelines
-- `scalify-cli opportunities list-search` — GET /opportunities/search
-- `scalify-cli opportunities update-opportunities` — PUT /opportunities/{id}
+- `scalify-cli notes` — Search Notes
 
-**payments** — Operations on payments
+**objects** — Manage objects
 
-- `scalify-cli payments create-coupons` — POST /payments/coupons
-- `scalify-cli payments delete-coupons` — DELETE /payments/coupons/{id}
-- `scalify-cli payments get-coupons` — GET /payments/coupons/{id}
-- `scalify-cli payments get-orders` — GET /payments/orders/{id}
-- `scalify-cli payments list-coupons` — GET /payments/coupons
-- `scalify-cli payments list-orders` — GET /payments/orders
-- `scalify-cli payments list-subscriptions` — GET /payments/subscriptions
-- `scalify-cli payments list-transactions` — GET /payments/transactions
-- `scalify-cli payments update-coupons` — PUT /payments/coupons/{id}
+- `scalify-cli objects get-schema` — Retrieve Object Schema by key or ID. This will return the schema of the custom object, including all its fields and...
+- `scalify-cli objects list` — Get all objects for a location. Supported Objects are contact, opportunity, business and custom objects.To...
 
-**social-media-posting** — Operations on social-media-posting
+**opportunities** — Manage opportunities
 
-- `scalify-cli social-media-posting create-social-media-posting` — POST /social-media-posting
-- `scalify-cli social-media-posting delete-social-media-posting` — DELETE /social-media-posting/{id}
-- `scalify-cli social-media-posting get-social-media-posting` — GET /social-media-posting/{id}
-- `scalify-cli social-media-posting list-social-media-posting` — GET /social-media-posting
+- `scalify-cli opportunities create` — Create an opportunity. `contactId` is optional. Unless the location allows duplicate opportunities...
+- `scalify-cli opportunities delete` — Delete Opportunity
+- `scalify-cli opportunities get` — Get Opportunity
+- `scalify-cli opportunities get-lost-reason` — Get lost reason
+- `scalify-cli opportunities get-pipeline` — Retrieves a single pipeline by its ID, including all its stages and configuration.
+- `scalify-cli opportunities list-pipelines` — Get Pipelines
+- `scalify-cli opportunities search` — Search Opportunities based on combinations of advanced filters. Send `filters` (each with `field`, `operator` and...
+- `scalify-cli opportunities search-legacy` — Search Opportunity
+- `scalify-cli opportunities update` — Update an opportunity. Unless the location allows duplicate opportunities (`allowDuplicateOpportunity`), a contact...
 
-**surveys** — Operations on surveys
+**payments** — Manage payments
 
-- `scalify-cli surveys list-submissions` — GET /surveys/submissions
-- `scalify-cli surveys list-surveys` — GET /surveys
+- `scalify-cli payments get-coupon` — The 'Get Coupon Details' API enables you to retrieve comprehensive information about a specific coupon using either...
+- `scalify-cli payments get-order` — The 'Get Order by ID' API allows to retrieve information for a specific order using its unique identifier. Use this...
+- `scalify-cli payments get-subscription` — The 'Get Subscription by ID' API allows to retrieve information for a specific subscription using its unique...
+- `scalify-cli payments get-transaction` — The 'Get Transaction by ID' API allows to retrieve information for a specific transaction using its unique...
+- `scalify-cli payments list-coupons` — The 'List Coupons' API allows you to retrieve a list of all coupons available in your location. Use this endpoint to...
+- `scalify-cli payments list-fulfillments` — List all fulfillment history of an order
+- `scalify-cli payments list-order-notes` — List all notes of an order
+- `scalify-cli payments list-orders` — The 'List Orders' API allows to retrieve a paginated list of orders. Customize your results by filtering orders...
+- `scalify-cli payments list-subscriptions` — The 'List Subscriptions' API allows to retrieve a paginated list of subscriptions. Customize your results by...
+- `scalify-cli payments list-transactions` — The 'List Transactions' API allows to retrieve a paginated list of transactions. Customize your results by filtering...
 
-**users** — Operations on users
+**products** — Manage products
 
-- `scalify-cli users get-users` — GET /users/{id}
-- `scalify-cli users list-users` — GET /users
+- `scalify-cli products get` — The 'Get Product by ID' API allows to retrieve information for a specific product using its unique identifier. Use...
+- `scalify-cli products list` — The 'List Products' API allows to retrieve a paginated list of products. Customize your results by filtering...
+- `scalify-cli products list-collections` — Internal API to fetch the Product Collections
+- `scalify-cli products list-inventory` — The 'List Inventory API allows the user to retrieve a paginated list of inventory items. Use this endpoint to fetch...
 
-**webhooks** — Operations on webhooks
+**proposals** — Manage proposals
 
-- `scalify-cli webhooks create-webhooks` — POST /webhooks
-- `scalify-cli webhooks delete-webhooks` — DELETE /webhooks/{id}
-- `scalify-cli webhooks get-webhooks` — GET /webhooks/{id}
-- `scalify-cli webhooks list-webhooks` — GET /webhooks
-- `scalify-cli webhooks update-webhooks` — PUT /webhooks/{id}
+- `scalify-cli proposals list-documents` — List documents for a location
+- `scalify-cli proposals list-templates` — List document contract templates for a location
 
-**workflows** — Operations on workflows
+**social-media-posting** — Manage social media posting
 
-- `scalify-cli workflows` — GET /workflows
+- `scalify-cli social-media-posting` — Retrieve analytics data for multiple social media accounts. Supports custom date ranges for both the current period...
+
+**surveys** — Manage surveys
+
+- `scalify-cli surveys get-submissions` — Get Surveys Submissions
+- `scalify-cli surveys list` — Get Surveys
+
+**users** — Manage users
+
+- `scalify-cli users filter-by-email` — Filter users by company ID, deleted status, and email array
+- `scalify-cli users get` — Get User
+- `scalify-cli users search` — Search Users
+
+**workflows** — Manage workflows
+
+- `scalify-cli workflows create` — **Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other...
+- `scalify-cli workflows delete` — **Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other...
+- `scalify-cli workflows list` — Get Workflow
+- `scalify-cli workflows list-step-types` — **Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other...
+- `scalify-cli workflows search` — **Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other...
+- `scalify-cli workflows validate-definition` — **Limited availability.** The workflow API is currently enabled for selected sub-accounts only; any other...
 
 
 ### Finding the right command
@@ -234,7 +259,7 @@ When you know what you want to do but not which command does it, ask the CLI dir
 scalify-cli which "<capability in your own words>"
 ```
 
-`which` resolves a natural-language capability query to the best matching command. Exit code `0` means at least one match; exit code `2` means no confident match — fall back to `--help` or use a narrower query.
+`which` resolves a natural-language capability query to the best matching command from this CLI's curated feature index. Exit code `0` means at least one match; exit code `2` means no confident match — fall back to `--help` or use a narrower query.
 
 ## Auth Setup
 

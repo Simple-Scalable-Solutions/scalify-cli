@@ -10,24 +10,18 @@ import (
 func newLocationsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "locations",
-		Short: "Operations on locations",
+		Short: "Manage locations",
 	}
 
-	cmd.AddCommand(newLocationsCreateCustomFieldsCmd(flags))
-	cmd.AddCommand(newLocationsCreateCustomValuesCmd(flags))
-	cmd.AddCommand(newLocationsCreateTagsCmd(flags))
-	cmd.AddCommand(newLocationsDeleteCustomFieldsCmd(flags))
-	cmd.AddCommand(newLocationsDeleteCustomValuesCmd(flags))
-	cmd.AddCommand(newLocationsDeleteTagsCmd(flags))
-	cmd.AddCommand(newLocationsGetCustomFieldsCmd(flags))
-	cmd.AddCommand(newLocationsGetCustomValuesCmd(flags))
-	cmd.AddCommand(newLocationsGetLocationsCmd(flags))
-	cmd.AddCommand(newLocationsGetTagsCmd(flags))
-	cmd.AddCommand(newLocationsListLocationsCmd(flags))
-	cmd.AddCommand(newLocationsListSearchCmd(flags))
-	cmd.AddCommand(newLocationsUpdateCustomFieldsCmd(flags))
-	cmd.AddCommand(newLocationsUpdateCustomValuesCmd(flags))
-	cmd.AddCommand(newLocationsUpdateLocationsCmd(flags))
-	cmd.AddCommand(newLocationsUpdateTagsCmd(flags))
+	cmd.AddCommand(newLocationsGetCmd(flags))
+	cmd.AddCommand(newLocationsSearchCmd(flags))
+	cmd.AddCommand(newLocationsUpdateCmd(flags))
+	cmd.AddCommand(newLocationsCustomFieldsCmd(flags))
+	cmd.AddCommand(newLocationsCustomValuesCmd(flags))
+	cmd.AddCommand(newLocationsFeaturesCmd(flags))
+	cmd.AddCommand(newLocationsTagsCmd(flags))
+	cmd.AddCommand(newLocationsTasksCmd(flags))
+	cmd.AddCommand(newLocationsTemplatesCmd(flags))
+	cmd.AddCommand(newLocationsTimezonesCmd(flags))
 	return cmd
 }

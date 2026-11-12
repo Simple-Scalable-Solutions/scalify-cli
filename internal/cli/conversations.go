@@ -10,16 +10,20 @@ import (
 func newConversationsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "conversations",
-		Short: "Operations on search",
+		Short: "Manage conversations",
 	}
 
-	cmd.AddCommand(newConversationsCreateConversationsCmd(flags))
-	cmd.AddCommand(newConversationsCreateInboundCmd(flags))
-	cmd.AddCommand(newConversationsCreateMessagesCmd(flags))
-	cmd.AddCommand(newConversationsGetConversationsCmd(flags))
-	cmd.AddCommand(newConversationsGetMessagesCmd(flags))
-	cmd.AddCommand(newConversationsGetMessages2Cmd(flags))
-	cmd.AddCommand(newConversationsListSearchCmd(flags))
-	cmd.AddCommand(newConversationsUpdateStatusCmd(flags))
+	cmd.AddCommand(newConversationsAddInboundMessageCmd(flags))
+	cmd.AddCommand(newConversationsCreateCmd(flags))
+	cmd.AddCommand(newConversationsExportMessagesCmd(flags))
+	cmd.AddCommand(newConversationsGetCmd(flags))
+	cmd.AddCommand(newConversationsGetEmailCmd(flags))
+	cmd.AddCommand(newConversationsGetMessageCmd(flags))
+	cmd.AddCommand(newConversationsGetRecordingCmd(flags))
+	cmd.AddCommand(newConversationsGetTranscriptionCmd(flags))
+	cmd.AddCommand(newConversationsSearchCmd(flags))
+	cmd.AddCommand(newConversationsSendMessageCmd(flags))
+	cmd.AddCommand(newConversationsUpdateMessageStatusCmd(flags))
+	cmd.AddCommand(newConversationsMessagesCmd(flags))
 	return cmd
 }

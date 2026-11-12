@@ -9,8 +9,8 @@ import (
 	"os"
 	"sort"
 
-	"scalify-pp-cli/internal/store"
 	"github.com/spf13/cobra"
+	"scalify-pp-cli/internal/store"
 )
 
 func newAnalyticsCmd(flags *rootFlags) *cobra.Command {
@@ -26,13 +26,13 @@ func newAnalyticsCmd(flags *rootFlags) *cobra.Command {
 		Long: `Analyze locally synced data with count, group-by, and summary operations.
 Data must be synced first with the sync command.`,
 		Example: `  # Count records by type
-  scalify-pp-cli analytics --type messages
+  scalify-cli analytics --type messages
 
   # Group by a field
-  scalify-pp-cli analytics --type messages --group-by author_id
+  scalify-cli analytics --type messages --group-by author_id
 
   # Top 10 most frequent values
-  scalify-pp-cli analytics --type messages --group-by channel_id --limit 10 --json`,
+  scalify-cli analytics --type messages --group-by channel_id --limit 10 --json`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if dbPath == "" {
 				dbPath = defaultDBPath("scalify-pp-cli")
@@ -40,7 +40,7 @@ Data must be synced first with the sync command.`,
 
 			db, err := store.OpenWithContext(cmd.Context(), dbPath)
 			if err != nil {
-				return fmt.Errorf("opening local database: %w\nRun 'scalify-pp-cli sync' first.", err)
+				return fmt.Errorf("opening local database: %w\nRun 'scalify-cli sync' first.", err)
 			}
 			defer db.Close()
 

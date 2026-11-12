@@ -6,39 +6,37 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 func newCampaignsPromotedCmd(flags *rootFlags) *cobra.Command {
-	var flagParams string
+	var flagLocationId string
+	var flagStatus string
 
 	cmd := &cobra.Command{
-		Use:   "campaigns",
-		Short: "GET /campaigns",
-		Long:  "Shortcut for 'campaigns list_campaigns'. GET /campaigns",
-		Example: "  scalify-cli campaigns",
-		Annotations: map[string]string{"pp:endpoint": "campaigns.list_campaigns", "pp:method": "GET", "pp:path": "/campaigns", "mcp:read-only": "true"},
+		Use:         "campaigns",
+		Short:       "Get Campaigns",
+		Long:        "Shortcut for 'campaigns list'. Get Campaigns",
+		Example:     "  scalify-cli campaigns --location-id 550e8400-e29b-41d4-a716-446655440000",
+		Annotations: map[string]string{"pp:endpoint": "campaigns.list", "pp:method": "GET", "pp:path": "/campaigns/", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if !cmd.Flags().Changed("location-id") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "location-id")
+			}
 			c, err := flags.newClient()
 			if err != nil {
 				return err
 			}
 
-			path := "/campaigns"
+			path := "/campaigns/"
 			params := map[string]string{}
-			if flagParams != "" {
-				// Parse as URL query string so each key becomes an individual query param.
-				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
-				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
-					for k, vals := range parsed {
-						if len(vals) > 0 {
-							params[k] = vals[0]
-						}
-					}
-				}
+			if flagLocationId != "" {
+				params["locationId"] = fmt.Sprintf("%v", flagLocationId)
+			}
+			if flagStatus != "" {
+				params["status"] = fmt.Sprintf("%v", flagStatus)
 			}
 			data, prov, err := resolveRead(cmd.Context(), c, flags, "campaigns", false, path, params, nil)
 			if err != nil {
@@ -92,7 +90,8 @@ func newCampaignsPromotedCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagParams, "params", "", "")
+	cmd.Flags().StringVar(&flagLocationId, "location-id", "", "Location id")
+	cmd.Flags().StringVar(&flagStatus, "status", "", "Status")
 
 	// Wire sibling endpoints and sub-resources as subcommands
 

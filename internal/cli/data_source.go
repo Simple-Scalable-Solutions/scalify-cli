@@ -117,7 +117,7 @@ func resolveRead(ctx context.Context, c *client.Client, flags *rootFlags, resour
 		// Network error — try local fallback
 		fallbackData, fallbackProv, fallbackErr := resolveLocal(ctx, resourceType, isList, path, params, "api_unreachable")
 		if fallbackErr != nil {
-			return nil, DataProvenance{}, fmt.Errorf("API unreachable and no local data. Run 'scalify-pp-cli sync' to enable offline access.\n\nOriginal error: %w", err)
+			return nil, DataProvenance{}, fmt.Errorf("API unreachable and no local data. Run 'scalify-cli sync' to enable offline access.\n\nOriginal error: %w", err)
 		}
 		return fallbackData, attachFreshness(fallbackProv, flags), nil
 	}
@@ -151,7 +151,7 @@ func resolvePaginatedRead(ctx context.Context, c *client.Client, flags *rootFlag
 		}
 		fallbackData, fallbackProv, fallbackErr := resolveLocal(ctx, resourceType, true, path, params, "api_unreachable")
 		if fallbackErr != nil {
-			return nil, DataProvenance{}, fmt.Errorf("API unreachable and no local data. Run 'scalify-pp-cli sync' to enable offline access.\n\nOriginal error: %w", err)
+			return nil, DataProvenance{}, fmt.Errorf("API unreachable and no local data. Run 'scalify-cli sync' to enable offline access.\n\nOriginal error: %w", err)
 		}
 		return fallbackData, attachFreshness(fallbackProv, flags), nil
 	}
@@ -207,10 +207,10 @@ func writeThroughCache(ctx context.Context, resourceType string, data json.RawMe
 func resolveLocal(ctx context.Context, resourceType string, isList bool, path string, params map[string]string, reason string) (json.RawMessage, DataProvenance, error) {
 	db, err := openStoreForRead(ctx, "scalify-pp-cli")
 	if err != nil {
-		return nil, DataProvenance{}, fmt.Errorf("opening local database: %w\nRun 'scalify-pp-cli sync' first.", err)
+		return nil, DataProvenance{}, fmt.Errorf("opening local database: %w\nRun 'scalify-cli sync' first.", err)
 	}
 	if db == nil {
-		return nil, DataProvenance{}, fmt.Errorf("no local data. Run 'scalify-pp-cli sync' first")
+		return nil, DataProvenance{}, fmt.Errorf("no local data. Run 'scalify-cli sync' first")
 	}
 	defer db.Close()
 
@@ -237,7 +237,7 @@ func resolveLocal(ctx context.Context, resourceType string, isList bool, path st
 			items = append(items, r)
 		}
 		if len(items) == 0 {
-			return nil, DataProvenance{}, fmt.Errorf("no local data for %q. Run 'scalify-pp-cli sync' first", resourceType)
+			return nil, DataProvenance{}, fmt.Errorf("no local data for %q. Run 'scalify-cli sync' first", resourceType)
 		}
 		// Marshal []json.RawMessage into a single JSON array
 		data, err := json.Marshal(items)
@@ -256,7 +256,7 @@ func resolveLocal(ctx context.Context, resourceType string, isList bool, path st
 		return nil, DataProvenance{}, fmt.Errorf("querying local store: %w", err)
 	}
 	if item == nil {
-		return nil, DataProvenance{}, fmt.Errorf("resource %q with ID %q not found in local store. Run 'scalify-pp-cli sync' first", resourceType, id)
+		return nil, DataProvenance{}, fmt.Errorf("resource %q with ID %q not found in local store. Run 'scalify-cli sync' first", resourceType, id)
 	}
 	return item, prov, nil
 }

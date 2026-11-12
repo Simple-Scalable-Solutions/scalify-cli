@@ -6,41 +6,40 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 func newCoursesPromotedCmd(flags *rootFlags) *cobra.Command {
-	var flagParams string
+	var flagLimit string
+	var flagCursor string
+	var flagSearch string
+	var flagLocationId string
+	var flagAll bool
 
 	cmd := &cobra.Command{
-		Use:   "courses",
-		Short: "GET /courses",
-		Long:  "Shortcut for 'courses list_courses'. GET /courses",
-		Example: "  scalify-cli courses",
-		Annotations: map[string]string{"pp:endpoint": "courses.list_courses", "pp:method": "GET", "pp:path": "/courses", "mcp:read-only": "true"},
+		Use:         "courses",
+		Short:       "List courses in the location. Requires a Location token with courses.readonly. Send Version: v3. Each item is the...",
+		Long:        "Shortcut for 'courses list'. List courses in the location. Requires a Location token with courses.readonly. Send Version: v3. Each item is the...",
+		Example:     "  scalify-cli courses --location-id 550e8400-e29b-41d4-a716-446655440000",
+		Annotations: map[string]string{"pp:endpoint": "courses.list", "pp:method": "GET", "pp:path": "/courses/products", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if !cmd.Flags().Changed("location-id") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "location-id")
+			}
 			c, err := flags.newClient()
 			if err != nil {
 				return err
 			}
 
-			path := "/courses"
-			params := map[string]string{}
-			if flagParams != "" {
-				// Parse as URL query string so each key becomes an individual query param.
-				// Wrapping in params["params"] produces ?params=k%3Dv which the API rejects.
-				if parsed, perr := url.ParseQuery(flagParams); perr == nil {
-					for k, vals := range parsed {
-						if len(vals) > 0 {
-							params[k] = vals[0]
-						}
-					}
-				}
-			}
-			data, prov, err := resolveRead(cmd.Context(), c, flags, "courses", false, path, params, nil)
+			path := "/courses/products"
+			data, prov, err := resolvePaginatedRead(cmd.Context(), c, flags, "courses", path, map[string]string{
+				"limit":      fmt.Sprintf("%v", flagLimit),
+				"cursor":     fmt.Sprintf("%v", flagCursor),
+				"search":     fmt.Sprintf("%v", flagSearch),
+				"locationId": fmt.Sprintf("%v", flagLocationId),
+			}, nil, flagAll, "cursor", "", "")
 			if err != nil {
 				return classifyAPIError(err, flags)
 			}
@@ -92,7 +91,11 @@ func newCoursesPromotedCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&flagParams, "params", "", "")
+	cmd.Flags().StringVar(&flagLimit, "limit", "", "Page size (1-50)")
+	cmd.Flags().StringVar(&flagCursor, "cursor", "", "Opaque cursor from the previous page")
+	cmd.Flags().StringVar(&flagSearch, "search", "", "Case-insensitive title search")
+	cmd.Flags().StringVar(&flagLocationId, "location-id", "", "Location id or sub-account id is required.")
+	cmd.Flags().BoolVar(&flagAll, "all", false, "Fetch all pages")
 
 	// Wire sibling endpoints and sub-resources as subcommands
 

@@ -30,13 +30,13 @@ Gracefully shuts down on SIGTERM/SIGINT.
 Note: For APIs with WebSocket or SSE support, a future version will use
 native streaming instead of polling.`,
 		Example: `  # Tail all changes every 10 seconds
-  scalify-pp-cli tail --interval 10s
+  scalify-cli tail --interval 10s
 
   # Tail a specific resource
-  scalify-pp-cli tail messages --interval 5s
+  scalify-cli tail messages --interval 5s
 
   # Pipe to jq for filtering
-  scalify-pp-cli tail events --interval 30s | jq 'select(.type == "error")'`,
+  scalify-cli tail events --interval 30s | jq 'select(.type == "error")'`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) > 0 {
 				resource = args[0]
@@ -104,6 +104,7 @@ native streaming instead of polling.`,
 // defaultSyncResources (which only exists when sync is generated).
 func tailKnownResources() []string {
 	return []string{
+		"associations",
 		"blogs",
 		"businesses",
 		"calendars",
@@ -111,7 +112,7 @@ func tailKnownResources() []string {
 		"contacts",
 		"conversations",
 		"courses",
-		"documents",
+		"custom-fields",
 		"emails",
 		"forms",
 		"funnels",
@@ -119,18 +120,22 @@ func tailKnownResources() []string {
 		"links",
 		"locations",
 		"medias",
+		"notes",
 		"objects",
 		"opportunities",
 		"payments",
+		"products",
+		"proposals",
 		"social-media-posting",
 		"surveys",
 		"users",
-		"webhooks",
 		"workflows",
 	}
 }
 
-func fetchAndEmit(c interface{ Get(string, map[string]string) (json.RawMessage, error) }, path string, enc *json.Encoder) error {
+func fetchAndEmit(c interface {
+	Get(string, map[string]string) (json.RawMessage, error)
+}, path string, enc *json.Encoder) error {
 	data, err := c.Get(path, nil)
 	if err != nil {
 		return err

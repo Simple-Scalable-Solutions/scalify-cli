@@ -10,22 +10,25 @@ import (
 func newInvoicesCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "invoices",
-		Short: "Operations on invoices",
+		Short: "Manage invoices",
 	}
 
+	cmd.AddCommand(newInvoicesCreateCmd(flags))
 	cmd.AddCommand(newInvoicesCreateEstimateCmd(flags))
-	cmd.AddCommand(newInvoicesCreateInvoicesCmd(flags))
-	cmd.AddCommand(newInvoicesCreateRecordPaymentCmd(flags))
-	cmd.AddCommand(newInvoicesCreateSendCmd(flags))
-	cmd.AddCommand(newInvoicesCreateSend2Cmd(flags))
-	cmd.AddCommand(newInvoicesCreateVoidCmd(flags))
+	cmd.AddCommand(newInvoicesDeleteCmd(flags))
 	cmd.AddCommand(newInvoicesDeleteEstimateCmd(flags))
-	cmd.AddCommand(newInvoicesDeleteInvoicesCmd(flags))
-	cmd.AddCommand(newInvoicesGetEstimateCmd(flags))
-	cmd.AddCommand(newInvoicesGetInvoicesCmd(flags))
-	cmd.AddCommand(newInvoicesListEstimateCmd(flags))
-	cmd.AddCommand(newInvoicesListInvoicesCmd(flags))
+	cmd.AddCommand(newInvoicesGetCmd(flags))
+	cmd.AddCommand(newInvoicesGetSettingsCmd(flags))
+	cmd.AddCommand(newInvoicesListCmd(flags))
+	cmd.AddCommand(newInvoicesListEstimateTemplatesCmd(flags))
+	cmd.AddCommand(newInvoicesListEstimatesCmd(flags))
+	cmd.AddCommand(newInvoicesListSchedulesCmd(flags))
+	cmd.AddCommand(newInvoicesListTemplatesCmd(flags))
+	cmd.AddCommand(newInvoicesSendEstimateCmd(flags))
+	cmd.AddCommand(newInvoicesUpdateCmd(flags))
 	cmd.AddCommand(newInvoicesUpdateEstimateCmd(flags))
-	cmd.AddCommand(newInvoicesUpdateInvoicesCmd(flags))
+	cmd.AddCommand(newInvoicesRecordPaymentCmd(flags))
+	cmd.AddCommand(newInvoicesSendCmd(flags))
+	cmd.AddCommand(newInvoicesVoidCmd(flags))
 	return cmd
 }

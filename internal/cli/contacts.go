@@ -10,23 +10,23 @@ import (
 func newContactsCmd(flags *rootFlags) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "contacts",
-		Short: "Operations on contacts",
+		Short: "Manage contacts",
 	}
 
-	cmd.AddCommand(newContactsCreateContactsCmd(flags))
-	cmd.AddCommand(newContactsCreateNotesCmd(flags))
-	cmd.AddCommand(newContactsCreateTagsCmd(flags))
-	cmd.AddCommand(newContactsCreateTasksCmd(flags))
-	cmd.AddCommand(newContactsCreateUpsertCmd(flags))
-	cmd.AddCommand(newContactsCreateWorkflowCmd(flags))
-	cmd.AddCommand(newContactsDeleteContactsCmd(flags))
-	cmd.AddCommand(newContactsDeleteTagsCmd(flags))
-	cmd.AddCommand(newContactsGetAppointmentsCmd(flags))
-	cmd.AddCommand(newContactsGetContactsCmd(flags))
-	cmd.AddCommand(newContactsGetNotesCmd(flags))
-	cmd.AddCommand(newContactsGetTasksCmd(flags))
-	cmd.AddCommand(newContactsListContactsCmd(flags))
-	cmd.AddCommand(newContactsListSearchCmd(flags))
-	cmd.AddCommand(newContactsUpdateContactsCmd(flags))
+	cmd.AddCommand(newContactsCountCmd(flags))
+	cmd.AddCommand(newContactsCreateCmd(flags))
+	cmd.AddCommand(newContactsDeleteCmd(flags))
+	cmd.AddCommand(newContactsGetCmd(flags))
+	cmd.AddCommand(newContactsGetDuplicateCmd(flags))
+	cmd.AddCommand(newContactsLookupByEmailOrPhoneCmd(flags))
+	cmd.AddCommand(newContactsSearchCmd(flags))
+	cmd.AddCommand(newContactsUpdateCmd(flags))
+	cmd.AddCommand(newContactsUpdateTagsCmd(flags))
+	cmd.AddCommand(newContactsUpsertCmd(flags))
+	cmd.AddCommand(newContactsAppointmentsCmd(flags))
+	cmd.AddCommand(newContactsNotesCmd(flags))
+	cmd.AddCommand(newContactsTagsCmd(flags))
+	cmd.AddCommand(newContactsTasksCmd(flags))
+	cmd.AddCommand(newContactsWorkflowCmd(flags))
 	return cmd
 }

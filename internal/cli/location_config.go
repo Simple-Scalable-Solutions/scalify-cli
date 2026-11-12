@@ -6,9 +6,9 @@ import (
 	"os"
 	"sort"
 
+	"github.com/spf13/cobra"
 	"scalify-pp-cli/internal/client"
 	"scalify-pp-cli/internal/config"
-	"github.com/spf13/cobra"
 )
 
 // fetchLocationName calls GET /locations/{id} authenticated with the location's
