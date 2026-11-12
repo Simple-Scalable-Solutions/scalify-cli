@@ -351,7 +351,7 @@ var codeOrchEndpoints = []codeOrchEndpoint{
 		Method:     "POST",
 		Path:       "/contacts/bulk/tags/update/{type}",
 		Summary:    "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts",
-		Positional: []string{},
+		Positional: []string{"type"},
 		keywords:   codeOrchKeywords("contacts", "update-tags", "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts", "/contacts/bulk/tags/update/{type}"),
 	},
 	{
@@ -487,7 +487,7 @@ var codeOrchEndpoints = []codeOrchEndpoint{
 		Method:     "GET",
 		Path:       "/conversations/messages/email/{id}",
 		Summary:    "Get email by Id",
-		Positional: []string{},
+		Positional: []string{"id"},
 		keywords:   codeOrchKeywords("conversations", "get-email", "Get email by Id", "/conversations/messages/email/{id}"),
 	},
 	{
@@ -495,7 +495,7 @@ var codeOrchEndpoints = []codeOrchEndpoint{
 		Method:     "GET",
 		Path:       "/conversations/messages/{id}",
 		Summary:    "Get message by message id.",
-		Positional: []string{},
+		Positional: []string{"id"},
 		keywords:   codeOrchKeywords("conversations", "get-message", "Get message by message id.", "/conversations/messages/{id}"),
 	},
 	{
@@ -663,7 +663,7 @@ var codeOrchEndpoints = []codeOrchEndpoint{
 		Method:     "GET",
 		Path:       "/emails/locations/{locationId}/campaigns/stats/{source}/{sourceId}",
 		Summary:    "Get statistics for email campaigns, workflows, or bulk actions",
-		Positional: []string{"locationId", "sourceId"},
+		Positional: []string{"locationId", "source", "sourceId"},
 		keywords:   codeOrchKeywords("emails", "get-campaign-stats", "Get statistics for email campaigns, workflows, or bulk actions", "/emails/locations/{locationId}/campaigns/stats/{source}/{sourceId}"),
 	},
 	{
@@ -1111,7 +1111,7 @@ var codeOrchEndpoints = []codeOrchEndpoint{
 		Method:     "GET",
 		Path:       "/locations/{locationId}/timezones",
 		Summary:    "Fetch the available timezones",
-		Positional: []string{},
+		Positional: []string{"locationId"},
 		keywords:   codeOrchKeywords("locations", "list", "Fetch the available timezones", "/locations/{locationId}/timezones"),
 	},
 	{

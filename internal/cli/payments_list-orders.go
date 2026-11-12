@@ -25,16 +25,20 @@ func newPaymentsListOrdersCmd(flags *rootFlags) *cobra.Command {
 	var flagSourceId string
 	var flagLimit float64
 	var flagOffset string
+	var flagAltType string
 	var flagAll bool
 
 	cmd := &cobra.Command{
 		Use:         "list-orders",
 		Short:       "The 'List Orders' API allows to retrieve a paginated list of orders. Customize your results by filtering orders...",
-		Example:     "  scalify-cli payments list-orders --alt-id 550e8400-e29b-41d4-a716-446655440000",
+		Example:     "  scalify-cli payments list-orders --alt-id 550e8400-e29b-41d4-a716-446655440000 --alt-type example-value",
 		Annotations: map[string]string{"pp:endpoint": "payments.list-orders", "pp:method": "GET", "pp:path": "/payments/orders", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !cmd.Flags().Changed("alt-id") && !flags.dryRun {
 				return fmt.Errorf("required flag \"%s\" not set", "alt-id")
+			}
+			if !cmd.Flags().Changed("alt-type") && !flags.dryRun {
+				return fmt.Errorf("required flag \"%s\" not set", "alt-type")
 			}
 			if cmd.Flags().Changed("payment-status") {
 				allowedPaymentStatus := []string{"paid", "unpaid", "refunded", "partially_paid"}
@@ -47,6 +51,19 @@ func newPaymentsListOrdersCmd(flags *rootFlags) *cobra.Command {
 				}
 				if !validPaymentStatus {
 					fmt.Fprintf(os.Stderr, "warning: --%s %q not in allowed set %v\n", "payment-status", flagPaymentStatus, allowedPaymentStatus)
+				}
+			}
+			if cmd.Flags().Changed("alt-type") {
+				allowedAltType := []string{"location"}
+				validAltType := false
+				for _, v := range allowedAltType {
+					if flagAltType == v {
+						validAltType = true
+						break
+					}
+				}
+				if !validAltType {
+					fmt.Fprintf(os.Stderr, "warning: --%s %q not in allowed set %v\n", "alt-type", flagAltType, allowedAltType)
 				}
 			}
 			c, err := flags.newClient()
@@ -69,6 +86,7 @@ func newPaymentsListOrdersCmd(flags *rootFlags) *cobra.Command {
 				"sourceId":         fmt.Sprintf("%v", flagSourceId),
 				"limit":            fmt.Sprintf("%v", flagLimit),
 				"offset":           fmt.Sprintf("%v", flagOffset),
+				"altType":          fmt.Sprintf("%v", flagAltType),
 			}, nil, flagAll, "offset", "", "")
 			if err != nil {
 				return classifyAPIError(err, flags)
@@ -124,6 +142,7 @@ func newPaymentsListOrdersCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().StringVar(&flagSourceId, "source-id", "", "Source id")
 	cmd.Flags().Float64Var(&flagLimit, "limit", 10.000000, "The maximum number of items to be included in a single page of results")
 	cmd.Flags().StringVar(&flagOffset, "offset", "0", "The starting index of the page, indicating the position from which the results should be retrieved.")
+	cmd.Flags().StringVar(&flagAltType, "alt-type", "", "Always location (one of: location)")
 	cmd.Flags().BoolVar(&flagAll, "all", false, "Fetch all pages")
 
 	return cmd

@@ -284,10 +284,10 @@ func replacePathParam(path, name, value string) string {
 func paginatedGet(c interface {
 	GetWithHeaders(path string, params map[string]string, headers map[string]string) (json.RawMessage, error)
 }, path string, params map[string]string, headers map[string]string, fetchAll bool, cursorParam, nextCursorPath, hasMoreField string) (json.RawMessage, error) {
-	// Clean zero-value params
+	// Clean zero-value params. Keep a 0 offset/skip: some endpoints require it.
 	clean := map[string]string{}
 	for k, v := range params {
-		if v != "" && v != "0" && v != "false" {
+		if v != "" && (v != "0" || k == "offset" || k == "skip") && v != "false" {
 			clean[k] = v
 		}
 	}
