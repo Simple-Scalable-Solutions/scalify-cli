@@ -20,6 +20,8 @@ Doc pages are cached in `$REGEN_WORK/pages` (default `$TMPDIR/scalify-regen`); d
 | `patches/*.patch` | Hand fixes to generated files: location switching (config, root, auth, doctor), `Version: v3`, binary name in hints. |
 | `fix_code_orch.py` | Points the MCP's `scalify_search` / `scalify_execute` tools at the hand-owned handlers. |
 | `gen_orch_meta.py` | Writes `internal/mcp/code_orch_meta.go`: each endpoint's path, query and body params, which search shows and execute uses to split params. |
+| `fix_sync.py` | Wires `sync` and `tail` to `internal/cli/sync_scalify.go`. |
+| `fix_delete_body.py` | Sends the JSON body on DELETE endpoints that take one. |
 | `fix_write_query.py` | Sends query params (e.g. `locationId`) on POST/PUT/DELETE, in both the CLI and the MCP handler. The generator only does this for GET. |
 
 Hand-owned files copied into each run: `internal/cli/location_config.go`, `internal/cli/location_default.go`,
@@ -29,5 +31,9 @@ MCP: `merge.py` sets `x-mcp: orchestration: code`, so the generator emits a sear
 (`internal/mcp/code_orch.go`) instead of one tool per endpoint. Its handlers rank loosely, don't show params,
 put query params in the body on writes and never fill the location, so `code_orch_scalify.go` replaces them.
 
-Known generator quirk: `internal/cli/search.go` and `internal/cli/sync.go` pick an endpoint in random order, so
-they flip between runs. `regen.sh` keeps the committed versions.
+`sync` and `tail`: `fix_sync.py` points them at `internal/cli/sync_scalify.go` (hand-owned), which lists what
+`sync` pulls and fills in the active location. The generator only syncs list endpoints with no required params,
+and nearly every v3 list endpoint requires the location.
+
+Known generator quirk: `internal/cli/search.go` picks its live-search endpoint in random order, so it flips
+between runs. `regen.sh` keeps the committed version.

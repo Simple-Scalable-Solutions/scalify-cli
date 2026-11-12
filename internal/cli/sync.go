@@ -80,6 +80,7 @@ Exit codes & warnings:
 				return err
 			}
 			c.NoCache = true
+			syncLocationID = c.Config.LocationID
 
 			if dbPath == "" {
 				dbPath = defaultDBPath("scalify-pp-cli")
@@ -348,7 +349,8 @@ func syncResource(c interface {
 			params[sinceParam] = effectiveSince
 		}
 
-		data, err := c.Get(path, params)
+		data, err := scalifySyncFetch(c, resource, maxPages)
+		_, _ = path, params
 		if err != nil {
 			if w, ok := isSyncAccessWarning(err); ok {
 				if !humanFriendly {
@@ -900,20 +902,15 @@ func parseSinceDuration(s string) (time.Time, error) {
 }
 
 func defaultSyncResources() []string {
-	return []string{
-		"locations",
-	}
+	return scalifySyncResources()
 }
 
 // syncResourcePath maps resource names to their actual API endpoint paths.
 // For REST APIs this is typically "/<resource>". For non-REST APIs (e.g., Steam)
 // this preserves the actual endpoint path like "/ISteamApps/GetAppList/v2".
 func syncResourcePath(resource string) (string, error) {
-	paths := map[string]string{
-		"locations": "/locations/search",
-	}
-	if p, ok := paths[resource]; ok {
-		return p, nil
+	if _, ok := scalifySyncDefs[resource]; ok {
+		return resource, nil
 	}
 	return "", fmt.Errorf("unknown sync resource %q", resource)
 }
@@ -927,12 +924,7 @@ type dependentResourceDef struct {
 }
 
 func dependentResourceDefs() []dependentResourceDef {
-	return []dependentResourceDef{
-		{Name: "categories", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/social-media-posting/{locationId}/categories"},
-		{Name: "emails", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/emails/locations/{locationId}/campaigns/bulk-actions"},
-		{Name: "social_media_posting_tags", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/social-media-posting/{locationId}/tags"},
-		{Name: "templates", ParentTable: "locations", ParentIDParam: "locationId", PathTemplate: "/locations/{locationId}/templates"},
-	}
+	return nil
 }
 
 // syncDependentResources iterates parent tables and syncs child resources per parent ID.
@@ -1154,7 +1146,7 @@ var resourceIDFieldOverrides = map[string]string{
 // genericIDFieldFallbacks is the runtime safety net for resources that did
 // NOT receive a templated IDField. API-specific names belong in spec
 // annotations (x-resource-id), not this list.
-var genericIDFieldFallbacks = []string{"id", "ID", "name", "uuid", "slug", "key", "code", "uid"}
+var genericIDFieldFallbacks = []string{"id", "_id", "ID", "name", "uuid", "slug", "key", "code", "uid"}
 
 // criticalResources is the template-time projection of per-resource Critical
 // (set by the profiler from the spec's path-item x-critical extension). It
