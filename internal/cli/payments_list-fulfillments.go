@@ -49,10 +49,7 @@ func newPaymentsListFulfillmentsCmd(flags *rootFlags) *cobra.Command {
 			}
 
 			path := "/payments/orders/{orderId}/fulfillments"
-			if len(args) < 3 {
-				return usageErr(fmt.Errorf("orderId is required\nUsage: %s <%s>", cmd.CommandPath(), "orderId"))
-			}
-			path = replacePathParam(path, "orderId", args[2])
+			path = replacePathParam(path, "orderId", args[0])
 			params := map[string]string{}
 			if flagAltId != "" {
 				params["altId"] = fmt.Sprintf("%v", flagAltId)

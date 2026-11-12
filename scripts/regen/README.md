@@ -15,7 +15,7 @@ Doc pages are cached in `$REGEN_WORK/pages` (default `$TMPDIR/scalify-regen`); d
 |---|---|
 | `endpoints.txt` | Endpoints the CLI wraps (`METHOD /path`, as in llms.txt). The run fails if one disappears from the docs. |
 | `select.py` | Finds each endpoint's doc page in llms.txt. |
-| `merge.py` | Merges the OpenAPI block of every page into `spec.json`: renames clashing schema names per service, collapses auth to one bearer scheme (keeps `SCALIFY_TOKEN`), strips provider names and doc links, applies `renames.tsv`. |
+| `merge.py` | Merges the OpenAPI block of every page into `spec.json`: renames clashing schema names per service, collapses auth to one bearer scheme (keeps `SCALIFY_TOKEN`), strips provider names and doc links, applies `renames.tsv`. Also patches doc gaps the generator trips on: undeclared path params, enum path params, path params listed after query params, payments endpoints missing `altType`. |
 | `renames.tsv` | Readable command names (`METHOD /path<TAB>operationId`). |
 | `patches/*.patch` | Hand fixes to generated files: location switching (config, root, auth, doctor), `Version: v3`, binary name in hints. |
 | `fix_code_orch.py` | Points the MCP's `scalify_search` / `scalify_execute` tools at the hand-owned handlers. |
