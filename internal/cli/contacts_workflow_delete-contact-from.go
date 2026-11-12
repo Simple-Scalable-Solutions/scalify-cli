@@ -35,7 +35,16 @@ func newContactsWorkflowDeleteContactFromCmd(flags *rootFlags) *cobra.Command {
 				return usageErr(fmt.Errorf("workflowId is required\nUsage: %s <%s>", cmd.CommandPath(), "workflowId"))
 			}
 			path = replacePathParam(path, "workflowId", args[1])
-			data, statusCode, err := c.Delete(path)
+			body := map[string]any{}
+			if bodyEventStartTime != "" {
+				var parsed any
+				if json.Unmarshal([]byte(bodyEventStartTime), &parsed) == nil {
+					body["eventStartTime"] = parsed
+				} else {
+					body["eventStartTime"] = bodyEventStartTime
+				}
+			}
+			data, statusCode, err := c.DeleteWithBody(path, body)
 			if err != nil {
 				return classifyDeleteError(err, flags)
 			}
