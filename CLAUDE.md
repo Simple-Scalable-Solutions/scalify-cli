@@ -90,9 +90,12 @@ go test ./... && git diff --stat
 # Correct — always use this
 goreleaser release --clean --parallelism 2
 
-# Or via Makefile
-make release
+# Or via Makefile (adds GOTOOLCHAIN=go1.26.3; NOTES attaches release notes)
+make release NOTES=docs/releases/v2.0.0.md
 ```
+
+Tag first (`git tag v2.0.0 && git push origin v2.0.0`); goreleaser needs a clean working tree. Before a
+release, run the end-to-end write test (`scripts/e2e/README.md`).
 
 Never run `goreleaser release --clean` without `--parallelism 2`.
 
