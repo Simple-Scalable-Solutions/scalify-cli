@@ -359,7 +359,7 @@ func handleContext(_ context.Context, _ mcplib.CallToolRequest) (*mcplib.CallToo
 		"api":         "scalify",
 		"description": "Printing Press CLI for Scalify.",
 		"archetype":   "content",
-		"tool_count":  195,
+		"tool_count":  207,
 		// tool_surface tells agents which surface a capability lives on.
 		"tool_surface": "MCP exposes typed endpoint tools plus a runtime mirror of user-facing CLI commands. Endpoint tools keep typed schemas; command-mirror tools shell out to the companion scalify-cli binary.",
 		"auth": map[string]any{
@@ -385,6 +385,12 @@ func handleContext(_ context.Context, _ mcplib.CallToolRequest) (*mcplib.CallToo
 				"name":        "blogs",
 				"description": "Manage blogs",
 				"endpoints":   []string{"check-url-slug", "get-all-authors", "get-all-categories", "get-post", "list", "list-posts"},
+				"searchable":  true,
+			},
+			{
+				"name":        "brand-boards",
+				"description": "Manage brand boards",
+				"endpoints":   []string{"create-brand-voice", "create-design-kit", "delete-brand-voice", "delete-design-kit", "get-brand-voice", "get-design-kit", "list-brand-voices", "list-design-kits", "set-default-brand-voice", "set-default-design-kit", "update-brand-voice", "update-design-kit"},
 				"searchable":  true,
 			},
 			{

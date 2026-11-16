@@ -838,6 +838,1302 @@
     }
    }
   },
+  "/brand-boards/locations/{locationId}/brand-voices": {
+   "post": {
+    "summary": "Create Brand Voice",
+    "operationId": "createBrandVoice",
+    "description": "Create a brand voice for a location",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateBrandVoicePublicV1BodyDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Created",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CreateBrandVoicePublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "summary": "List Brand Voices",
+    "operationId": "listBrandVoices",
+    "description": "Get list of brand voices for a location",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "description": "Number of brand voices to return. Defaults to 10, minimum is 1, maximum is 20",
+      "schema": {
+       "minimum": 1,
+       "maximum": 20,
+       "default": 10,
+       "example": 10,
+       "type": "number"
+      }
+     },
+     {
+      "name": "offset",
+      "required": false,
+      "in": "query",
+      "description": "Number of brand voices to skip for pagination. Defaults to 0, minimum is 0",
+      "schema": {
+       "minimum": 0,
+       "default": 0,
+       "example": 0,
+       "type": "number"
+      }
+     },
+     {
+      "name": "search",
+      "required": false,
+      "in": "query",
+      "description": "Search text for brand voice name",
+      "schema": {
+       "example": "My Brand Voice",
+       "type": "string"
+      }
+     },
+     {
+      "name": "deleted",
+      "required": false,
+      "in": "query",
+      "description": "Whether to return deleted brand voices. Defaults to false",
+      "schema": {
+       "default": false,
+       "example": false,
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ListBrandVoicesPublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/brand-boards/locations/{locationId}/design-kits": {
+   "post": {
+    "summary": "Create Design Kit",
+    "operationId": "createDesignKit",
+    "description": "Create a design kit for a location",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location where the design kit will be created.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CreateDesignKitPublicV3BodyDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Created",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CreateDesignKitPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "summary": "List Design Kits",
+    "operationId": "listDesignKits",
+    "description": "Get list of design kits for a location",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location to list design kits for.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "limit",
+      "required": false,
+      "in": "query",
+      "description": "Maximum number of design kits to return.",
+      "schema": {
+       "minimum": 1,
+       "maximum": 20,
+       "default": 10,
+       "example": 10,
+       "type": "number"
+      }
+     },
+     {
+      "name": "offset",
+      "required": false,
+      "in": "query",
+      "description": "Number of design kits to skip for pagination.",
+      "schema": {
+       "minimum": 0,
+       "default": 0,
+       "example": 0,
+       "type": "number"
+      }
+     },
+     {
+      "name": "search",
+      "required": false,
+      "in": "query",
+      "description": "Filter results by design kit name (case-insensitive partial match).",
+      "schema": {
+       "example": "My Design Kit",
+       "type": "string"
+      }
+     },
+     {
+      "name": "deleted",
+      "required": false,
+      "in": "query",
+      "description": "Include soft-deleted design kits in the results.",
+      "schema": {
+       "default": false,
+       "example": false,
+       "type": "boolean"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ListDesignKitsPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}": {
+   "delete": {
+    "summary": "Delete Brand Voice",
+    "operationId": "deleteBrandVoice",
+    "description": "Delete a brand voice by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "brandVoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Brand voice ID",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DeleteBrandVoicePublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "summary": "Get Brand Voice",
+    "operationId": "getBrandVoice",
+    "description": "Get a brand voice by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "brandVoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Brand voice ID",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GetBrandVoicePublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "summary": "Update Brand Voice",
+    "operationId": "updateBrandVoice",
+    "description": "Update a brand voice by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "brandVoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Brand voice ID",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateBrandVoicePublicV1BodyDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UpdateBrandVoicePublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/brand-boards/locations/{locationId}/design-kits/{designKitId}": {
+   "delete": {
+    "summary": "Delete Design Kit",
+    "operationId": "deleteDesignKit",
+    "description": "Delete a design kit by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location that owns the design kit.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "designKitId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the design kit to delete.",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DeleteDesignKitPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "get": {
+    "summary": "Get Design Kit",
+    "operationId": "getDesignKit",
+    "description": "Get a design kit by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location that owns the design kit.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "designKitId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the design kit to retrieve.",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GetDesignKitPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "summary": "Update Design Kit",
+    "operationId": "updateDesignKit",
+    "description": "Update a design kit by ID",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location that owns the design kit.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "designKitId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the design kit to update.",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateDesignKitPublicV3BodyDto"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UpdateDesignKitPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}/default": {
+   "post": {
+    "summary": "Set Default Brand Voice",
+    "operationId": "setDefaultBrandVoice",
+    "description": "Set a brand voice as the default for a location. The previous default will be unset.",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "Location ID",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "brandVoiceId",
+      "required": true,
+      "in": "path",
+      "description": "Brand voice ID",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SetDefaultBrandVoicePublicV1ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/brand-boards/locations/{locationId}/design-kits/{designKitId}/default": {
+   "post": {
+    "summary": "Set Default Design Kit",
+    "operationId": "setDefaultDesignKit",
+    "description": "Set a design kit as the default for a location. The previous default will be unset.",
+    "parameters": [
+     {
+      "name": "locationId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the location that owns the design kit.",
+      "schema": {
+       "example": "oHJiAh0wDG3BzmzACVD6",
+       "type": "string"
+      }
+     },
+     {
+      "name": "designKitId",
+      "required": true,
+      "in": "path",
+      "description": "ID of the design kit to set as default.",
+      "schema": {
+       "example": "507f1f77bcf86cd799439011",
+       "type": "string"
+      }
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Success",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SetDefaultDesignKitPublicV3ResponseDto"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "The token does not have access to this location",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/InvalidLocationDTO"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/NotFoundDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/businesses/": {
    "post": {
     "summary": "Create Business",
@@ -20835,6 +22131,1809 @@
     ],
     "title": "BlogGetResponseWrapperDTO"
    },
+   "CreateBrandVoicePublicV1BodyDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "Name",
+      "example": "My Brand Voice"
+     },
+     "type": {
+      "type": "string",
+      "description": "Creation type. \"manual\" creates with provided custom answers, \"url\" generates answers from a website, \"description\" generates answers from a text description",
+      "enum": [
+       "manual",
+       "url",
+       "description"
+      ],
+      "example": "manual"
+     },
+     "url": {
+      "type": "string",
+      "description": "Website URL to generate brand voice from. Required when type is \"url\"",
+      "example": "https://example.com"
+     },
+     "description": {
+      "type": "string",
+      "description": "Company description to generate brand voice from. Required when type is \"description\", optional when type is \"url\"",
+      "example": "We are a tech company focused on innovative solutions for small businesses"
+     },
+     "answers": {
+      "description": "Brand voice answers. Required when type is \"manual\"",
+      "example": {
+       "brandName": "Acme Inc",
+       "toneOfVoice": "Professional and friendly",
+       "targetAudience": "Small business owners",
+       "customerPainPoints": "Difficulty with time management"
+      },
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "brandName": {
+          "type": "string",
+          "description": "Brand Name",
+          "example": "Acme Inc"
+         },
+         "toneOfVoice": {
+          "type": "string",
+          "description": "Tone of Voice",
+          "example": "Professional and friendly"
+         },
+         "targetAudience": {
+          "type": "string",
+          "description": "Target Audience",
+          "example": "Small business owners"
+         },
+         "customerPainPoints": {
+          "type": "string",
+          "description": "Customer Pain Points",
+          "example": "Difficulty with time management"
+         },
+         "businessType": {
+          "type": "string",
+          "description": "Business Type",
+          "example": "Software Development"
+         },
+         "companyWebsite": {
+          "type": "string",
+          "description": "Company Website",
+          "example": "https://example.com"
+         },
+         "companyEmail": {
+          "type": "string",
+          "description": "Company Email",
+          "example": "contact@example.com"
+         },
+         "companyAddress": {
+          "type": "string",
+          "description": "Company Address",
+          "example": "123 Main St, Anytown, CA"
+         },
+         "phone": {
+          "type": "object",
+          "description": "Phone Information",
+          "example": {
+           "phoneNumber": "5551234567",
+           "countryCode": "US"
+          }
+         },
+         "businessHours": {
+          "type": "string",
+          "description": "Business Hours",
+          "example": "Mon-Fri 9am-5pm"
+         },
+         "brandPromise": {
+          "type": "string",
+          "description": "Brand Promise",
+          "example": "We deliver on time, every time"
+         },
+         "brandValues": {
+          "type": "string",
+          "description": "Brand Values",
+          "example": "Integrity, Excellence, Innovation"
+         },
+         "brandPurpose": {
+          "type": "string",
+          "description": "Brand Purpose",
+          "example": "To empower small businesses with technology"
+         },
+         "competitiveAdvantage": {
+          "type": "string",
+          "description": "Competitive Advantage",
+          "example": "Proprietary AI technology"
+         },
+         "risksOfInaction": {
+          "type": "string",
+          "description": "Risks of Inaction",
+          "example": "Falling behind competitors"
+         },
+         "uniqueSellingProposition": {
+          "type": "string",
+          "description": "Unique Selling Proposition",
+          "example": "The only solution that integrates with all major platforms"
+         },
+         "callToAction": {
+          "type": "string",
+          "description": "Call to Action",
+          "example": "Schedule a demo today"
+         }
+        },
+        "required": [
+         "brandName",
+         "toneOfVoice",
+         "targetAudience",
+         "customerPainPoints"
+        ],
+        "title": "BrandVoiceAnswersDto"
+       }
+      ]
+     }
+    },
+    "required": [
+     "type"
+    ],
+    "title": "CreateBrandVoicePublicV1BodyDto"
+   },
+   "CreateBrandVoicePublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Brand voice ID",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Brand voice name",
+      "example": "My Brand Voice"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default brand voice",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "Creation timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "Last update timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "Location ID",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the brand voice has been soft deleted",
+      "example": false
+     },
+     "answers": {
+      "description": "Brand voice answers",
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "brandName": {
+          "type": "string",
+          "description": "Brand Name",
+          "example": "Acme Inc"
+         },
+         "toneOfVoice": {
+          "type": "string",
+          "description": "Tone of Voice",
+          "example": "Professional and friendly"
+         },
+         "targetAudience": {
+          "type": "string",
+          "description": "Target Audience",
+          "example": "Small business owners"
+         },
+         "customerPainPoints": {
+          "type": "string",
+          "description": "Customer Pain Points",
+          "example": "Difficulty with time management"
+         },
+         "businessType": {
+          "type": "string",
+          "description": "Business Type",
+          "example": "Software Development"
+         },
+         "companyWebsite": {
+          "type": "string",
+          "description": "Company Website",
+          "example": "https://example.com"
+         },
+         "companyEmail": {
+          "type": "string",
+          "description": "Company Email",
+          "example": "contact@example.com"
+         },
+         "companyAddress": {
+          "type": "string",
+          "description": "Company Address",
+          "example": "123 Main St, Anytown, CA"
+         },
+         "phone": {
+          "type": "object",
+          "description": "Phone Information",
+          "example": {
+           "phoneNumber": "5551234567",
+           "countryCode": "US"
+          }
+         },
+         "businessHours": {
+          "type": "string",
+          "description": "Business Hours",
+          "example": "Mon-Fri 9am-5pm"
+         },
+         "brandPromise": {
+          "type": "string",
+          "description": "Brand Promise",
+          "example": "We deliver on time, every time"
+         },
+         "brandValues": {
+          "type": "string",
+          "description": "Brand Values",
+          "example": "Integrity, Excellence, Innovation"
+         },
+         "brandPurpose": {
+          "type": "string",
+          "description": "Brand Purpose",
+          "example": "To empower small businesses with technology"
+         },
+         "competitiveAdvantage": {
+          "type": "string",
+          "description": "Competitive Advantage",
+          "example": "Proprietary AI technology"
+         },
+         "risksOfInaction": {
+          "type": "string",
+          "description": "Risks of Inaction",
+          "example": "Falling behind competitors"
+         },
+         "uniqueSellingProposition": {
+          "type": "string",
+          "description": "Unique Selling Proposition",
+          "example": "The only solution that integrates with all major platforms"
+         },
+         "callToAction": {
+          "type": "string",
+          "description": "Call to Action",
+          "example": "Schedule a demo today"
+         }
+        },
+        "title": "BrandVoiceAnswersPublicV1Dto"
+       }
+      ]
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "CreateBrandVoicePublicV1ResponseDto"
+   },
+   "InvalidLocationDTO": {
+    "type": "object",
+    "properties": {
+     "statusCode": {
+      "type": "number",
+      "description": "HTTP status code for invalid location access",
+      "example": 403
+     },
+     "message": {
+      "type": "string",
+      "description": "Error message describing the location access failure",
+      "example": "The token does not have access to this location"
+     }
+    },
+    "title": "InvalidLocationDTO"
+   },
+   "CreateDesignKitPublicV3BodyDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "Display name for the design kit.",
+      "example": "My Design Kit"
+     },
+     "logos": {
+      "description": "Logos to include in the design kit.",
+      "example": [
+       {
+        "url": "https://storage.googleapis.com/bucket/logos/my-logo.png",
+        "label": "Primary Logo"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing logo. Include it to update the same logo; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "url": {
+         "type": "string",
+         "description": "Publicly accessible URL of the logo image.",
+         "example": "https://storage.googleapis.com/bucket/logos/my-logo.png"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the logo.",
+         "example": "Primary Logo"
+        }
+       },
+       "required": [
+        "url",
+        "label"
+       ],
+       "title": "DesignKitLogoV3Dto"
+      }
+     },
+     "colors": {
+      "description": "Colors to include in the design kit.",
+      "example": [
+       {
+        "value": "#FF5733",
+        "label": "Brand Orange"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing color. Include it to update the same color; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "value": {
+         "type": "string",
+         "description": "Hex color value. Accepts 3, 4, 6, or 8 hex digits with an optional leading `#`. The 4- and 8-digit forms include an alpha channel (e.g. `#F00F`, `#FF5733FF`). When updating an existing color, copy the `hexa` field from a previous response to keep the alpha channel \u2014 using `hex` will drop the alpha.",
+         "example": "#FF5733"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the color.",
+         "example": "Brand Orange"
+        }
+       },
+       "required": [
+        "value",
+        "label"
+       ],
+       "title": "DesignKitColorV3Dto"
+      }
+     },
+     "fonts": {
+      "description": "Fonts to include in the design kit.",
+      "example": [
+       {
+        "font": "Montserrat",
+        "fallback": "sans-serif",
+        "label": "Heading Font"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing font. Include it to update the same font; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "font": {
+         "type": "string",
+         "description": "Primary font family name.",
+         "example": "Montserrat"
+        },
+        "fallback": {
+         "type": "string",
+         "description": "Fallback font family used when the primary is unavailable.",
+         "example": "sans-serif"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the font.",
+         "example": "Heading Font"
+        }
+       },
+       "required": [
+        "font",
+        "fallback",
+        "label"
+       ],
+       "title": "DesignKitFontV3Dto"
+      }
+     },
+     "type": {
+      "type": "string",
+      "description": "How the design kit should be initialized. Use `blank` for an empty kit, or `url` to extract branding from a website (requires `url`).",
+      "enum": [
+       "blank",
+       "url"
+      ],
+      "example": "blank"
+     },
+     "url": {
+      "type": "string",
+      "description": "Website URL to extract branding from. Required when `type` is `url`.",
+      "example": "https://example.com"
+     }
+    },
+    "title": "CreateDesignKitPublicV3BodyDto"
+   },
+   "CreateDesignKitPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Unique identifier of the design kit.",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Display name of the design kit.",
+      "example": "My Design Kit"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default design kit for the location.",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was created.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was last updated.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "ID of the location that owns the design kit.",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the design kit has been soft-deleted.",
+      "example": false
+     },
+     "logos": {
+      "description": "Logos belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3c9",
+        "url": "https://storage.googleapis.com/bucket/logos/my-logo.png",
+        "label": "Primary Logo"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing logo. Include it to update the same logo; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "url": {
+         "type": "string",
+         "description": "Publicly accessible URL of the logo image.",
+         "example": "https://storage.googleapis.com/bucket/logos/my-logo.png"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the logo.",
+         "example": "Primary Logo"
+        }
+       },
+       "required": [
+        "url",
+        "label"
+       ],
+       "title": "DesignKitLogoV3Dto"
+      }
+     },
+     "colors": {
+      "description": "Colors belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3ca",
+        "hex": "#FF5733",
+        "hexa": "#FF5733FF",
+        "rgb": "rgb(255, 87, 51)",
+        "rgba": "rgba(255, 87, 51, 1)",
+        "label": "Brand Orange"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Unique identifier of the color.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "hex": {
+         "type": "string",
+         "description": "6-digit hex representation of the color, without alpha.",
+         "example": "#FF5733"
+        },
+        "hexa": {
+         "type": "string",
+         "description": "8-digit hex representation of the color, including the alpha channel.",
+         "example": "#FF5733FF"
+        },
+        "rgb": {
+         "type": "string",
+         "description": "RGB representation of the color.",
+         "example": "rgb(255, 87, 51)"
+        },
+        "rgba": {
+         "type": "string",
+         "description": "RGBA representation of the color, including the alpha channel.",
+         "example": "rgba(255, 87, 51, 1)"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the color.",
+         "example": "Brand Orange"
+        }
+       },
+       "required": [
+        "hex",
+        "hexa",
+        "rgb",
+        "rgba",
+        "label"
+       ],
+       "title": "DesignKitColorV3OutputDto"
+      }
+     },
+     "fonts": {
+      "description": "Fonts belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3cb",
+        "font": "Montserrat",
+        "fallback": "sans-serif",
+        "label": "Heading Font"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing font. Include it to update the same font; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "font": {
+         "type": "string",
+         "description": "Primary font family name.",
+         "example": "Montserrat"
+        },
+        "fallback": {
+         "type": "string",
+         "description": "Fallback font family used when the primary is unavailable.",
+         "example": "sans-serif"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the font.",
+         "example": "Heading Font"
+        }
+       },
+       "required": [
+        "font",
+        "fallback",
+        "label"
+       ],
+       "title": "DesignKitFontV3Dto"
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "CreateDesignKitPublicV3ResponseDto"
+   },
+   "DeleteBrandVoicePublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the brand voice is deleted",
+      "example": true
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "deleted"
+    ],
+    "title": "DeleteBrandVoicePublicV1ResponseDto"
+   },
+   "DeleteDesignKitPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the design kit was successfully deleted.",
+      "example": true
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "deleted"
+    ],
+    "title": "DeleteDesignKitPublicV3ResponseDto"
+   },
+   "GetBrandVoicePublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Brand voice ID",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Brand voice name",
+      "example": "My Brand Voice"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default brand voice",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "Creation timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "Last update timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "Location ID",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the brand voice has been soft deleted",
+      "example": false
+     },
+     "answers": {
+      "description": "Brand voice answers",
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "brandName": {
+          "type": "string",
+          "description": "Brand Name",
+          "example": "Acme Inc"
+         },
+         "toneOfVoice": {
+          "type": "string",
+          "description": "Tone of Voice",
+          "example": "Professional and friendly"
+         },
+         "targetAudience": {
+          "type": "string",
+          "description": "Target Audience",
+          "example": "Small business owners"
+         },
+         "customerPainPoints": {
+          "type": "string",
+          "description": "Customer Pain Points",
+          "example": "Difficulty with time management"
+         },
+         "businessType": {
+          "type": "string",
+          "description": "Business Type",
+          "example": "Software Development"
+         },
+         "companyWebsite": {
+          "type": "string",
+          "description": "Company Website",
+          "example": "https://example.com"
+         },
+         "companyEmail": {
+          "type": "string",
+          "description": "Company Email",
+          "example": "contact@example.com"
+         },
+         "companyAddress": {
+          "type": "string",
+          "description": "Company Address",
+          "example": "123 Main St, Anytown, CA"
+         },
+         "phone": {
+          "type": "object",
+          "description": "Phone Information",
+          "example": {
+           "phoneNumber": "5551234567",
+           "countryCode": "US"
+          }
+         },
+         "businessHours": {
+          "type": "string",
+          "description": "Business Hours",
+          "example": "Mon-Fri 9am-5pm"
+         },
+         "brandPromise": {
+          "type": "string",
+          "description": "Brand Promise",
+          "example": "We deliver on time, every time"
+         },
+         "brandValues": {
+          "type": "string",
+          "description": "Brand Values",
+          "example": "Integrity, Excellence, Innovation"
+         },
+         "brandPurpose": {
+          "type": "string",
+          "description": "Brand Purpose",
+          "example": "To empower small businesses with technology"
+         },
+         "competitiveAdvantage": {
+          "type": "string",
+          "description": "Competitive Advantage",
+          "example": "Proprietary AI technology"
+         },
+         "risksOfInaction": {
+          "type": "string",
+          "description": "Risks of Inaction",
+          "example": "Falling behind competitors"
+         },
+         "uniqueSellingProposition": {
+          "type": "string",
+          "description": "Unique Selling Proposition",
+          "example": "The only solution that integrates with all major platforms"
+         },
+         "callToAction": {
+          "type": "string",
+          "description": "Call to Action",
+          "example": "Schedule a demo today"
+         }
+        },
+        "title": "BrandVoiceAnswersPublicV1Dto"
+       }
+      ]
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "GetBrandVoicePublicV1ResponseDto"
+   },
+   "GetDesignKitPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Unique identifier of the design kit.",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Display name of the design kit.",
+      "example": "My Design Kit"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default design kit for the location.",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was created.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was last updated.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "ID of the location that owns the design kit.",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the design kit has been soft-deleted.",
+      "example": false
+     },
+     "logos": {
+      "description": "Logos belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3c9",
+        "url": "https://storage.googleapis.com/bucket/logos/my-logo.png",
+        "label": "Primary Logo"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing logo. Include it to update the same logo; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "url": {
+         "type": "string",
+         "description": "Publicly accessible URL of the logo image.",
+         "example": "https://storage.googleapis.com/bucket/logos/my-logo.png"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the logo.",
+         "example": "Primary Logo"
+        }
+       },
+       "required": [
+        "url",
+        "label"
+       ],
+       "title": "DesignKitLogoV3Dto"
+      }
+     },
+     "colors": {
+      "description": "Colors belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3ca",
+        "hex": "#FF5733",
+        "hexa": "#FF5733FF",
+        "rgb": "rgb(255, 87, 51)",
+        "rgba": "rgba(255, 87, 51, 1)",
+        "label": "Brand Orange"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Unique identifier of the color.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "hex": {
+         "type": "string",
+         "description": "6-digit hex representation of the color, without alpha.",
+         "example": "#FF5733"
+        },
+        "hexa": {
+         "type": "string",
+         "description": "8-digit hex representation of the color, including the alpha channel.",
+         "example": "#FF5733FF"
+        },
+        "rgb": {
+         "type": "string",
+         "description": "RGB representation of the color.",
+         "example": "rgb(255, 87, 51)"
+        },
+        "rgba": {
+         "type": "string",
+         "description": "RGBA representation of the color, including the alpha channel.",
+         "example": "rgba(255, 87, 51, 1)"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the color.",
+         "example": "Brand Orange"
+        }
+       },
+       "required": [
+        "hex",
+        "hexa",
+        "rgb",
+        "rgba",
+        "label"
+       ],
+       "title": "DesignKitColorV3OutputDto"
+      }
+     },
+     "fonts": {
+      "description": "Fonts belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3cb",
+        "font": "Montserrat",
+        "fallback": "sans-serif",
+        "label": "Heading Font"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing font. Include it to update the same font; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "font": {
+         "type": "string",
+         "description": "Primary font family name.",
+         "example": "Montserrat"
+        },
+        "fallback": {
+         "type": "string",
+         "description": "Fallback font family used when the primary is unavailable.",
+         "example": "sans-serif"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the font.",
+         "example": "Heading Font"
+        }
+       },
+       "required": [
+        "font",
+        "fallback",
+        "label"
+       ],
+       "title": "DesignKitFontV3Dto"
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "GetDesignKitPublicV3ResponseDto"
+   },
+   "ListBrandVoicesPublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "items": {
+      "description": "List of brand voices",
+      "example": [
+       {
+        "id": "507f1f77bcf86cd799439011",
+        "name": "My Brand Voice",
+        "isDefault": false,
+        "createdAt": "2024-01-05T12:00:00.000Z",
+        "updatedAt": "2024-01-05T12:00:00.000Z"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Brand voice ID",
+         "example": "507f1f77bcf86cd799439011"
+        },
+        "name": {
+         "type": "string",
+         "description": "Brand voice name",
+         "example": "My Brand Voice"
+        },
+        "isDefault": {
+         "type": "boolean",
+         "description": "Whether this is the default brand voice",
+         "example": false
+        },
+        "createdAt": {
+         "type": "string",
+         "description": "Creation timestamp",
+         "example": "2024-01-05T12:00:00.000Z"
+        },
+        "updatedAt": {
+         "type": "string",
+         "description": "Last update timestamp",
+         "example": "2024-01-05T12:00:00.000Z"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "isDefault",
+        "createdAt",
+        "updatedAt"
+       ],
+       "title": "BrandVoicePublicV1Dto"
+      }
+     },
+     "total": {
+      "type": "number",
+      "description": "Total count of brand voices",
+      "example": 25
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "items",
+     "total"
+    ],
+    "title": "ListBrandVoicesPublicV1ResponseDto"
+   },
+   "ListDesignKitsPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "items": {
+      "description": "List of design kits for the current page.",
+      "example": [
+       {
+        "id": "507f1f77bcf86cd799439011",
+        "name": "My Design Kit",
+        "isDefault": false,
+        "createdAt": "2024-01-05T12:00:00.000Z",
+        "updatedAt": "2024-01-05T12:00:00.000Z"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Unique identifier of the design kit.",
+         "example": "507f1f77bcf86cd799439011"
+        },
+        "name": {
+         "type": "string",
+         "description": "Display name of the design kit.",
+         "example": "My Design Kit"
+        },
+        "isDefault": {
+         "type": "boolean",
+         "description": "Whether this is the default design kit for the location.",
+         "example": false
+        },
+        "createdAt": {
+         "type": "string",
+         "description": "ISO 8601 timestamp of when the design kit was created.",
+         "example": "2024-01-05T12:00:00.000Z"
+        },
+        "updatedAt": {
+         "type": "string",
+         "description": "ISO 8601 timestamp of when the design kit was last updated.",
+         "example": "2024-01-05T12:00:00.000Z"
+        }
+       },
+       "required": [
+        "id",
+        "name",
+        "isDefault",
+        "createdAt",
+        "updatedAt"
+       ],
+       "title": "DesignKitPublicV3Dto"
+      }
+     },
+     "total": {
+      "type": "number",
+      "description": "Total number of design kits matching the query.",
+      "example": 25
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "items",
+     "total"
+    ],
+    "title": "ListDesignKitsPublicV3ResponseDto"
+   },
+   "SetDefaultBrandVoicePublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "success": {
+      "type": "boolean",
+      "description": "Whether the operation was successful",
+      "example": true
+     },
+     "brandVoiceId": {
+      "type": "string",
+      "description": "Brand voice ID that was set as default",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "success",
+     "brandVoiceId"
+    ],
+    "title": "SetDefaultBrandVoicePublicV1ResponseDto"
+   },
+   "SetDefaultDesignKitPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "success": {
+      "type": "boolean",
+      "description": "Whether the default was set successfully.",
+      "example": true
+     },
+     "designKitId": {
+      "type": "string",
+      "description": "ID of the design kit that is now the default.",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "success",
+     "designKitId"
+    ],
+    "title": "SetDefaultDesignKitPublicV3ResponseDto"
+   },
+   "UpdateBrandVoicePublicV1BodyDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "Name",
+      "example": "My Brand Voice"
+     },
+     "answers": {
+      "description": "Updated answers",
+      "example": {
+       "brandName": "Brand Name",
+       "toneOfVoice": "Friendly"
+      },
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "brandName": {
+          "type": "string",
+          "description": "Brand Name",
+          "example": "Acme Inc"
+         },
+         "toneOfVoice": {
+          "type": "string",
+          "description": "Tone of Voice",
+          "example": "Professional and friendly"
+         },
+         "targetAudience": {
+          "type": "string",
+          "description": "Target Audience",
+          "example": "Small business owners"
+         },
+         "customerPainPoints": {
+          "type": "string",
+          "description": "Customer Pain Points",
+          "example": "Difficulty with time management"
+         },
+         "businessType": {
+          "type": "string",
+          "description": "Business Type",
+          "example": "Software Development"
+         },
+         "companyWebsite": {
+          "type": "string",
+          "description": "Company Website",
+          "example": "https://example.com"
+         },
+         "companyEmail": {
+          "type": "string",
+          "description": "Company Email",
+          "example": "contact@example.com"
+         },
+         "companyAddress": {
+          "type": "string",
+          "description": "Company Address",
+          "example": "123 Main St, Anytown, CA"
+         },
+         "phone": {
+          "type": "object",
+          "description": "Phone Information",
+          "example": {
+           "phoneNumber": "5551234567",
+           "countryCode": "US"
+          }
+         },
+         "businessHours": {
+          "type": "string",
+          "description": "Business Hours",
+          "example": "Mon-Fri 9am-5pm"
+         },
+         "brandPromise": {
+          "type": "string",
+          "description": "Brand Promise",
+          "example": "We deliver on time, every time"
+         },
+         "brandValues": {
+          "type": "string",
+          "description": "Brand Values",
+          "example": "Integrity, Excellence, Innovation"
+         },
+         "brandPurpose": {
+          "type": "string",
+          "description": "Brand Purpose",
+          "example": "To empower small businesses with technology"
+         },
+         "competitiveAdvantage": {
+          "type": "string",
+          "description": "Competitive Advantage",
+          "example": "Proprietary AI technology"
+         },
+         "risksOfInaction": {
+          "type": "string",
+          "description": "Risks of Inaction",
+          "example": "Falling behind competitors"
+         },
+         "uniqueSellingProposition": {
+          "type": "string",
+          "description": "Unique Selling Proposition",
+          "example": "The only solution that integrates with all major platforms"
+         },
+         "callToAction": {
+          "type": "string",
+          "description": "Call to Action",
+          "example": "Schedule a demo today"
+         }
+        },
+        "title": "UpdateBrandVoiceAnswersDto"
+       }
+      ]
+     }
+    },
+    "title": "UpdateBrandVoicePublicV1BodyDto"
+   },
+   "UpdateBrandVoicePublicV1ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Brand voice ID",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Brand voice name",
+      "example": "My Brand Voice"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default brand voice",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "Creation timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "Last update timestamp",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "Location ID",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the brand voice has been soft deleted",
+      "example": false
+     },
+     "answers": {
+      "description": "Brand voice answers",
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "brandName": {
+          "type": "string",
+          "description": "Brand Name",
+          "example": "Acme Inc"
+         },
+         "toneOfVoice": {
+          "type": "string",
+          "description": "Tone of Voice",
+          "example": "Professional and friendly"
+         },
+         "targetAudience": {
+          "type": "string",
+          "description": "Target Audience",
+          "example": "Small business owners"
+         },
+         "customerPainPoints": {
+          "type": "string",
+          "description": "Customer Pain Points",
+          "example": "Difficulty with time management"
+         },
+         "businessType": {
+          "type": "string",
+          "description": "Business Type",
+          "example": "Software Development"
+         },
+         "companyWebsite": {
+          "type": "string",
+          "description": "Company Website",
+          "example": "https://example.com"
+         },
+         "companyEmail": {
+          "type": "string",
+          "description": "Company Email",
+          "example": "contact@example.com"
+         },
+         "companyAddress": {
+          "type": "string",
+          "description": "Company Address",
+          "example": "123 Main St, Anytown, CA"
+         },
+         "phone": {
+          "type": "object",
+          "description": "Phone Information",
+          "example": {
+           "phoneNumber": "5551234567",
+           "countryCode": "US"
+          }
+         },
+         "businessHours": {
+          "type": "string",
+          "description": "Business Hours",
+          "example": "Mon-Fri 9am-5pm"
+         },
+         "brandPromise": {
+          "type": "string",
+          "description": "Brand Promise",
+          "example": "We deliver on time, every time"
+         },
+         "brandValues": {
+          "type": "string",
+          "description": "Brand Values",
+          "example": "Integrity, Excellence, Innovation"
+         },
+         "brandPurpose": {
+          "type": "string",
+          "description": "Brand Purpose",
+          "example": "To empower small businesses with technology"
+         },
+         "competitiveAdvantage": {
+          "type": "string",
+          "description": "Competitive Advantage",
+          "example": "Proprietary AI technology"
+         },
+         "risksOfInaction": {
+          "type": "string",
+          "description": "Risks of Inaction",
+          "example": "Falling behind competitors"
+         },
+         "uniqueSellingProposition": {
+          "type": "string",
+          "description": "Unique Selling Proposition",
+          "example": "The only solution that integrates with all major platforms"
+         },
+         "callToAction": {
+          "type": "string",
+          "description": "Call to Action",
+          "example": "Schedule a demo today"
+         }
+        },
+        "title": "BrandVoiceAnswersPublicV1Dto"
+       }
+      ]
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace ID of request",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "UpdateBrandVoicePublicV1ResponseDto"
+   },
+   "UpdateDesignKitPublicV3BodyDto": {
+    "type": "object",
+    "properties": {
+     "name": {
+      "type": "string",
+      "description": "Display name for the design kit.",
+      "example": "My Design Kit"
+     },
+     "logos": {
+      "description": "Logos for the design kit. Sending this field replaces the existing logos. To keep an existing logo, include it with its `id`.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3c9",
+        "url": "https://storage.googleapis.com/bucket/logos/my-logo.png",
+        "label": "Primary Logo"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing logo. Include it to update the same logo; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "url": {
+         "type": "string",
+         "description": "Publicly accessible URL of the logo image.",
+         "example": "https://storage.googleapis.com/bucket/logos/my-logo.png"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the logo.",
+         "example": "Primary Logo"
+        }
+       },
+       "required": [
+        "url",
+        "label"
+       ],
+       "title": "DesignKitLogoV3Dto"
+      }
+     },
+     "colors": {
+      "description": "Colors for the design kit. Sending this field replaces the existing colors. To keep an existing color, include it with its `id`.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3ca",
+        "value": "#FF5733",
+        "label": "Brand Orange"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing color. Include it to update the same color; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "value": {
+         "type": "string",
+         "description": "Hex color value. Accepts 3, 4, 6, or 8 hex digits with an optional leading `#`. The 4- and 8-digit forms include an alpha channel (e.g. `#F00F`, `#FF5733FF`). When updating an existing color, copy the `hexa` field from a previous response to keep the alpha channel \u2014 using `hex` will drop the alpha.",
+         "example": "#FF5733"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the color.",
+         "example": "Brand Orange"
+        }
+       },
+       "required": [
+        "value",
+        "label"
+       ],
+       "title": "DesignKitColorV3Dto"
+      }
+     },
+     "fonts": {
+      "description": "Fonts for the design kit. Sending this field replaces the existing fonts. To keep an existing font, include it with its `id`.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3cb",
+        "font": "Montserrat",
+        "fallback": "sans-serif",
+        "label": "Heading Font"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing font. Include it to update the same font; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "font": {
+         "type": "string",
+         "description": "Primary font family name.",
+         "example": "Montserrat"
+        },
+        "fallback": {
+         "type": "string",
+         "description": "Fallback font family used when the primary is unavailable.",
+         "example": "sans-serif"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the font.",
+         "example": "Heading Font"
+        }
+       },
+       "required": [
+        "font",
+        "fallback",
+        "label"
+       ],
+       "title": "DesignKitFontV3Dto"
+      }
+     }
+    },
+    "title": "UpdateDesignKitPublicV3BodyDto"
+   },
+   "UpdateDesignKitPublicV3ResponseDto": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "description": "Unique identifier of the design kit.",
+      "example": "507f1f77bcf86cd799439011"
+     },
+     "name": {
+      "type": "string",
+      "description": "Display name of the design kit.",
+      "example": "My Design Kit"
+     },
+     "isDefault": {
+      "type": "boolean",
+      "description": "Whether this is the default design kit for the location.",
+      "example": false
+     },
+     "createdAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was created.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "updatedAt": {
+      "type": "string",
+      "description": "ISO 8601 timestamp of when the design kit was last updated.",
+      "example": "2024-01-05T12:00:00.000Z"
+     },
+     "locationId": {
+      "type": "string",
+      "description": "ID of the location that owns the design kit.",
+      "example": "oHJiAh0wDG3BzmzACVD6"
+     },
+     "deleted": {
+      "type": "boolean",
+      "description": "Whether the design kit has been soft-deleted.",
+      "example": false
+     },
+     "logos": {
+      "description": "Logos belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3c9",
+        "url": "https://storage.googleapis.com/bucket/logos/my-logo.png",
+        "label": "Primary Logo"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing logo. Include it to update the same logo; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "url": {
+         "type": "string",
+         "description": "Publicly accessible URL of the logo image.",
+         "example": "https://storage.googleapis.com/bucket/logos/my-logo.png"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the logo.",
+         "example": "Primary Logo"
+        }
+       },
+       "required": [
+        "url",
+        "label"
+       ],
+       "title": "DesignKitLogoV3Dto"
+      }
+     },
+     "colors": {
+      "description": "Colors belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3ca",
+        "hex": "#FF5733",
+        "hexa": "#FF5733FF",
+        "rgb": "rgb(255, 87, 51)",
+        "rgba": "rgba(255, 87, 51, 1)",
+        "label": "Brand Orange"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Unique identifier of the color.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "hex": {
+         "type": "string",
+         "description": "6-digit hex representation of the color, without alpha.",
+         "example": "#FF5733"
+        },
+        "hexa": {
+         "type": "string",
+         "description": "8-digit hex representation of the color, including the alpha channel.",
+         "example": "#FF5733FF"
+        },
+        "rgb": {
+         "type": "string",
+         "description": "RGB representation of the color.",
+         "example": "rgb(255, 87, 51)"
+        },
+        "rgba": {
+         "type": "string",
+         "description": "RGBA representation of the color, including the alpha channel.",
+         "example": "rgba(255, 87, 51, 1)"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the color.",
+         "example": "Brand Orange"
+        }
+       },
+       "required": [
+        "hex",
+        "hexa",
+        "rgb",
+        "rgba",
+        "label"
+       ],
+       "title": "DesignKitColorV3OutputDto"
+      }
+     },
+     "fonts": {
+      "description": "Fonts belonging to the design kit.",
+      "example": [
+       {
+        "id": "6a1d1e5db5ef0dfa799ed3cb",
+        "font": "Montserrat",
+        "fallback": "sans-serif",
+        "label": "Heading Font"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "description": "Identifier of an existing font. Include it to update the same font; omit it to add a new one.",
+         "example": "6a1d1e5db5ef0dfa799ed3c9"
+        },
+        "font": {
+         "type": "string",
+         "description": "Primary font family name.",
+         "example": "Montserrat"
+        },
+        "fallback": {
+         "type": "string",
+         "description": "Fallback font family used when the primary is unavailable.",
+         "example": "sans-serif"
+        },
+        "label": {
+         "type": "string",
+         "description": "Display name for the font.",
+         "example": "Heading Font"
+        }
+       },
+       "required": [
+        "font",
+        "fallback",
+        "label"
+       ],
+       "title": "DesignKitFontV3Dto"
+      }
+     },
+     "traceId": {
+      "type": "string",
+      "description": "Trace identifier for the request, useful for debugging and support.",
+      "example": "019e4ef5-a65e-4198-8cf9-8e93dca9bda4"
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "isDefault",
+     "createdAt",
+     "updatedAt",
+     "locationId",
+     "deleted"
+    ],
+    "title": "UpdateDesignKitPublicV3ResponseDto"
+   },
    "CreateBusinessDto": {
     "type": "object",
     "properties": {
@@ -37828,22 +40927,6 @@
      "isPlainText"
     ],
     "title": "CreateTemplatePublicV2ResponseDto"
-   },
-   "InvalidLocationDTO": {
-    "type": "object",
-    "properties": {
-     "statusCode": {
-      "type": "number",
-      "description": "HTTP status code for invalid location access",
-      "example": 403
-     },
-     "message": {
-      "type": "string",
-      "description": "Error message describing the location access failure",
-      "example": "The token does not have access to this location"
-     }
-    },
-    "title": "InvalidLocationDTO"
    },
    "CreateTemplateFolderPublicV2BodyDto": {
     "type": "object",

@@ -307,6 +307,26 @@ type CreateAddTagSuccessfulResponseDto struct {
 	Tags json.RawMessage `json:"tags"`
 }
 
+type CreateBrandVoicePublicV1BodyDto struct {
+	Answers     string `json:"answers"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Url         string `json:"url"`
+}
+
+type CreateBrandVoicePublicV1ResponseDto struct {
+	Answers    string `json:"answers"`
+	CreatedAt  string `json:"createdAt"`
+	Deleted    bool   `json:"deleted"`
+	Id         string `json:"id"`
+	IsDefault  bool   `json:"isDefault"`
+	LocationId string `json:"locationId"`
+	Name       string `json:"name"`
+	TraceId    string `json:"traceId"`
+	UpdatedAt  string `json:"updatedAt"`
+}
+
 type CreateBusinessDto struct {
 	Address     string `json:"address"`
 	City        string `json:"city"`
@@ -406,6 +426,29 @@ type CreateCustomObjectRecordDto struct {
 
 type CreateDeleteTagSuccessfulResponseDto struct {
 	Tags json.RawMessage `json:"tags"`
+}
+
+type CreateDesignKitPublicV3BodyDto struct {
+	Colors json.RawMessage `json:"colors"`
+	Fonts  json.RawMessage `json:"fonts"`
+	Logos  json.RawMessage `json:"logos"`
+	Name   string          `json:"name"`
+	Type   string          `json:"type"`
+	Url    string          `json:"url"`
+}
+
+type CreateDesignKitPublicV3ResponseDto struct {
+	Colors     json.RawMessage `json:"colors"`
+	CreatedAt  string          `json:"createdAt"`
+	Deleted    bool            `json:"deleted"`
+	Fonts      json.RawMessage `json:"fonts"`
+	Id         string          `json:"id"`
+	IsDefault  bool            `json:"isDefault"`
+	LocationId string          `json:"locationId"`
+	Logos      json.RawMessage `json:"logos"`
+	Name       string          `json:"name"`
+	TraceId    string          `json:"traceId"`
+	UpdatedAt  string          `json:"updatedAt"`
 }
 
 type CreateDtoV3 struct {
@@ -690,6 +733,11 @@ type CustomValuesListSuccessfulResponseDto struct {
 	CustomValues json.RawMessage `json:"customValues"`
 }
 
+type DeleteBrandVoicePublicV1ResponseDto struct {
+	Deleted bool   `json:"deleted"`
+	TraceId string `json:"traceId"`
+}
+
 type DeleteBusinessResponseDto struct {
 	Success bool `json:"success"`
 }
@@ -700,6 +748,11 @@ type DeleteContactDto struct {
 type DeleteContactsSuccessfulResponseDto struct {
 	Succeded  bool `json:"succeded"`
 	Succeeded bool `json:"succeeded"`
+}
+
+type DeleteDesignKitPublicV3ResponseDto struct {
+	Deleted bool   `json:"deleted"`
+	TraceId string `json:"traceId"`
 }
 
 type DeleteInvoiceResponseDto struct {
@@ -869,6 +922,18 @@ type GetAnalyticsBodyDTOV2 struct {
 	ProfileIds   json.RawMessage `json:"profileIds"`
 }
 
+type GetBrandVoicePublicV1ResponseDto struct {
+	Answers    string `json:"answers"`
+	CreatedAt  string `json:"createdAt"`
+	Deleted    bool   `json:"deleted"`
+	Id         string `json:"id"`
+	IsDefault  bool   `json:"isDefault"`
+	LocationId string `json:"locationId"`
+	Name       string `json:"name"`
+	TraceId    string `json:"traceId"`
+	UpdatedAt  string `json:"updatedAt"`
+}
+
 type GetBulkActionCampaignPublicV2ResponseDto struct {
 	CompletedAt      string `json:"completedAt"`
 	CreatedAt        string `json:"createdAt"`
@@ -937,6 +1002,20 @@ type GetConversationByIdResponse struct {
 
 type GetCreateUpdateNoteSuccessfulResponseDto struct {
 	Note string `json:"note"`
+}
+
+type GetDesignKitPublicV3ResponseDto struct {
+	Colors     json.RawMessage `json:"colors"`
+	CreatedAt  string          `json:"createdAt"`
+	Deleted    bool            `json:"deleted"`
+	Fonts      json.RawMessage `json:"fonts"`
+	Id         string          `json:"id"`
+	IsDefault  bool            `json:"isDefault"`
+	LocationId string          `json:"locationId"`
+	Logos      json.RawMessage `json:"logos"`
+	Name       string          `json:"name"`
+	TraceId    string          `json:"traceId"`
+	UpdatedAt  string          `json:"updatedAt"`
 }
 
 type GetEmailCampaignPublicV2ResponseDto struct {
@@ -1372,6 +1451,12 @@ type InvalidLocationDTO struct {
 	StatusCode float64 `json:"statusCode"`
 }
 
+type ListBrandVoicesPublicV1ResponseDto struct {
+	Items   json.RawMessage `json:"items"`
+	Total   float64         `json:"total"`
+	TraceId string          `json:"traceId"`
+}
+
 type ListBulkActionCampaignsPublicV2ResponseDto struct {
 	Campaigns json.RawMessage `json:"campaigns"`
 	Total     float64         `json:"total"`
@@ -1387,6 +1472,12 @@ type ListCouponsResponseDto struct {
 	Data       json.RawMessage `json:"data"`
 	TotalCount float64         `json:"totalCount"`
 	TraceId    string          `json:"traceId"`
+}
+
+type ListDesignKitsPublicV3ResponseDto struct {
+	Items   json.RawMessage `json:"items"`
+	Total   float64         `json:"total"`
+	TraceId string          `json:"traceId"`
 }
 
 type ListEmailCampaignsPublicV2ResponseDto struct {
@@ -1807,6 +1898,18 @@ type SendMessageResponseDto struct {
 	Msg            string          `json:"msg"`
 }
 
+type SetDefaultBrandVoicePublicV1ResponseDto struct {
+	BrandVoiceId string `json:"brandVoiceId"`
+	Success      bool   `json:"success"`
+	TraceId      string `json:"traceId"`
+}
+
+type SetDefaultDesignKitPublicV3ResponseDto struct {
+	DesignKitId string `json:"designKitId"`
+	Success     bool   `json:"success"`
+	TraceId     string `json:"traceId"`
+}
+
 type StatisticsResponseDTO struct {
 	Message string `json:"message"`
 	Results string `json:"results"`
@@ -1943,6 +2046,23 @@ type UnprocessableDTO struct {
 	StatusCode float64         `json:"statusCode"`
 }
 
+type UpdateBrandVoicePublicV1BodyDto struct {
+	Answers string `json:"answers"`
+	Name    string `json:"name"`
+}
+
+type UpdateBrandVoicePublicV1ResponseDto struct {
+	Answers    string `json:"answers"`
+	CreatedAt  string `json:"createdAt"`
+	Deleted    bool   `json:"deleted"`
+	Id         string `json:"id"`
+	IsDefault  bool   `json:"isDefault"`
+	LocationId string `json:"locationId"`
+	Name       string `json:"name"`
+	TraceId    string `json:"traceId"`
+	UpdatedAt  string `json:"updatedAt"`
+}
+
 type UpdateBusinessDto struct {
 	Address     string `json:"address"`
 	City        string `json:"city"`
@@ -2003,6 +2123,27 @@ type UpdateCustomFieldsDTO struct {
 }
 
 type UpdateCustomObjectRecordDto struct {
+}
+
+type UpdateDesignKitPublicV3BodyDto struct {
+	Colors json.RawMessage `json:"colors"`
+	Fonts  json.RawMessage `json:"fonts"`
+	Logos  json.RawMessage `json:"logos"`
+	Name   string          `json:"name"`
+}
+
+type UpdateDesignKitPublicV3ResponseDto struct {
+	Colors     json.RawMessage `json:"colors"`
+	CreatedAt  string          `json:"createdAt"`
+	Deleted    bool            `json:"deleted"`
+	Fonts      json.RawMessage `json:"fonts"`
+	Id         string          `json:"id"`
+	IsDefault  bool            `json:"isDefault"`
+	LocationId string          `json:"locationId"`
+	Logos      json.RawMessage `json:"logos"`
+	Name       string          `json:"name"`
+	TraceId    string          `json:"traceId"`
+	UpdatedAt  string          `json:"updatedAt"`
 }
 
 type UpdateEstimateDto struct {

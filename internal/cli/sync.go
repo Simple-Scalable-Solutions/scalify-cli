@@ -783,6 +783,8 @@ func upsertSingleObject(db *store.Store, resource string, data json.RawMessage) 
 		return db.UpsertAssociations(data)
 	case "blogs":
 		return db.UpsertBlogs(data)
+	case "brand_boards":
+		return db.UpsertBrandBoards(data)
 	case "businesses":
 		return db.UpsertBusinesses(data)
 	case "calendars":
@@ -1137,6 +1139,7 @@ func syncDependentResource(c interface {
 // annotations on a child path-item are honored at runtime, not just on
 // flat paths.
 var resourceIDFieldOverrides = map[string]string{
+	"brand_boards":              "id",
 	"categories":                "success",
 	"emails":                    "id",
 	"locations":                 "id",

@@ -175,6 +175,7 @@ Run 'scalify-cli doctor' to verify auth and connectivity.`,
 	}
 	rootCmd.AddCommand(newAssociationsCmd(flags))
 	rootCmd.AddCommand(newBlogsCmd(flags))
+	rootCmd.AddCommand(newBrandBoardsCmd(flags))
 	rootCmd.AddCommand(newBusinessesCmd(flags))
 	rootCmd.AddCommand(newCalendarsCmd(flags))
 	rootCmd.AddCommand(newContactsCmd(flags))

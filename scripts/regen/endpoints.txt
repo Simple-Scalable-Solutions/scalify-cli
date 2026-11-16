@@ -193,3 +193,16 @@ PUT /workflows/{workflowId}/definition
 GET /workflows/{workflowId}/logs
 GET /workflows/{workflowId}/logs/aggregate
 PUT /workflows/{workflowId}/status
+# brand boards (design kits = brand colours/fonts, brand voices)
+POST /brand-boards/locations/{locationId}/brand-voices
+POST /brand-boards/locations/{locationId}/design-kits
+DELETE /brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}
+DELETE /brand-boards/locations/{locationId}/design-kits/{designKitId}
+GET /brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}
+GET /brand-boards/locations/{locationId}/design-kits/{designKitId}
+GET /brand-boards/locations/{locationId}/brand-voices
+GET /brand-boards/locations/{locationId}/design-kits
+POST /brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}/default
+POST /brand-boards/locations/{locationId}/design-kits/{designKitId}/default
+PATCH /brand-boards/locations/{locationId}/brand-voices/{brandVoiceId}
+PATCH /brand-boards/locations/{locationId}/design-kits/{designKitId}

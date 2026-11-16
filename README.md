@@ -135,6 +135,23 @@ Manage blogs
 - **`scalify-cli blogs list`** - The "Get Blogs by Location ID" API allows you get blogs using Location ID.
 - **`scalify-cli blogs list-posts`** - The "Get Blog posts by Blog ID" API returns the blog posts for a given blog site. Use searchTerm to search across post title, description, url slug and category name.
 
+### brand-boards
+
+Brand colours, fonts and logos (design kits) and brand voices
+
+- **`scalify-cli brand-boards create-brand-voice`** - Create a brand voice for a location
+- **`scalify-cli brand-boards create-design-kit`** - Create a design kit for a location
+- **`scalify-cli brand-boards delete-brand-voice`** - Delete a brand voice by ID
+- **`scalify-cli brand-boards delete-design-kit`** - Delete a design kit by ID
+- **`scalify-cli brand-boards get-brand-voice`** - Get a brand voice by ID
+- **`scalify-cli brand-boards get-design-kit`** - Get a design kit by ID
+- **`scalify-cli brand-boards list-brand-voices`** - Get list of brand voices for a location
+- **`scalify-cli brand-boards list-design-kits`** - Get list of design kits for a location
+- **`scalify-cli brand-boards set-default-brand-voice`** - Set a brand voice as the default for a location. The previous default will be unset.
+- **`scalify-cli brand-boards set-default-design-kit`** - Set a design kit as the default for a location. The previous default will be unset.
+- **`scalify-cli brand-boards update-brand-voice`** - Update a brand voice by ID
+- **`scalify-cli brand-boards update-design-kit`** - Update a design kit by ID
+
 ### businesses
 
 Manage businesses

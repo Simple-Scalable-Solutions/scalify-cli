@@ -207,6 +207,16 @@ func (s *Store) backfillColumns(ctx context.Context, conn *sql.Conn) error {
 		{table: "associations", column: "key", decl: "TEXT"},
 		{table: "associations", column: "location_id", decl: "TEXT"},
 		{table: "blogs", column: "name", decl: "TEXT"},
+		{table: "brand_boards", column: "answers", decl: "TEXT"},
+		{table: "brand_boards", column: "created_at", decl: "TEXT"},
+		{table: "brand_boards", column: "deleted", decl: "INTEGER"},
+		{table: "brand_boards", column: "is_default", decl: "INTEGER"},
+		{table: "brand_boards", column: "location_id", decl: "TEXT"},
+		{table: "brand_boards", column: "name", decl: "TEXT"},
+		{table: "brand_boards", column: "trace_id", decl: "TEXT"},
+		{table: "brand_boards", column: "updated_at", decl: "TEXT"},
+		{table: "brand_boards", column: "total", decl: "REAL"},
+		{table: "brand_boards", column: "parent_id", decl: "TEXT"},
 		{table: "businesses", column: "business", decl: "TEXT"},
 		{table: "calendars", column: "has_more", decl: "INTEGER"},
 		{table: "free_slots", column: "calendars_id", decl: "TEXT"},
@@ -518,6 +528,24 @@ func (s *Store) migrate(ctx context.Context) error {
 			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			name TEXT
 		)`,
+		`CREATE TABLE IF NOT EXISTS brand_boards (
+			id TEXT PRIMARY KEY,
+			data JSON NOT NULL,
+			synced_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			answers TEXT,
+			created_at TEXT,
+			deleted INTEGER,
+			is_default INTEGER,
+			location_id TEXT,
+			name TEXT,
+			trace_id TEXT,
+			updated_at TEXT,
+			total REAL,
+			parent_id TEXT
+		)`,
+		`CREATE INDEX IF NOT EXISTS idx_brand_boards_created_at ON brand_boards(created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_brand_boards_updated_at ON brand_boards(updated_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_brand_boards_parent_id ON brand_boards(parent_id)`,
 		`CREATE TABLE IF NOT EXISTS businesses (
 			id TEXT PRIMARY KEY,
 			data JSON NOT NULL,
@@ -1522,6 +1550,66 @@ func (s *Store) UpsertBlogs(data json.RawMessage) error {
 		return err
 	}
 	if err := s.upsertBlogsTx(tx, id, obj, data); err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+// upsertBrandBoardsTx writes the typed-table portion of a brand_boards upsert
+// inside an existing transaction. The caller is responsible for the generic
+// resources insert (via upsertGenericResourceTx) and for committing the tx.
+// Splitting this out lets UpsertBatch dispatch typed inserts per item without
+// opening a per-item transaction.
+func (s *Store) upsertBrandBoardsTx(tx *sql.Tx, id string, obj map[string]any, data json.RawMessage) error {
+	if _, err := tx.Exec(
+		`INSERT INTO brand_boards (id, data, synced_at, answers, created_at, deleted, is_default, location_id, name, trace_id, updated_at, total, parent_id)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+		 ON CONFLICT(id) DO UPDATE SET data = excluded.data, synced_at = excluded.synced_at, answers = excluded.answers, created_at = excluded.created_at, deleted = excluded.deleted, is_default = excluded.is_default, location_id = excluded.location_id, name = excluded.name, trace_id = excluded.trace_id, updated_at = excluded.updated_at, total = excluded.total, parent_id = excluded.parent_id`,
+		id,
+		string(data),
+		time.Now(),
+		lookupFieldValue(obj, "answers"),
+		lookupFieldValue(obj, "created_at"),
+		lookupFieldValue(obj, "deleted"),
+		lookupFieldValue(obj, "is_default"),
+		lookupFieldValue(obj, "location_id"),
+		lookupFieldValue(obj, "name"),
+		lookupFieldValue(obj, "trace_id"),
+		lookupFieldValue(obj, "updated_at"),
+		lookupFieldValue(obj, "total"),
+		lookupFieldValue(obj, "parent_id"),
+	); err != nil {
+		return fmt.Errorf("insert into brand_boards: %w", err)
+	}
+
+	return nil
+}
+
+// UpsertBrandBoards inserts or updates a brand_boards record with domain-specific columns.
+func (s *Store) UpsertBrandBoards(data json.RawMessage) error {
+	var obj map[string]any
+	if err := json.Unmarshal(data, &obj); err != nil {
+		return fmt.Errorf("unmarshaling brand_boards: %w", err)
+	}
+
+	id := extractObjectID(obj)
+	if id == "" {
+		return fmt.Errorf("missing id for brand_boards")
+	}
+
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	tx, err := s.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := s.upsertGenericResourceTx(tx, "brand_boards", id, data); err != nil {
+		return err
+	}
+	if err := s.upsertBrandBoardsTx(tx, id, obj, data); err != nil {
 		return err
 	}
 
@@ -3884,6 +3972,7 @@ func (s *Store) UpsertWorkflowsStatus(data json.RawMessage) error {
 // child path-item annotated with x-resource-id resolves the same as a flat
 // path-item.
 var resourceIDFieldOverrides = map[string]string{
+	"brand_boards":              "id",
 	"categories":                "success",
 	"emails":                    "id",
 	"locations":                 "id",
@@ -3965,6 +4054,10 @@ func (s *Store) UpsertBatch(resourceType string, items []json.RawMessage) (int, 
 			}
 		case "blogs":
 			if err := s.upsertBlogsTx(tx, id, obj, item); err != nil {
+				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
+			}
+		case "brand_boards":
+			if err := s.upsertBrandBoardsTx(tx, id, obj, item); err != nil {
 				return 0, extractFailures, fmt.Errorf("typed upsert for %s/%s: %w", resourceType, id, err)
 			}
 		case "businesses":
