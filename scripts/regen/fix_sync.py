@@ -50,4 +50,10 @@ b="""\t\t\t\t{
 """
 if "partial, searchErr := db.Search(query, limit)" not in s:
     s=sub(s,a,b+a,f); open(f,"w").write(s)
+# search: honour --select / --compact (and so --agent) like every other read; it printed full records.
+f=g+"search.go"; s=open(f).read()
+a="\t\tdata, err := json.Marshal(results)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\twrapped, err := wrapWithProvenance(data, prov)"
+b="\t\tdata, err := json.Marshal(results)\n\t\tif err != nil {\n\t\t\treturn err\n\t\t}\n\t\tif flags.selectFields != \"\" {\n\t\t\tdata = filterFields(data, flags.selectFields)\n\t\t} else if flags.compact {\n\t\t\tdata = compactFields(data)\n\t\t}\n\t\twrapped, err := wrapWithProvenance(data, prov)"
+if "data = filterFields(data, flags.selectFields)" not in s:
+    s=sub(s,a,b,f); open(f,"w").write(s)
 print("sync + tail + search: scalify resources wired")

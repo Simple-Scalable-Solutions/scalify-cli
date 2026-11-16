@@ -209,7 +209,8 @@ echo '{"locationId":"<loc>","pageLimit":20,"filters":[{"field":"tags","operator"
 scalify-cli doctor              # Check auth + connectivity + cache health
 scalify-cli sync                # Copy the active location's records (contacts, conversations, opportunities,
                                 #   workflows, invoices and more; --resources to pick) into a local cache
-scalify-cli search <query>      # Full-text search over the synced copy (--type contacts to narrow)
+scalify-cli search <query> --agent --limit 10   # Full-text search over the synced copy (--type contacts
+                                #   to narrow). Without --agent/--select it prints full records (~20k tokens)
 scalify-cli analytics --type contacts --group-by type   # Counts over the synced copy
 scalify-cli tail                # Stream live events
 scalify-cli which <command>     # Show which binary will run
