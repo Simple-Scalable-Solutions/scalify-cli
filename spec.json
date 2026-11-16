@@ -2804,16 +2804,16 @@
       "name": "type",
       "required": true,
       "in": "path",
-      "description": "Whether the given tags are added to or removed from the contacts. Must be either 'add' or 'remove' One of: add, remove",
       "schema": {
-       "type": "string",
-       "example": "add"
-      }
+       "example": "add",
+       "type": "string"
+      },
+      "description": "Whether to add the tags to or remove them from the contacts One of: add, remove"
      },
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2828,7 +2828,7 @@
      "content": {
       "application/json": {
        "schema": {
-        "$ref": "#/components/schemas/UpdateTagsDTO"
+        "$ref": "#/components/schemas/ContactsUpdateTagsDTO"
        }
       }
      }
@@ -31383,6 +31383,54 @@
      "total"
     ],
     "title": "SearchContactSuccessResponseDto"
+   },
+   "ContactsUpdateTagsDTO": {
+    "type": "object",
+    "properties": {
+     "contacts": {
+      "description": "list of contact ids to be processed. Minimum 1, maximum 500 per request.",
+      "example": [
+       "qFSqySFkVvNzOSqgGqFi",
+       "abcdef",
+       "qFSqySFkVvNzOSqgGqFi",
+       "3ualbhnV7j3n3a9r2moD"
+      ],
+      "minItems": 1,
+      "maxItems": 500,
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "tags": {
+      "description": "list of tags to be added or removed. Minimum 1, maximum 50 per request. Can be empty only when removeAllTags is true.",
+      "example": [
+       "tag-1",
+       "tag-2"
+      ],
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "locationId": {
+      "type": "string",
+      "description": "location id from where the bulk request is executed",
+      "example": "asdrwHvLUxlfw5SqKVCN"
+     },
+     "removeAllTags": {
+      "type": "boolean",
+      "description": "Optional. If `true`, removes all tags from the contacts, and `tags` can be empty. Can only be used with the `remove` type. Defaults to `false`.",
+      "example": false
+     }
+    },
+    "required": [
+     "contacts",
+     "tags",
+     "locationId"
+    ],
+    "title": "ContactsUpdateTagsDTO"
    },
    "UpdateContactDtoV3": {
     "type": "object",

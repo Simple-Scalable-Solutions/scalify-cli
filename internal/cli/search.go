@@ -276,6 +276,11 @@ func outputSearchResults(cmd *cobra.Command, flags *rootFlags, results []json.Ra
 		if err != nil {
 			return err
 		}
+		if flags.selectFields != "" {
+			data = filterFields(data, flags.selectFields)
+		} else if flags.compact {
+			data = compactFields(data)
+		}
 		wrapped, err := wrapWithProvenance(data, prov)
 		if err != nil {
 			return err

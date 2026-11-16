@@ -265,6 +265,13 @@ type ContactsGetNotesListSuccessfulResponseDto struct {
 	Notes json.RawMessage `json:"notes"`
 }
 
+type ContactsUpdateTagsDTO struct {
+	Contacts      json.RawMessage `json:"contacts"`
+	LocationId    string          `json:"locationId"`
+	RemoveAllTags bool            `json:"removeAllTags"`
+	Tags          json.RawMessage `json:"tags"`
+}
+
 type ContactsWorkflowSuccessfulResponseDto struct {
 	Succeded  bool `json:"succeded"`
 	Succeeded bool `json:"succeeded"`
