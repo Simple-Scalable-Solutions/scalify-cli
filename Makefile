@@ -23,5 +23,6 @@ install-mcp:
 
 build-all: build build-mcp
 
+# make release NOTES=docs/releases/v2.0.0.md  (Go 1.26.3: the version every build and test used)
 release:
-	GITHUB_TOKEN=$$(gh auth token) goreleaser release --clean --parallelism 2
+	GOTOOLCHAIN=go1.26.3 GITHUB_TOKEN=$$(gh auth token) goreleaser release --clean --parallelism 2 $(if $(NOTES),--release-notes $(NOTES))
