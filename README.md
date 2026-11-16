@@ -68,7 +68,7 @@ scalify-cli doctor
 Checks configuration, credentials, API connectivity, and whether a newer version is available. If an update exists, the output will show:
 
 ```
-  WARN Update available: v1.x.x
+  WARN Update available: v2.x.x
     CLI:   curl -fsSL .../install.sh | bash
     Skill: curl -fsSL .../install-skill.sh | bash
 ```
@@ -76,7 +76,7 @@ Checks configuration, credentials, API connectivity, and whether a newer version
 ### 3. Try a Command
 
 ```bash
-scalify-cli contacts list-contacts --compact
+scalify-cli contacts search --page-limit 10 --agent
 ```
 
 ---
@@ -106,7 +106,7 @@ scalify-cli location show
 Override for a single command without switching:
 
 ```bash
-SCALIFY_LOCATION_ID=<id> scalify-cli contacts list-contacts
+SCALIFY_LOCATION_ID=<id> scalify-cli contacts search --page-limit 10
 ```
 
 ---
@@ -446,25 +446,22 @@ Run the full save pipeline against a definition and report what a real save woul
 
 ```bash
 # Human-readable table (default in terminal, JSON when piped)
-scalify-cli contacts list-contacts
+scalify-cli workflows list
 
 # JSON
-scalify-cli contacts list-contacts --json
+scalify-cli workflows list --json
 
-# Compact JSON — key fields only (id, name, status, timestamps)
-scalify-cli contacts list-contacts --compact
-
-# Filter to specific fields
-scalify-cli contacts list-contacts --json --select id,firstName,email
+# Filter to specific fields (dotted paths reach into the response)
+scalify-cli workflows list --json --select workflows.id,workflows.name,workflows.status
 
 # CSV
-scalify-cli contacts list-contacts --csv
+scalify-cli workflows list --csv
 
 # Dry run — print the request without sending
-scalify-cli contacts list-contacts --dry-run
+scalify-cli workflows list --dry-run
 
 # Agent mode — JSON + compact + no prompts in one flag
-scalify-cli contacts list-contacts --agent
+scalify-cli workflows list --agent
 ```
 
 ---
@@ -488,15 +485,15 @@ Exit codes: `0` success · `2` usage error · `3` not found · `4` auth error ·
 Example — search contacts by query:
 
 ```bash
-scalify-cli contacts list-search --params "query=jane doe" --agent
+scalify-cli contacts search --page-limit 10 --query "jane doe" --agent
 ```
 
-Example — fetch all contact IDs and look each one up:
+Example — fetch contact IDs and look each one up (POST commands like `search` wrap their response in `data`):
 
 ```bash
-scalify-cli contacts list-contacts --agent --select id \
-  | jq -r '.[].id' \
-  | xargs -I{} scalify-cli contacts get-contacts {} --agent
+scalify-cli contacts search --page-limit 50 --agent \
+  | jq -r '.data.contacts[].id' \
+  | xargs -I{} scalify-cli contacts get {} --agent
 ```
 
 ---
@@ -530,7 +527,11 @@ tools, so it costs a few hundred tokens of context instead of one tool per endpo
 - `scalify_execute`: call it by `endpoint_id` with one flat `params` object. `locationId` defaults to the
   active location (`scalify-cli location use`, or `SCALIFY_LOCATION_ID`).
 
-It also has the CLI's utility tools (`location_*`, `sync`, `search`, `sql` and others). Register it in Claude Code:
+It also has the CLI's utility tools (`location_*`, `sync`, `search`, `sql` and others).
+
+`install.sh` installs only the CLI. Get `scalify-pp-mcp` from the
+[latest release](https://github.com/Simple-Scalable-Solutions/scalify-cli/releases/latest): it's in the same
+archive as `scalify-cli` for your platform. Put it on your PATH, then register it in Claude Code:
 
 ```bash
 claude mcp add scalify scalify-pp-mcp -e SCALIFY_TOKEN=<your-token>
