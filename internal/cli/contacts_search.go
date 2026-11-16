@@ -98,7 +98,7 @@ func newContactsSearchCmd(flags *rootFlags) *cobra.Command {
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -117,7 +117,7 @@ func newContactsSearchCmd(flags *rootFlags) *cobra.Command {
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}
@@ -165,7 +165,7 @@ func newContactsSearchCmd(flags *rootFlags) *cobra.Command {
 	cmd.Flags().Float64Var(&bodyPage, "page", 1.000000, "Page number for standard pagination, starting at 1. - Standard pagination returns up to **10,000** records in total,...")
 	cmd.Flags().Float64Var(&bodyPageLimit, "page-limit", 0.0, "Number of contacts per page. **Required.** Maximum 500.")
 	cmd.Flags().StringVar(&bodyQuery, "query", "", "Text to search for. It is matched against the contact fields marked searchable in the location's Custom Fields...")
-	cmd.Flags().StringVar(&bodySearchAfter, "search-after", "", "Cursor for the next page (cursor-based pagination). - Pass the `searchAfter` array of the last contact in the...")
+	cmd.Flags().StringVar(&bodySearchAfter, "search-after", "", "Use this to get the next page of results. • Copy the `searchAfter` value from the last contact in the previous...")
 	cmd.Flags().StringVar(&bodySort, "sort", "", "Sort order, applied in the order given. Contacts that tie are ordered by id, so `searchAfter` paging is stable.")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 

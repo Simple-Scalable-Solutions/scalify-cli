@@ -234,14 +234,9 @@ func classifyAPIError(err error, flags *rootFlags) error {
 			"\n      Run 'scalify-cli doctor' to check auth status."+
 			"\n      Response: "+cliutil.SanitizeErrorBody(msg), err))
 	case strings.Contains(msg, "HTTP 401"):
-		return authErr(fmt.Errorf("%w\nhint: check your token. Set it with: scalify-cli auth set-token <token>"+
-			"\n      or: export SCALIFY_TOKEN=<your-token>"+
-			"\n      Run 'scalify-cli doctor' to check auth status.", err))
+		return authErr(fmt.Errorf("%w%s", err, locationAuthHint(flags, 401)))
 	case strings.Contains(msg, "HTTP 403"):
-		return authErr(fmt.Errorf("%w\nhint: permission denied. Your credentials are valid but lack access to this resource."+
-			"\n      Check that your API key has the required permissions."+
-			"\n      Set it with: export SCALIFY_TOKEN=<your-key>"+
-			"\n      Run 'scalify-cli doctor' to check auth status.", err))
+		return authErr(fmt.Errorf("%w%s", err, locationAuthHint(flags, 403)))
 	case strings.Contains(msg, "HTTP 404"):
 		return notFoundErr(fmt.Errorf("%w\nhint: resource not found. Run the 'list' command to see available items", err))
 	case strings.Contains(msg, "HTTP 429"):
@@ -440,7 +435,12 @@ func filterFields(data json.RawMessage, fields string) json.RawMessage {
 	if len(paths) == 0 {
 		return data
 	}
-	return filterFieldsRec(data, paths)
+	out, ok := selectNested(data, paths)
+	if !ok {
+		out = filterFieldsRec(data, paths)
+	}
+	warnEmptySelect(data, out, fields)
+	return out
 }
 
 // filterFieldsRec applies path filters to a JSON value. Each path is a list of
@@ -575,6 +575,9 @@ func extractResponseData(data json.RawMessage) json.RawMessage {
 // For arrays: allowlist of high-gravity fields (no descriptions).
 // For single objects: blocklist that strips known-verbose fields (descriptions, comments, etc.).
 func compactFields(data json.RawMessage) json.RawMessage {
+	if out, ok := compactNested(data); ok {
+		return out
+	}
 	// Try array first
 	var items []map[string]any
 	if err := json.Unmarshal(data, &items); err == nil {
@@ -633,6 +636,7 @@ func compactObjectFields(obj map[string]any) json.RawMessage {
 
 // printCSV renders JSON arrays as CSV with header row.
 func printCSV(w io.Writer, data json.RawMessage) error {
+	data = unwrapList(data)
 	var items []map[string]any
 	if err := json.Unmarshal(data, &items); err != nil || len(items) == 0 {
 		// Single object or empty - just print as JSON

@@ -14,34 +14,27 @@ import (
 
 func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 	var bodyAdditionalDetails string
+	var bodyFilters string
 	var bodyLimit float64
 	var bodyLocationId string
 	var bodyPage float64
 	var bodyQuery string
 	var bodySearchAfter string
+	var bodySort string
 	var stdinBody bool
 
 	cmd := &cobra.Command{
 		Use:         "search",
-		Short:       "Search Opportunities based on combinations of advanced filters. Send `filters` (each with `field`, `operator` and...",
+		Short:       "Search Opportunities based on combinations of advanced filters, with sorting and pagination. Send `filters` (each...",
 		Example:     "  scalify-cli opportunities search --location-id 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "opportunities.search", "pp:method": "POST", "pp:path": "/opportunities/search", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if !stdinBody {
-				if !cmd.Flags().Changed("additional-details") && !flags.dryRun {
-					return fmt.Errorf("required flag \"%s\" not set", "additional-details")
-				}
 				if !cmd.Flags().Changed("limit") && !flags.dryRun {
 					return fmt.Errorf("required flag \"%s\" not set", "limit")
 				}
 				if !cmd.Flags().Changed("location-id") && !flags.dryRun {
 					return fmt.Errorf("required flag \"%s\" not set", "location-id")
-				}
-				if !cmd.Flags().Changed("query") && !flags.dryRun {
-					return fmt.Errorf("required flag \"%s\" not set", "query")
-				}
-				if !cmd.Flags().Changed("search-after") && !flags.dryRun {
-					return fmt.Errorf("required flag \"%s\" not set", "search-after")
 				}
 			}
 			c, err := flags.newClient()
@@ -70,6 +63,13 @@ func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 					}
 					body["additionalDetails"] = parsedAdditionalDetails
 				}
+				if bodyFilters != "" {
+					var parsedFilters any
+					if err := json.Unmarshal([]byte(bodyFilters), &parsedFilters); err != nil {
+						return fmt.Errorf("parsing --filters JSON: %w", err)
+					}
+					body["filters"] = parsedFilters
+				}
 				if bodyLimit != 0.0 {
 					body["limit"] = bodyLimit
 				}
@@ -89,6 +89,13 @@ func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 					}
 					body["searchAfter"] = parsedSearchAfter
 				}
+				if bodySort != "" {
+					var parsedSort any
+					if err := json.Unmarshal([]byte(bodySort), &parsedSort); err != nil {
+						return fmt.Errorf("parsing --sort JSON: %w", err)
+					}
+					body["sort"] = parsedSort
+				}
 			}
 			data, statusCode, err := c.Post(path, body)
 			if err != nil {
@@ -97,7 +104,7 @@ func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -116,7 +123,7 @@ func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}
@@ -157,12 +164,14 @@ func newOpportunitiesSearchCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&bodyAdditionalDetails, "additional-details", "", "Flags to include additional related entities in the response")
-	cmd.Flags().Float64Var(&bodyLimit, "limit", 0.0, "Maximum number of results to return per page")
-	cmd.Flags().StringVar(&bodyLocationId, "location-id", "", "Location Id")
-	cmd.Flags().Float64Var(&bodyPage, "page", 0.0, "Page number, starting at 1 (0 is treated as 1). `page * limit` cannot exceed 10,000; use `searchAfter` without...")
-	cmd.Flags().StringVar(&bodyQuery, "query", "", "Full-text search query string (max 75 characters)")
-	cmd.Flags().StringVar(&bodySearchAfter, "search-after", "", "Search-after cursor values for deep pagination")
+	cmd.Flags().StringVar(&bodyAdditionalDetails, "additional-details", "", "Related data to include with each opportunity: notes, tasks and calendar events")
+	cmd.Flags().StringVar(&bodyFilters, "filters", "", "Filters, or groups of filters, to narrow the results. Each filter has three parts: 1. **Field**: the opportunity...")
+	cmd.Flags().Float64Var(&bodyLimit, "limit", 0.0, "Number of opportunities per page. Minimum 1, maximum 500.")
+	cmd.Flags().StringVar(&bodyLocationId, "location-id", "", "Location ID in which the search needs to be performed")
+	cmd.Flags().Float64Var(&bodyPage, "page", 0.0, "Page number for standard pagination, starting at 1 (0 is treated as 1). - Standard pagination returns up to...")
+	cmd.Flags().StringVar(&bodyQuery, "query", "", "Text to search for within your opportunities. It is matched against the opportunity fields marked searchable in the...")
+	cmd.Flags().StringVar(&bodySearchAfter, "search-after", "", "Use this to get the next page of results (cursor-based pagination). • Copy the `sort` value from the last...")
+	cmd.Flags().StringVar(&bodySort, "sort", "", "Sort order, applied in the order given. Without `sort`, the newest opportunities come first (`date_added` `desc`)....")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 
 	return cmd

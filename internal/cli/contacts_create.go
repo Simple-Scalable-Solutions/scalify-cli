@@ -42,7 +42,7 @@ func newContactsCreateCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:         "create",
-		Short:       "Create a new contact",
+		Short:       "Create a new contact `Idempotency-Key` is not supported. Retrying a request that timed out can create a duplicate...",
 		Example:     "  scalify-cli contacts create --location-id 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.create", "pp:method": "POST", "pp:path": "/contacts/"},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -177,7 +177,7 @@ func newContactsCreateCmd(flags *rootFlags) *cobra.Command {
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -196,7 +196,7 @@ func newContactsCreateCmd(flags *rootFlags) *cobra.Command {
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}
@@ -237,8 +237,8 @@ func newContactsCreateCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&bodyAdditionalEmails, "additional-emails", "", "Add additional email addresses to a contact. > ⚠️ **Important:** When sending `additionalEmails`, you must also...")
-	cmd.Flags().StringVar(&bodyAdditionalPhones, "additional-phones", "", "Add additional phone numbers to a contact. > ⚠️ **Important:** When sending `additionalPhones`, you must also...")
+	cmd.Flags().StringVar(&bodyAdditionalEmails, "additional-emails", "", "⚠️ Always send the primary together with the additionals (email with additionalEmails). Array of { email },...")
+	cmd.Flags().StringVar(&bodyAdditionalPhones, "additional-phones", "", "⚠️ Always send the primary together with the additionals (phone with additionalPhones). Array of { phone,...")
 	cmd.Flags().StringVar(&bodyAddress1, "address1", "", "Street address of the contact")
 	cmd.Flags().StringVar(&bodyAssignedTo, "assigned-to", "", "User's Id")
 	cmd.Flags().StringVar(&bodyCity, "city", "", "City of the contact")

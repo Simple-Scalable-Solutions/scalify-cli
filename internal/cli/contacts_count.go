@@ -20,7 +20,7 @@ func newContactsCountCmd(flags *rootFlags) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:         "count",
-		Short:       "Count the contacts that match a search, without returning them. Takes the same `query` and `filters` as Search...",
+		Short:       "Count the contacts that match a search, without returning them. Takes the same `query` and `filters` as [Search...",
 		Example:     "  scalify-cli contacts count --location-id 550e8400-e29b-41d4-a716-446655440000",
 		Annotations: map[string]string{"pp:endpoint": "contacts.count", "pp:method": "POST", "pp:path": "/contacts/search/count", "mcp:read-only": "true"},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -69,7 +69,7 @@ func newContactsCountCmd(flags *rootFlags) *cobra.Command {
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -88,7 +88,7 @@ func newContactsCountCmd(flags *rootFlags) *cobra.Command {
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}

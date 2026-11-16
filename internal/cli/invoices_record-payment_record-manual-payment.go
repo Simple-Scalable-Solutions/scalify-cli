@@ -129,7 +129,7 @@ func newInvoicesRecordPaymentRecordManualPaymentCmd(flags *rootFlags) *cobra.Com
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -148,7 +148,7 @@ func newInvoicesRecordPaymentRecordManualPaymentCmd(flags *rootFlags) *cobra.Com
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}

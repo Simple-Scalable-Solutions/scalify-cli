@@ -25,7 +25,7 @@ $PP generate --spec $R/spec.json --name scalify --owner Scalify --spec-source of
   --spec-url https://marketplace.gohighlevel.com/docs/llms/v3/llms.txt --output $W/gen --validate=false > $W/gen.log 2>&1
 gofmt -w $W/gen/internal
 for p in $D/patches/*.patch; do patch -s -p1 -d $W/gen --no-backup-if-mismatch < $p; done
-cp $R/internal/cli/location_config.go $R/internal/cli/location_default.go $R/internal/cli/sync_scalify.go $W/gen/internal/cli/
+cp $R/internal/cli/location_config.go $R/internal/cli/location_default.go $R/internal/cli/sync_scalify.go $R/internal/cli/output_scalify.go $R/internal/cli/output_scalify_test.go $W/gen/internal/cli/
 cp $R/internal/client/query.go $W/gen/internal/client/
 cp $R/internal/mcp/code_orch_scalify.go $R/internal/mcp/code_orch_scalify_test.go $W/gen/internal/mcp/
 find $W/gen/internal $W/gen/cmd -name '*.go' -print0 | xargs -0 perl -pi -e "s/scalify-pp-cli(?=[ '])/scalify-cli/g"
@@ -33,6 +33,7 @@ python3 -I $D/fix_write_query.py $R/spec.json $W/gen
 python3 -I $D/fix_code_orch.py $W/gen
 python3 -I $D/fix_delete_body.py $W/gen
 python3 -I $D/fix_sync.py $W/gen
+python3 -I $D/fix_output.py $W/gen
 python3 -I $D/gen_orch_meta.py $R/spec.json $W/gen/internal/mcp/code_orch_meta.go
 gofmt -w $W/gen/internal
 cp $R/go.sum $W/gen/go.sum

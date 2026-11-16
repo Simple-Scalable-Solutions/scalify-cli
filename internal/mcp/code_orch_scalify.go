@@ -181,6 +181,13 @@ func scalifyExecute(ctx context.Context, req mcplib.CallToolRequest) (*mcplib.Ca
 			strings.Contains(ep.Path, "{locationId}")) {
 		params["locationId"] = cfg.LocationID
 	}
+	// A location with its own saved token is called with that token (as the CLI does).
+	for _, k := range []string{"locationId", "altId"} {
+		if loc, ok := params[k].(string); ok && cfg.LocationTokens[loc] != "" {
+			cfg.LocationID = loc
+			break
+		}
+	}
 
 	var missing []string
 	path := placeholderRe.ReplaceAllStringFunc(ep.Path, func(m string) string {

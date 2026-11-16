@@ -103,11 +103,15 @@ scalify-cli location list
 scalify-cli location show
 ```
 
-Override for a single command without switching:
+Run one command against another saved location without switching (id or name):
 
 ```bash
-SCALIFY_LOCATION_ID=<id> scalify-cli contacts search --page-limit 10
+scalify-cli contacts search --page-limit 10 --location "Scalify Demo"
 ```
+
+A command that takes a location id as its argument uses that location's saved token on its own
+(`scalify-cli locations custom-values list <location-id>`). On a 403 the error says which location's
+token was used.
 
 ---
 
@@ -451,8 +455,8 @@ scalify-cli workflows list
 # JSON
 scalify-cli workflows list --json
 
-# Filter to specific fields (dotted paths reach into the response)
-scalify-cli workflows list --json --select workflows.id,workflows.name,workflows.status
+# Filter to specific fields (applies to each item of the list; dotted paths also work)
+scalify-cli workflows list --json --select id,name,status
 
 # CSV
 scalify-cli workflows list --csv

@@ -13,12 +13,15 @@ import (
 )
 
 func newLocationsTagsUpdateCmd(flags *rootFlags) *cobra.Command {
+	var bodyCategoryId string
+	var bodyColor string
+	var bodyDescription string
 	var bodyName string
 	var stdinBody bool
 
 	cmd := &cobra.Command{
 		Use:         "update <locationId> <tagId>",
-		Short:       "Update tag",
+		Short:       "Updates a tag. A new name is stored lowercased and trimmed; renaming to a name another tag already has returns 400.",
 		Example:     "  scalify-cli locations tags update 550e8400-e29b-41d4-a716-446655440000 550e8400-e29b-41d4-a716-446655440000 --name example-resource",
 		Annotations: map[string]string{"pp:endpoint": "tags.update", "pp:method": "PUT", "pp:path": "/locations/{locationId}/tags/{tagId}"},
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -54,6 +57,15 @@ func newLocationsTagsUpdateCmd(flags *rootFlags) *cobra.Command {
 				body = jsonBody
 			} else {
 				body = map[string]any{}
+				if bodyCategoryId != "" {
+					body["categoryId"] = bodyCategoryId
+				}
+				if bodyColor != "" {
+					body["color"] = bodyColor
+				}
+				if bodyDescription != "" {
+					body["description"] = bodyDescription
+				}
 				if bodyName != "" {
 					body["name"] = bodyName
 				}
@@ -65,7 +77,7 @@ func newLocationsTagsUpdateCmd(flags *rootFlags) *cobra.Command {
 			if wantsHumanTable(cmd.OutOrStdout(), flags) {
 				// Check if response contains an array (directly or wrapped in "data")
 				var items []map[string]any
-				if json.Unmarshal(data, &items) == nil && len(items) > 0 {
+				if json.Unmarshal(unwrapList(data), &items) == nil && len(items) > 0 {
 					if err := printAutoTable(cmd.OutOrStdout(), items); err != nil {
 						fmt.Fprintf(os.Stderr, "warning: table rendering failed, falling back to JSON: %v\n", err)
 					} else {
@@ -84,7 +96,7 @@ func newLocationsTagsUpdateCmd(flags *rootFlags) *cobra.Command {
 					}
 				}
 			}
-			if flags.asJSON || !isTerminal(cmd.OutOrStdout()) {
+			if !flags.csv && (flags.asJSON || !isTerminal(cmd.OutOrStdout())) {
 				if flags.quiet {
 					return nil
 				}
@@ -125,7 +137,10 @@ func newLocationsTagsUpdateCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&bodyName, "name", "", "Tag name")
+	cmd.Flags().StringVar(&bodyCategoryId, "category-id", "", "Category ID to assign to tag. Null or omit for uncategorized.")
+	cmd.Flags().StringVar(&bodyColor, "color", "", "Color: hex (#RGB, #RRGGBB), CSS name (blue, red), rgb()/hsl(), or gradient.")
+	cmd.Flags().StringVar(&bodyDescription, "description", "", "Optional tag description (max 200 chars)")
+	cmd.Flags().StringVar(&bodyName, "name", "", "Tag name, up to 1000 characters. Stored lowercased and trimmed, and unique in the sub-account ignoring case.")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 
 	return cmd

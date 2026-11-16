@@ -115,7 +115,7 @@ scalify-cli location list
 scalify-cli location show
 ```
 
-Override for one command: `SCALIFY_LOCATION_ID=<id> scalify-cli contacts search --agent`
+One command against another saved location (id or name), without switching: `scalify-cli contacts search --location "Scalify Demo" --agent`. A command given a saved location id as its argument (e.g. `locations custom-values list <id>`) uses that location's token on its own.
 
 Commands with a `--location-id` flag fill it from the active location when you leave it out. Commands
 that take the location as an argument (`scalify-cli emails list-templates <locationId>`) still need it

@@ -78,7 +78,7 @@ go test ./... && git diff --stat
 - `scripts/regen/renames.tsv` gives clumsy generated command names a readable name.
 - Hand fixes are re-applied on every run: `scripts/regen/patches/*.patch` (location switching, auth,
   doctor update check, `Version: v3` header), plus the hand-owned files `internal/cli/location_config.go`,
-  `internal/cli/location_default.go`, `internal/client/query.go` and `internal/mcp/code_orch_scalify.go`. Change those files, then refresh the
+  `internal/cli/location_default.go`, `internal/cli/output_scalify.go`, `internal/client/query.go` and `internal/mcp/code_orch_scalify.go`. Change those files, then refresh the
   matching patch, or the next regen undoes your change.
 - `spec.json` is the merged OpenAPI input the CLI was generated from; it's an output of the script.
 

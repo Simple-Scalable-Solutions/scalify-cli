@@ -265,13 +265,6 @@ type ContactsGetNotesListSuccessfulResponseDto struct {
 	Notes json.RawMessage `json:"notes"`
 }
 
-type ContactsUpdateTagsDTO struct {
-	Contacts      json.RawMessage `json:"contacts"`
-	LocationId    string          `json:"locationId"`
-	RemoveAllTags bool            `json:"removeAllTags"`
-	Tags          json.RawMessage `json:"tags"`
-}
-
 type ContactsWorkflowSuccessfulResponseDto struct {
 	Succeded  bool `json:"succeded"`
 	Succeeded bool `json:"succeeded"`
@@ -699,6 +692,9 @@ type CustomValuesListSuccessfulResponseDto struct {
 
 type DeleteBusinessResponseDto struct {
 	Success bool `json:"success"`
+}
+
+type DeleteContactDto struct {
 }
 
 type DeleteContactsSuccessfulResponseDto struct {
@@ -1469,7 +1465,7 @@ type ListWorkflowCampaignsPublicV2ResponseDto struct {
 }
 
 type LocationTagDeleteSuccessfulResponseDto struct {
-	Succeded bool `json:"succeded"`
+	Succeeded bool `json:"succeeded"`
 }
 
 type LocationTagSuccessfulResponseDto struct {
@@ -1555,11 +1551,13 @@ type OpportunitiesSearchSuccessfulResponseDto struct {
 
 type OpportunitySearchBodyDTO struct {
 	AdditionalDetails string          `json:"additionalDetails"`
+	Filters           json.RawMessage `json:"filters"`
 	Limit             float64         `json:"limit"`
 	LocationId        string          `json:"locationId"`
 	Page              float64         `json:"page"`
 	Query             string          `json:"query"`
 	SearchAfter       json.RawMessage `json:"searchAfter"`
+	Sort              json.RawMessage `json:"sort"`
 }
 
 type OrderResponseSchema struct {
@@ -1689,6 +1687,7 @@ type SearchBodyV2DTO struct {
 
 type SearchContactSuccessResponseDto struct {
 	Contacts json.RawMessage `json:"contacts"`
+	HasMore  bool            `json:"hasMore"`
 	Total    float64         `json:"total"`
 }
 
@@ -1848,6 +1847,13 @@ type SubscriptionResponseSchema struct {
 	SubscriptionId                  string          `json:"subscriptionId"`
 	SubscriptionSnapshot            json.RawMessage `json:"subscriptionSnapshot"`
 	UpdatedAt                       string          `json:"updatedAt"`
+}
+
+type TagBadRequestDto struct {
+	Error      string  `json:"error"`
+	Message    string  `json:"message"`
+	Meta       string  `json:"meta"`
+	StatusCode float64 `json:"statusCode"`
 }
 
 type TagsDTO struct {
@@ -2403,5 +2409,8 @@ type customValuesDTO struct {
 }
 
 type tagBody struct {
-	Name string `json:"name"`
+	CategoryId  string `json:"categoryId"`
+	Color       string `json:"color"`
+	Description string `json:"description"`
+	Name        string `json:"name"`
 }

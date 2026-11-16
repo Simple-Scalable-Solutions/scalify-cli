@@ -2406,7 +2406,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2497,7 +2497,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2580,7 +2580,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2661,7 +2661,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2729,12 +2729,12 @@
    "post": {
     "summary": "Count Contacts",
     "operationId": "countContacts",
-    "description": "Count the contacts that match a search, without returning them. Takes the same `query` and `filters` as Search Contacts. Large counts can take up to 35 seconds. If the count does not finish in time, the response is `{ \"count\": null }`; retry the request.",
+    "description": "Count the contacts that match a search, without returning them. Takes the same `query` and `filters` as [Search Contacts](./search-contacts-advanced). Large counts can take up to 35 seconds. If the count does not finish in time, the response is `{ \"count\": null }`; retry the request.",
     "parameters": [
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2766,10 +2766,24 @@
       }
      },
      "400": {
-      "description": "Bad Request"
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
      },
      "401": {
-      "description": "Unauthorized"
+      "description": "Unauthorized",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnauthorizedDTO"
+        }
+       }
+      }
      },
      "403": {
       "description": "Forbidden - the token does not have access to this location",
@@ -2794,89 +2808,16 @@
     }
    }
   },
-  "/contacts/bulk/tags/update/{type}": {
-   "post": {
-    "summary": "Update Contacts Tags",
-    "operationId": "updateContactsTags",
-    "description": "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts",
-    "parameters": [
-     {
-      "name": "type",
-      "required": true,
-      "in": "path",
-      "schema": {
-       "example": "add",
-       "type": "string"
-      },
-      "description": "Whether to add the tags to or remove them from the contacts One of: add, remove"
-     },
-     {
-      "name": "Version",
-      "in": "header",
-      "description": "API Version. Send `v3`.",
-      "required": true,
-      "schema": {
-       "type": "string",
-       "enum": [
-        "v3"
-       ]
-      }
-     }
-    ],
-    "requestBody": {
-     "required": true,
-     "content": {
-      "application/json": {
-       "schema": {
-        "$ref": "#/components/schemas/ContactsUpdateTagsDTO"
-       }
-      }
-     }
-    },
-    "responses": {
-     "201": {
-      "description": "Successful response",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/UpdateTagsResponseDTO"
-        }
-       }
-      }
-     },
-     "400": {
-      "description": "Bad Request",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/BadRequestDTO"
-        }
-       }
-      }
-     },
-     "422": {
-      "description": "Unprocessable Entity",
-      "content": {
-       "application/json": {
-        "schema": {
-         "$ref": "#/components/schemas/UnprocessableDTO"
-        }
-       }
-      }
-     }
-    }
-   }
-  },
   "/contacts/": {
    "post": {
     "summary": "Create Contact",
     "operationId": "createContact",
-    "description": "Create a new contact",
+    "description": "Create a new contact\n\n`Idempotency-Key` is not supported. Retrying a request that timed out can create a duplicate contact. Before you retry, check whether the contact exists (for example with Get Duplicate Contact), or use Upsert Contact.",
     "parameters": [
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -2944,7 +2885,7 @@
    "post": {
     "summary": "Create Note",
     "operationId": "createNote",
-    "description": "Create Note",
+    "description": "Create Note\n\n`Idempotency-Key` is not supported. Retrying a request that timed out can create a second note.",
     "parameters": [
      {
       "name": "contactId",
@@ -2959,7 +2900,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3040,7 +2981,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3103,7 +3044,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3184,7 +3125,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3247,7 +3188,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3257,6 +3198,16 @@
       }
      }
     ],
+    "requestBody": {
+     "required": false,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DeleteContactDto"
+       }
+      }
+     }
+    },
     "responses": {
      "200": {
       "description": "Successful response",
@@ -3303,7 +3254,7 @@
    "get": {
     "summary": "Get Contact",
     "operationId": "getContact",
-    "description": "Retrieves a contact by its unique identifier.",
+    "description": "Retrieves a contact by its unique identifier.\n\nThe response includes a weak `ETag` header, but conditional requests are not supported. Do not rely on `If-None-Match` to return `304`: a full `200` response can be returned even when the contact has not changed.",
     "parameters": [
      {
       "name": "contactId",
@@ -3318,7 +3269,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3374,7 +3325,7 @@
    "put": {
     "summary": "Update Contact",
     "operationId": "updateContact",
-    "description": "Update a contact using contactId\n\n> \u26a0\ufe0f **When updating additional emails/phones, always include the current primary `email`/`phone` in the same request. Otherwise, the existing primary value may be lost.**",
+    "description": "Update a contact using contactId\n\nConditional updates are not supported: `If-Match` is ignored, so the update is applied even if the contact changed after you read it. Do not use the response `ETag` for concurrency control. If a request times out, get the contact again before you retry.",
     "parameters": [
      {
       "name": "contactId",
@@ -3389,7 +3340,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3472,7 +3423,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3530,12 +3481,12 @@
    "get": {
     "summary": "Get Duplicate Contact",
     "operationId": "getDuplicateContact",
-    "description": "Get Duplicate Contact.  If `Allow Duplicate Contact` is disabled under Settings, the global unique identifier will be used for searching the contact. If the setting is enabled, first priority for search is `email` and the second priority will be `phone`.",
+    "description": "Get Duplicate Contact.\n\nIf `Allow Duplicate Contact` is disabled under Settings, the global unique identifier will be used for searching the contact. If the setting is enabled, first priority for search is `email` and the second priority will be `phone`.\n\n`email` and `phone` are matched against both the primary and the additional emails and phone numbers of each contact.",
     "parameters": [
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3638,7 +3589,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3721,7 +3672,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3769,12 +3720,12 @@
    "get": {
     "summary": "Lookup Contact By Email Or Phone",
     "operationId": "lookupContactByEmailOrPhone",
-    "description": "Look up contacts matching an exact `email` or `phone`, scoped to a location, up to `limit` contacts (max 20) per page. Also matches against a contact's additional emails and additional phone numbers. Exactly one of `email` or `phone` must be provided. Paginate with `nextCursor`. Returns an empty `contacts` array if no contact matches. OAuth channel only.",
+    "description": "Look up contacts matching an exact `email` or `phone`, scoped to a location, up to `limit` contacts (max 20) per page. Also matches against a contact's additional emails and additional phone numbers. Exactly one of `email` or `phone` must be provided. Paginate with `nextCursor`. Returns an empty `contacts` array if no contact matches. Requires the `Version` header set to at least `v3`; earlier versions return 400. Available to OAuth access tokens and Private Integration Tokens.",
     "parameters": [
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3887,7 +3838,7 @@
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3927,16 +3878,89 @@
     }
    }
   },
+  "/contacts/bulk/tags/update/{type}": {
+   "post": {
+    "summary": "Update Contacts Tags",
+    "operationId": "updateContactsTags",
+    "description": "Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts",
+    "parameters": [
+     {
+      "name": "type",
+      "required": true,
+      "in": "path",
+      "schema": {
+       "example": "add",
+       "type": "string"
+      },
+      "description": "Whether to add the tags to or remove them from the contacts One of: add, remove"
+     },
+     {
+      "name": "Version",
+      "in": "header",
+      "description": "API Version. Send `v3`.",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "enum": [
+        "v3"
+       ]
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/UpdateTagsDTO"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UpdateTagsResponseDTO"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BadRequestDTO"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Entity",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/UnprocessableDTO"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/contacts/upsert": {
    "post": {
     "summary": "Upsert Contact",
     "operationId": "upsertContact",
-    "description": "The Upsert API will adhere to the configuration defined under the \"Allow Duplicate Contact\" setting at the Location level. If the setting is configured to check both Email and Phone, the API will attempt to identify an existing contact based on the priority sequence specified in the setting, and will create or update the contact accordingly.  If two separate contacts already exist\u2014one with the same email and another with the same phone\u2014and an upsert request includes both the email and phone, the API will update the contact that matches the first field in the configured sequence, and ignore the second field to prevent duplication.",
+    "description": "The Upsert API will adhere to the configuration defined under the \"Allow Duplicate Contact\" setting at the Location level. If the setting is configured to check both Email and Phone, the API will attempt to identify an existing contact based on the priority sequence specified in the setting, and will create or update the contact accordingly.\n\nIf two separate contacts already exist\u2014one with the same email and another with the same phone\u2014and an upsert request includes both the email and phone, the API will update the contact that matches the first field in the configured sequence, and ignore the second field to prevent duplication.\n\n`Idempotency-Key` is not supported. Upsert matches an existing contact by email or phone as described above, so for requests that include an email or phone it is safer to retry than Create Contact. This does not apply when `createNewIfDuplicateAllowed` is set at a location that allows duplicates.",
     "parameters": [
      {
       "name": "Version",
       "in": "header",
-      "description": "API Version",
+      "description": "API Version. Send `v3`.",
       "required": true,
       "schema": {
        "type": "string",
@@ -3957,8 +3981,8 @@
      }
     },
     "responses": {
-     "200": {
-      "description": "Successful response",
+     "201": {
+      "description": "Successful response. Upsert returns 201 for both outcomes: when it creates a new contact and when it matches or updates an existing one. Use the **new** field to tell them apart: true means a contact was created, false means an existing contact was used.",
       "content": {
        "application/json": {
         "schema": {
@@ -10397,7 +10421,7 @@
    "post": {
     "summary": "Create Tag",
     "operationId": "createTag",
-    "description": "Create tag",
+    "description": "Creates a tag in the sub-account. The name is stored lowercased and trimmed, and names are unique ignoring case: creating a name that already exists returns 400.",
     "parameters": [
      {
       "name": "locationId",
@@ -10433,7 +10457,7 @@
      }
     },
     "responses": {
-     "200": {
+     "201": {
       "description": "Successful response",
       "content": {
        "application/json": {
@@ -10444,11 +10468,11 @@
       }
      },
      "400": {
-      "description": "Bad Request",
+      "description": "Bad Request. When the name is already used by another tag, `meta.existingId` is that tag id.",
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/BadRequestDTO"
+         "$ref": "#/components/schemas/TagBadRequestDto"
         }
        }
       }
@@ -11151,7 +11175,7 @@
    "put": {
     "summary": "Update tag",
     "operationId": "updateTag",
-    "description": "Update tag",
+    "description": "Updates a tag. A new name is stored lowercased and trimmed; renaming to a name another tag already has returns 400.",
     "parameters": [
      {
       "name": "locationId",
@@ -11208,11 +11232,11 @@
       }
      },
      "400": {
-      "description": "Bad Request",
+      "description": "Bad Request. When the name is already used by another tag, `meta.existingId` is that tag id.",
       "content": {
        "application/json": {
         "schema": {
-         "$ref": "#/components/schemas/BadRequestDTO"
+         "$ref": "#/components/schemas/TagBadRequestDto"
         }
        }
       }
@@ -13218,7 +13242,7 @@
    "post": {
     "summary": "Search Opportunities",
     "operationId": "searchOpportunities",
-    "description": "Search Opportunities based on combinations of advanced filters. Send `filters` (each with `field`, `operator` and `value`, or a `group` of `AND`/`OR` filters) and `sort` (`field` and `direction`). `page` starts at 1 (0 is treated as 1) and works with `limit`; `page * limit` cannot exceed 10,000, so use `searchAfter` without `page` to read further.",
+    "description": "Search Opportunities based on combinations of advanced filters, with sorting and pagination. Send `filters` (each with `field`, `operator` and `value`, or a `group` of `AND`/`OR` filters) and `sort` (`field` and `direction`); the request body fields below list every supported filter field, operator and sort field, with examples. `page` starts at 1 (0 is treated as 1) and works with `limit`; `page * limit` cannot exceed 10,000, so use `searchAfter` without `page` to read further.\n\n\u26a0\ufe0f Because of the advanced filtering, changes can take a few seconds to appear in the search results.",
     "parameters": [
      {
       "name": "Version",
@@ -13311,16 +13335,6 @@
        "enum": [
         "v3"
        ]
-      }
-     },
-     {
-      "name": "q",
-      "required": false,
-      "in": "query",
-      "description": "Search query (max 75 characters)",
-      "schema": {
-       "example": "john@deo.com",
-       "type": "string"
       }
      },
      {
@@ -13470,6 +13484,28 @@
       "schema": {
        "example": false,
        "type": "boolean"
+      }
+     },
+     {
+      "name": "query",
+      "required": false,
+      "in": "query",
+      "description": "Search query (max 75 characters)",
+      "schema": {
+       "maxLength": 75,
+       "example": "john@deo.com",
+       "type": "string"
+      }
+     },
+     {
+      "name": "q",
+      "required": false,
+      "in": "query",
+      "description": "Deprecated: use `query`. Search query (max 75 characters); ignored when `query` is sent.",
+      "deprecated": true,
+      "schema": {
+       "example": "john@deo.com",
+       "type": "string"
       }
      },
      {
@@ -26024,114 +26060,6 @@
     },
     "title": "ForbiddenDTO"
    },
-   "UpdateTagsDTO": {
-    "type": "object",
-    "properties": {
-     "contacts": {
-      "description": "list of contact ids to be processed",
-      "example": [
-       "qFSqySFkVvNzOSqgGqFi",
-       "abcdef",
-       "qFSqySFkVvNzOSqgGqFi",
-       "3ualbhnV7j3n3a9r2moD"
-      ],
-      "type": "array",
-      "items": {
-       "type": "string"
-      }
-     },
-     "tags": {
-      "description": "list of tags to be added or removed",
-      "example": [
-       "tag-1",
-       "tag-2"
-      ],
-      "type": "array",
-      "items": {
-       "type": "string"
-      }
-     },
-     "locationId": {
-      "type": "string",
-      "description": "location id from where the bulk request is executed",
-      "example": "asdrwHvLUxlfw5SqKVCN"
-     },
-     "removeAllTags": {
-      "type": "boolean",
-      "description": "Option to implement remove all tags. if true, all tags will be removed from the contacts. Can only be used with remove type.",
-      "example": false
-     }
-    },
-    "required": [
-     "contacts",
-     "tags",
-     "locationId"
-    ],
-    "title": "UpdateTagsDTO"
-   },
-   "UpdateTagsResponseDTO": {
-    "type": "object",
-    "properties": {
-     "succeeded": {
-      "type": "boolean",
-      "description": "Indicates if the operation was successful",
-      "example": true
-     },
-     "succeded": {
-      "type": "boolean",
-      "description": "Legacy misspelling of `succeeded`. Deprecated; use `succeeded`.",
-      "example": true,
-      "deprecated": true
-     },
-     "errorCount": {
-      "type": "number",
-      "description": "Number of errors encountered during the operation",
-      "example": 0
-     },
-     "responses": {
-      "description": "Responses for each contact processed",
-      "example": [
-       {
-        "contactId": "qFSqySFkVvNzOSqgGqFi",
-        "message": "Tags updated",
-        "type": "success",
-        "oldTags": [
-         "tag-1",
-         "tag-2"
-        ],
-        "tagsAdded": [],
-        "tagsRemoved": []
-       },
-       {
-        "contactId": "abcdef",
-        "message": "contact id is not a valid firebase id",
-        "type": "error"
-       },
-       {
-        "contactId": "qFSqySFkVvNzOSqgGqFi",
-        "message": "contact is deleted",
-        "type": "error"
-       },
-       {
-        "contactId": "3ualbhnV7j3n3a9r2moD",
-        "message": "contact does not belong to location",
-        "type": "error"
-       }
-      ],
-      "type": "array",
-      "items": {
-       "type": "string"
-      }
-     }
-    },
-    "required": [
-     "succeeded",
-     "succeded",
-     "errorCount",
-     "responses"
-    ],
-    "title": "UpdateTagsResponseDTO"
-   },
    "CreateContactDtoV3": {
     "type": "object",
     "properties": {
@@ -26666,7 +26594,7 @@
       "description": "User's Id"
      },
      "additionalEmails": {
-      "description": "Add additional email addresses to a contact.\n\n> \u26a0\ufe0f **Important:** When sending `additionalEmails`, you must also include the contact\u2019s current primary `email` in the same request. If you send `additionalEmails` without `email`, the contact\u2019s existing primary email may be cleared or replaced.\n\n\nemail represents the contact\u2019s primary email address.\nadditionalEmails represents secondary email addresses for the same contact.\nAlways send the primary email together with additionalEmails when updating email addresses.\nA maximum of 10 additional email addresses can be provided.\n\n\nExample\n\n```json\n{\n  \"email\": \"john@example.com\",\n  \"additionalEmails\": [\n    {\n      \"email\": \"john.work@example.com\"\n    }\n  ]\n}\n```\n\nAvoid\n\n```json\n{\n  \"additionalEmails\": [\n    {\n      \"email\": \"john.work@example.com\"\n    }\n  ]\n}\n```\n\nSending only `additionalEmails` may cause the existing primary email to be lost.\n\nIf email uniqueness is enabled for the location, every email address in the request\u2014primary and additional\u2014must be unique across contacts. If any email already belongs to another contact, the request fails with **400 Bad Request** and no changes are saved.",
+      "description": "\u26a0\ufe0f Always send the primary together with the additionals (email with additionalEmails).\n\nArray of { email }, maximum 10. `email` stays the contact's primary email. Additional values are extra addresses on the same contact.\n\nIf the location has uniqueness check enabled on email and any email you send (primary or additional) already belongs to another contact, the request fails with BadRequest (400) and nothing is saved.",
       "maxItems": 10,
       "example": [
        {
@@ -26690,7 +26618,7 @@
       }
      },
      "additionalPhones": {
-      "description": "Add additional phone numbers to a contact.\n\n> \u26a0\ufe0f **Important:** When sending `additionalPhones`, you must also include the contact\u2019s current primary `phone` in the same request. If you send `additionalPhones` without `phone`, the contact\u2019s existing primary phone may be cleared or replaced.\n\n\nphone represents the contact\u2019s primary phone number.\nadditionalPhones represents secondary phone numbers for the same contact.\nAlways send the primary phone together with additionalPhones when updating phone numbers.\nA maximum of 10 additional phone numbers can be provided.\nphoneLabel is optional. Allowed values: Home, Work, Mobile, or Landline. A label can belong to only one phone number on the contact, including the primary. If a label is repeated, it is kept on the first phone number and removed from the others.\n\n\nExample\n\n```json\n{\n  \"phone\": \"+14155550100\",\n  \"additionalPhones\": [\n    {\n      \"phone\": \"+14155550101\",\n      \"phoneLabel\": \"Work\"\n    }\n  ]\n}\n```\n\nAvoid\n\n```json\n{\n  \"additionalPhones\": [\n    {\n      \"phone\": \"+14155550101\",\n      \"phoneLabel\": \"Work\"\n    }\n  ]\n}\n```\n\nSending only `additionalPhones` may cause the existing primary phone number to be lost.\n\nIf phone uniqueness is enabled for the location, every phone number in the request\u2014primary and additional\u2014must be unique across contacts. If any phone number already belongs to another contact, the request fails with **400 Bad Request** and no changes are saved.",
+      "description": "\u26a0\ufe0f Always send the primary together with the additionals (phone with additionalPhones).\n\nArray of { phone, phoneLabel? }, maximum 10. `phoneLabel` is one of Home, Work, Mobile, Landline. `phone` stays the contact's primary phone. Additional values are extra numbers on the same contact.\n\nIf the location has uniqueness check enabled on phone and any phone number you send (primary or additional) already belongs to another contact, the request fails with BadRequest (400) and nothing is saved.",
       "maxItems": 10,
       "example": [
        {
@@ -27944,6 +27872,11 @@
           "description": "Body content of the note",
           "example": "lorem ipsum"
          },
+         "bodyText": {
+          "type": "string",
+          "description": "Plain-text version of the note body, with HTML tags removed and entities decoded",
+          "example": "lorem ipsum"
+         },
          "userId": {
           "type": "string",
           "description": "User Id of the note author",
@@ -27973,6 +27906,41 @@
           "type": "boolean",
           "description": "Whether the note is pinned",
           "example": false
+         },
+         "businessId": {
+          "type": "string",
+          "description": "Business Id associated with the note. Present only when the note is attached to a business.",
+          "example": "TUcmRxWrjqzJS8EjkxNK"
+         },
+         "relations": {
+          "description": "Every record the note is attached to, such as contacts, businesses, opportunities and custom object records.",
+          "example": [
+           {
+            "objectKey": "contact",
+            "recordId": "TUcmRxWrjqzJS8EjkxNK"
+           },
+           {
+            "objectKey": "opportunity",
+            "recordId": "632c34b4c9b7da3358ac9891"
+           }
+          ],
+          "type": "array",
+          "items": {
+           "type": "object",
+           "properties": {
+            "objectKey": {
+             "type": "string",
+             "description": "Object the record belongs to: a standard object key such as \"contact\", \"business\" or \"opportunity\", or a custom object key such as \"custom_objects.pet\".",
+             "example": "business"
+            },
+            "recordId": {
+             "type": "string",
+             "description": "Id of the record the note is attached to",
+             "example": "632c34b4c9b7da3358ac9891"
+            }
+           },
+           "title": "NoteRelationResponseSchema"
+          }
          }
         },
         "title": "GetNoteSchema"
@@ -28079,6 +28047,11 @@
     },
     "title": "TaskByIsSuccessfulResponseDto"
    },
+   "DeleteContactDto": {
+    "type": "object",
+    "properties": {},
+    "title": "DeleteContactDto"
+   },
    "DeleteContactsSuccessfulResponseDto": {
     "type": "object",
     "properties": {
@@ -28124,6 +28097,11 @@
          "description": "Body content of the note",
          "example": "lorem ipsum"
         },
+        "bodyText": {
+         "type": "string",
+         "description": "Plain-text version of the note body, with HTML tags removed and entities decoded",
+         "example": "lorem ipsum"
+        },
         "userId": {
          "type": "string",
          "description": "User Id of the note author",
@@ -28153,6 +28131,41 @@
          "type": "boolean",
          "description": "Whether the note is pinned",
          "example": false
+        },
+        "businessId": {
+         "type": "string",
+         "description": "Business Id associated with the note. Present only when the note is attached to a business.",
+         "example": "TUcmRxWrjqzJS8EjkxNK"
+        },
+        "relations": {
+         "description": "Every record the note is attached to, such as contacts, businesses, opportunities and custom object records.",
+         "example": [
+          {
+           "objectKey": "contact",
+           "recordId": "TUcmRxWrjqzJS8EjkxNK"
+          },
+          {
+           "objectKey": "opportunity",
+           "recordId": "632c34b4c9b7da3358ac9891"
+          }
+         ],
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "objectKey": {
+            "type": "string",
+            "description": "Object the record belongs to: a standard object key such as \"contact\", \"business\" or \"opportunity\", or a custom object key such as \"custom_objects.pet\".",
+            "example": "business"
+           },
+           "recordId": {
+            "type": "string",
+            "description": "Id of the record the note is attached to",
+            "example": "632c34b4c9b7da3358ac9891"
+           }
+          },
+          "title": "NoteRelationResponseSchema"
+         }
         }
        },
        "title": "GetNoteSchema"
@@ -30866,21 +30879,31 @@
      },
      "page": {
       "type": "number",
-      "description": "Page number for standard pagination, starting at 1.\n- Standard pagination returns up to **10,000** records in total, at most 500 per request: `page \u00d7 pageLimit` must not exceed 10,000. For example, `page: 20` with `pageLimit: 500` returns the last set.\n- To go past 10,000 records, use `searchAfter`.\n- \u26a0\ufe0f **Do not send** `page` together with `searchAfter`.",
+      "description": "Page number for standard pagination, starting at 1.\n- Standard pagination returns up to **10,000** records in total, at most 500 per request: `page \u00d7 pageLimit` must not exceed 10,000. For example, `page: 20` with `pageLimit: 500` returns the last set.\n- To go past 10,000 records, use `searchAfter`.\n- \u26a0\ufe0f `page` is ignored when `searchAfter` is a non-empty array: results start right after the cursor. Send one or the other.",
       "default": 1,
       "example": 1
      },
      "searchAfter": {
       "type": "array",
-      "description": "Cursor for the next page (cursor-based pagination).\n- Pass the `searchAfter` array of the last contact in the previous response, unchanged. Values can be numbers or strings.\n- **Required** to read past **10,000** results.\n- **Do not send** `page` with it.",
+      "description": "Use this to get the next page of results.\n\n\u2022 Copy the `searchAfter` value from the last contact in the previous response and send it here unchanged. Its values can be numbers or strings.\n\n\u2022 You need it to go past the first **10,000** contacts.\n\n\u2022 When you send it, `page` is ignored.\n\n\u2022 To start from the first page, leave it out or send an empty list (`[]`).\n\n\u2022 If the response has no contacts, you have reached the end.",
       "items": {
-       "type": "string"
+       "oneOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "number"
+        }
+       ]
       },
-      "example": []
+      "example": [
+       1700000000000,
+       "ocQHyuzHvysMo5N5VsXc"
+      ]
      },
      "query": {
       "type": "string",
-      "description": "Text to search for. It is matched against the contact fields marked searchable in the location's Custom Fields Settings. Maximum 75 characters.",
+      "description": "Text to search for. It is matched against the contact fields marked searchable in the location's Custom Fields Settings. For email and phone, it also matches additional emails and phone numbers. Maximum 75 characters.",
       "maxLength": 75,
       "example": "tom"
      },
@@ -30892,7 +30915,7 @@
        "properties": {
         "field": {
          "type": "string",
-         "description": "Field to filter on (filter item). The supported fields, grouped as in the Contacts Search API reference, with the operators each one supports:\n\n### Contact Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Contact Id | `id` | `eq`, `not_eq` | `{ \"field\": \"id\", \"operator\": \"eq\", \"value\": \"{contactId}\" }` |\n| Contact Name | `contactName` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"contactName\", \"operator\": \"eq\", \"value\": \"John Doe\" }` |\n| Address | `address` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"address\", \"operator\": \"contains\", \"value\": \"Main Street\" }` |\n| Assigned | `assignedTo` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"assignedTo\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n| Business Name | `businessName` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"businessName\", \"operator\": \"contains\", \"value\": \"acme\" }` |\n| City | `city` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"city\", \"operator\": \"eq\", \"value\": \"New York\" }` |\n| Country | `country` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"country\", \"operator\": \"eq\", \"value\": \"US\" }` |\n| Company Name | `companyName` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"companyName\", \"operator\": \"eq\", \"value\": \"XYZ Corp\" }` |\n| Created At | `dateAdded` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateAdded\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Updated At | `dateUpdated` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateUpdated\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-11-01T00:00:00Z\" } }` |\n| DND | `dnd` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"dnd\", \"operator\": \"eq\", \"value\": true }` |\n| Email | `email` | `eq`, `not_eq`, `exists`, `not_exists` `contains` and `not_contains` are not yet supported | `{ \"field\": \"email\", \"operator\": \"eq\", \"value\": \"john@example.com\" }` |\n| Followers | `followers` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"followers\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n| First Name Lower Case | `firstNameLowerCase` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"firstNameLowerCase\", \"operator\": \"eq\", \"value\": \"john\" }` |\n| First Name (Without Lower Case) | Coming soon! | Coming soon! | Coming soon! |\n| Last Name Lower Case | `lastNameLowerCase` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"lastNameLowerCase\", \"operator\": \"contains\", \"value\": \"doe\" }` |\n| Last Name (Without Lower Case) | Coming soon! | Coming soon! | Coming soon! |\n| Is Valid Whatsapp | `isValidWhatsapp` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"isValidWhatsapp\", \"operator\": \"eq\", \"value\": true }` |\n| Last Email Clicked Date | `lastEmailClickedDate` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastEmailClickedDate\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Last Email Opened Date | `lastEmailOpenedDate` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastEmailOpenedDate\", \"operator\": \"exists\" }` |\n| Phone Pass the correct country code, e.g. `+917010000000` | `phone` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"phone\", \"operator\": \"eq\", \"value\": \"+917010000000\" }` |\n| Postal Zip Code | `postalCode` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"postalCode\", \"operator\": \"eq\", \"value\": \"10001\" }` |\n| Source | `source` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"source\", \"operator\": \"eq\", \"value\": \"Website\" }` |\n| State | `state` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"state\", \"operator\": \"eq\", \"value\": \"California\" }` |\n| Tags | `tags` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"tags\", \"operator\": \"eq\", \"value\": \"vip\" }` |\n| Timezone e.g. `Pacific/Honolulu` | `timezone` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"timezone\", \"operator\": \"eq\", \"value\": \"Pacific/Honolulu\" }` |\n| Contact Type | `type` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"type\", \"operator\": \"eq\", \"value\": \"lead\" }` |\n| Is Valid Email Applies only if Email Validation is enabled for the location | `validEmail` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"validEmail\", \"operator\": \"eq\", \"value\": true }` |\n| Website | `website` | `eq`, `not_eq`, `exists`, `not_exists` `contains` and `not_contains` are not yet supported | `{ \"field\": \"website\", \"operator\": \"exists\" }` |\n| Date of Birth | `dateOfBirth` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateOfBirth\", \"operator\": \"range\", \"value\": { \"gte\": \"1990-01-01\", \"lte\": \"1990-12-31\" } }` |\n\n### Contact Activity\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Last Appointment - Confirmed/Open | `lastAppointment` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastAppointment\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Workflow (Active) | `activeWorkflows` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"activeWorkflows\", \"operator\": \"eq\", \"value\": \"{workflowId}\" }` |\n| Workflow (Finished) | `finishedWorkflows` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"finishedWorkflows\", \"operator\": \"eq\", \"value\": \"{workflowId}\" }` |\n| Last Activity | `lastActivity` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastActivity\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-10-01T00:00:00Z\" } }` |\n\n### Opportunity Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Pipeline | field `opportunities` sub field `pipelineId` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"pipelineId\", \"operator\": \"eq\", \"value\": \"{pipelineId}\" } ] }` |\n| Pipeline Stage | field `opportunities` sub field `pipelineStageId` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"pipelineStageId\", \"operator\": \"eq\", \"value\": \"{pipelineStageId}\" } ] }` |\n| Pipeline Status | field `opportunities` sub field `status` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"status\", \"operator\": \"eq\", \"value\": \"open\" } ] }` |\n\nExample: opportunities combination filter, open opportunities in one pipeline stage\n\n```json\n{\n  \"field\": \"opportunities\",\n  \"operator\": \"nested\",\n  \"value\": [\n    {\n      \"field\": \"pipelineId\",\n      \"operator\": \"eq\",\n      \"value\": \"{pipelineId}\"\n    },\n    {\n      \"field\": \"pipelineStageId\",\n      \"operator\": \"eq\",\n      \"value\": \"{pipelineStageId}\"\n    },\n    {\n      \"field\": \"status\",\n      \"operator\": \"eq\",\n      \"value\": \"open\"\n    }\n  ]\n}\n```\n\nYou can combine 2 or more sub-fields under the `opportunities` nested filter.\n\n### Custom Fields\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| TEXT, LARGE_TEXT, SINGLE_OPTIONS, RADIO, PHONE | `customFields.{customFieldId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"contains\", \"value\": \"gold\" }` |\n| CHECKBOX, MULTIPLE_OPTIONS | `customFields.{customFieldId}` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"eq\", \"value\": [ \"Newsletter\", \"Promotions\" ] }` |\n| NUMERICAL, MONETORY | `customFields.{customFieldId}` | `range`, `exists`, `not_exists`, `eq`, `not_eq` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": 100, \"lte\": 500 } }` |\n| DATE | `customFields.{customFieldId}` | `range`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01\", \"lte\": \"2026-12-31\" } }` |\n| TEXTBOX_LIST | `customFields.{customFieldId}.{optionId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}.{optionId}\", \"operator\": \"eq\", \"value\": \"Line one\" }` |\n\n- Custom field: `customFields.{customFieldId}`, e.g. `customFields.OBj007JIEmLP0IEHdV1l`.\n- TEXTBOX_LIST: add the option id, `customFields.{customFieldId}.{optionId}`, e.g. `customFields.OBj007JIEmLP0IEHdV1l.c1b70ec9-664f-400f-a3fc-6f7912c5e310`.\n- CHECKBOX / MULTIPLE_OPTIONS: `value` is an option, or an array of options to match any of them.",
+         "description": "Field to filter on (filter item). The supported fields, grouped as in the Contacts Search API reference, with the operators each one supports:\n\n### Contact Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Contact Id | `id` | `eq`, `not_eq` | `{ \"field\": \"id\", \"operator\": \"eq\", \"value\": \"{contactId}\" }` |\n| Contact Name | `contactName` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"contactName\", \"operator\": \"eq\", \"value\": \"John Doe\" }` |\n| Address | `address` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"address\", \"operator\": \"contains\", \"value\": \"Main Street\" }` |\n| Assigned | `assignedTo` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"assignedTo\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n| Business Name | `businessName` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"businessName\", \"operator\": \"contains\", \"value\": \"acme\" }` |\n| City | `city` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"city\", \"operator\": \"eq\", \"value\": \"New York\" }` |\n| Country | `country` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"country\", \"operator\": \"eq\", \"value\": \"US\" }` |\n| Company Name | `companyName` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"companyName\", \"operator\": \"eq\", \"value\": \"XYZ Corp\" }` |\n| Created At | `dateAdded` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateAdded\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Updated At | `dateUpdated` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateUpdated\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-11-01T00:00:00Z\" } }` |\n| DND | `dnd` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"dnd\", \"operator\": \"eq\", \"value\": true }` |\n| Email | `email` | `eq`, `not_eq`, `exists`, `not_exists` `contains` and `not_contains` are not yet supported | `{ \"field\": \"email\", \"operator\": \"eq\", \"value\": \"john@example.com\" }` |\n| Followers | `followers` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"followers\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n| First Name Lower Case | `firstNameLowerCase` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"firstNameLowerCase\", \"operator\": \"eq\", \"value\": \"john\" }` |\n| First Name (Without Lower Case) | Coming soon! | Coming soon! | Coming soon! |\n| Last Name Lower Case | `lastNameLowerCase` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"lastNameLowerCase\", \"operator\": \"contains\", \"value\": \"doe\" }` |\n| Last Name (Without Lower Case) | Coming soon! | Coming soon! | Coming soon! |\n| Is Valid Whatsapp | `isValidWhatsapp` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"isValidWhatsapp\", \"operator\": \"eq\", \"value\": true }` |\n| Last Email Clicked Date | `lastEmailClickedDate` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastEmailClickedDate\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Last Email Opened Date | `lastEmailOpenedDate` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastEmailOpenedDate\", \"operator\": \"exists\" }` |\n| Phone Pass the correct country code, e.g. `+917010000000` | `phone` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"phone\", \"operator\": \"eq\", \"value\": \"+917010000000\" }` |\n| Postal Zip Code | `postalCode` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"postalCode\", \"operator\": \"eq\", \"value\": \"10001\" }` |\n| Source | `source` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"source\", \"operator\": \"eq\", \"value\": \"Website\" }` |\n| State | `state` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"state\", \"operator\": \"eq\", \"value\": \"California\" }` |\n| Tags | `tags` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"tags\", \"operator\": \"eq\", \"value\": \"vip\" }` |\n| Timezone e.g. `Pacific/Honolulu` | `timezone` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"timezone\", \"operator\": \"eq\", \"value\": \"Pacific/Honolulu\" }` |\n| Contact Type | `type` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"type\", \"operator\": \"eq\", \"value\": \"lead\" }` |\n| Is Valid Email Applies only if Email Validation is enabled for the location | `validEmail` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"validEmail\", \"operator\": \"eq\", \"value\": true }` |\n| Website | `website` | `eq`, `not_eq`, `exists`, `not_exists` `contains` and `not_contains` are not yet supported | `{ \"field\": \"website\", \"operator\": \"exists\" }` |\n| Date of Birth | `dateOfBirth` | `range`, `exists`, `not_exists` | `{ \"field\": \"dateOfBirth\", \"operator\": \"range\", \"value\": { \"gte\": \"1990-01-01\", \"lte\": \"1990-12-31\" } }` |\n\n### Contact Activity\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Last Appointment - Confirmed/Open | `lastAppointment` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastAppointment\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-12-31T23:59:59Z\" } }` |\n| Workflow (Active) | `activeWorkflows` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"activeWorkflows\", \"operator\": \"eq\", \"value\": \"{workflowId}\" }` |\n| Workflow (Finished) | `finishedWorkflows` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"finishedWorkflows\", \"operator\": \"eq\", \"value\": \"{workflowId}\" }` |\n| Last Activity | `lastActivity` | `range`, `exists`, `not_exists` | `{ \"field\": \"lastActivity\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-10-01T00:00:00Z\" } }` |\n\n### Opportunity Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Pipeline | field `opportunities` sub field `pipelineId` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"pipelineId\", \"operator\": \"eq\", \"value\": \"{pipelineId}\" } ] }` |\n| Pipeline Stage | field `opportunities` sub field `pipelineStageId` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"pipelineStageId\", \"operator\": \"eq\", \"value\": \"{pipelineStageId}\" } ] }` |\n| Pipeline Status | field `opportunities` sub field `status` | field: `nested` sub field: `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"opportunities\", \"operator\": \"nested\", \"value\": [ { \"field\": \"status\", \"operator\": \"eq\", \"value\": \"open\" } ] }` |\n\nExample: opportunities combination filter, open opportunities in one pipeline stage\n\n```json\n{\n  \"field\": \"opportunities\",\n  \"operator\": \"nested\",\n  \"value\": [\n    {\n      \"field\": \"pipelineId\",\n      \"operator\": \"eq\",\n      \"value\": \"{pipelineId}\"\n    },\n    {\n      \"field\": \"pipelineStageId\",\n      \"operator\": \"eq\",\n      \"value\": \"{pipelineStageId}\"\n    },\n    {\n      \"field\": \"status\",\n      \"operator\": \"eq\",\n      \"value\": \"open\"\n    }\n  ]\n}\n```\n\nYou can combine 2 or more sub-fields under the `opportunities` nested filter.\n\n### Custom Fields\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| TEXT, LARGE_TEXT, SINGLE_OPTIONS, RADIO, PHONE | `customFields.{customFieldId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"contains\", \"value\": \"gold\" }` |\n| CHECKBOX, MULTIPLE_OPTIONS | `customFields.{customFieldId}` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"eq\", \"value\": [ \"Newsletter\", \"Promotions\" ] }` |\n| NUMERICAL, MONETORY | `customFields.{customFieldId}` | `range`, `exists`, `not_exists`, `eq`, `not_eq` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": 100, \"lte\": 500 } }` |\n| DATE | `customFields.{customFieldId}` | `range`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01\", \"lte\": \"2026-12-31\" } }` |\n| TEXTBOX_LIST | `customFields.{customFieldId}.{optionId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"customFields.{customFieldId}.{optionId}\", \"operator\": \"eq\", \"value\": \"Line one\" }` |\n\n- Custom field: `customFields.{customFieldId}`, e.g. `customFields.OBj007JIEmLP0IEHdV1l`.\n- TEXTBOX_LIST: add the option id, `customFields.{customFieldId}.{optionId}`, e.g. `customFields.OBj007JIEmLP0IEHdV1l.c1b70ec9-664f-400f-a3fc-6f7912c5e310`.\n- CHECKBOX / MULTIPLE_OPTIONS: `value` is an option, or an array of options to match any of them.\n- `email` and `phone` match only the primary email and phone of a contact, not its additional emails or phone numbers. To find a contact by an additional email or phone, use `query` or Get Duplicate Contact.",
          "example": "tags"
         },
         "operator": {
@@ -31375,16 +31398,18 @@
      },
      "total": {
       "type": "number",
-      "description": "Total number of contacts matching the search criteria",
+      "description": "Total number of contacts matching the search criteria. Not returned when `fastPagination` is true; for the exact count, send the same filters without `fastPagination`.",
       "example": 120
+     },
+     "hasMore": {
+      "type": "boolean",
+      "description": "Returned only when `fastPagination` is true, in place of `total`. `true` when another page exists, `false` on the last page.",
+      "example": true
      }
     },
-    "required": [
-     "total"
-    ],
     "title": "SearchContactSuccessResponseDto"
    },
-   "ContactsUpdateTagsDTO": {
+   "UpdateTagsDTO": {
     "type": "object",
     "properties": {
      "contacts": {
@@ -31430,7 +31455,70 @@
      "tags",
      "locationId"
     ],
-    "title": "ContactsUpdateTagsDTO"
+    "title": "UpdateTagsDTO"
+   },
+   "UpdateTagsResponseDTO": {
+    "type": "object",
+    "properties": {
+     "succeeded": {
+      "type": "boolean",
+      "description": "Indicates if the operation was successful",
+      "example": true
+     },
+     "succeded": {
+      "type": "boolean",
+      "description": "Legacy misspelling of `succeeded`. Deprecated; use `succeeded`.",
+      "example": true,
+      "deprecated": true
+     },
+     "errorCount": {
+      "type": "number",
+      "description": "Number of errors encountered during the operation",
+      "example": 0
+     },
+     "responses": {
+      "description": "Responses for each contact processed",
+      "example": [
+       {
+        "contactId": "qFSqySFkVvNzOSqgGqFi",
+        "message": "Tags updated",
+        "type": "success",
+        "oldTags": [
+         "tag-1",
+         "tag-2"
+        ],
+        "tagsAdded": [],
+        "tagsRemoved": []
+       },
+       {
+        "contactId": "abcdef",
+        "message": "contact id is not a valid firebase id",
+        "type": "error"
+       },
+       {
+        "contactId": "qFSqySFkVvNzOSqgGqFi",
+        "message": "contact is deleted",
+        "type": "error"
+       },
+       {
+        "contactId": "3ualbhnV7j3n3a9r2moD",
+        "message": "contact does not belong to location",
+        "type": "error"
+       }
+      ],
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "succeeded",
+     "succeded",
+     "errorCount",
+     "responses"
+    ],
+    "title": "UpdateTagsResponseDTO"
    },
    "UpdateContactDtoV3": {
     "type": "object",
@@ -31952,7 +32040,7 @@
       "nullable": true
      },
      "additionalEmails": {
-      "description": "Add additional email addresses to a contact.\n\n> \u26a0\ufe0f **Important:** When sending `additionalEmails`, you must also include the contact\u2019s current primary `email` in the same request. If you send `additionalEmails` without `email`, the contact\u2019s existing primary email may be cleared or replaced.\n\n\nemail represents the contact\u2019s primary email address.\nadditionalEmails represents secondary email addresses for the same contact.\nAlways send the primary email together with additionalEmails when updating email addresses.\nA maximum of 10 additional email addresses can be provided.\n\n\nExample\n\n```json\n{\n  \"email\": \"john@example.com\",\n  \"additionalEmails\": [\n    {\n      \"email\": \"john.work@example.com\"\n    }\n  ]\n}\n```\n\nAvoid\n\n```json\n{\n  \"additionalEmails\": [\n    {\n      \"email\": \"john.work@example.com\"\n    }\n  ]\n}\n```\n\nSending only `additionalEmails` may cause the existing primary email to be lost.\n\nIf email uniqueness is enabled for the location, every email address in the request\u2014primary and additional\u2014must be unique across contacts. If any email already belongs to another contact, the request fails with **400 Bad Request** and no changes are saved.",
+      "description": "\u26a0\ufe0f Always send the primary together with the additionals (email with additionalEmails).\n\nArray of { email }, maximum 10. `email` stays the contact's primary email. Additional values are extra addresses on the same contact.\n\nIf the location has uniqueness check enabled on email and any email you send (primary or additional) already belongs to another contact, the request fails with BadRequest (400) and nothing is saved.",
       "maxItems": 10,
       "example": [
        {
@@ -31976,7 +32064,7 @@
       }
      },
      "additionalPhones": {
-      "description": "Add additional phone numbers to a contact.\n\n> \u26a0\ufe0f **Important:** When sending `additionalPhones`, you must also include the contact\u2019s current primary `phone` in the same request. If you send `additionalPhones` without `phone`, the contact\u2019s existing primary phone may be cleared or replaced.\n\n\nphone represents the contact\u2019s primary phone number.\nadditionalPhones represents secondary phone numbers for the same contact.\nAlways send the primary phone together with additionalPhones when updating phone numbers.\nA maximum of 10 additional phone numbers can be provided.\nphoneLabel is optional. Allowed values: Home, Work, Mobile, or Landline. A label can belong to only one phone number on the contact, including the primary. If a label is repeated, it is kept on the first phone number and removed from the others.\n\n\nExample\n\n```json\n{\n  \"phone\": \"+14155550100\",\n  \"additionalPhones\": [\n    {\n      \"phone\": \"+14155550101\",\n      \"phoneLabel\": \"Work\"\n    }\n  ]\n}\n```\n\nAvoid\n\n```json\n{\n  \"additionalPhones\": [\n    {\n      \"phone\": \"+14155550101\",\n      \"phoneLabel\": \"Work\"\n    }\n  ]\n}\n```\n\nSending only `additionalPhones` may cause the existing primary phone number to be lost.\n\nIf phone uniqueness is enabled for the location, every phone number in the request\u2014primary and additional\u2014must be unique across contacts. If any phone number already belongs to another contact, the request fails with **400 Bad Request** and no changes are saved.",
+      "description": "\u26a0\ufe0f Always send the primary together with the additionals (phone with additionalPhones).\n\nArray of { phone, phoneLabel? }, maximum 10. `phoneLabel` is one of Home, Work, Mobile, Landline. `phone` stays the contact's primary phone. Additional values are extra numbers on the same contact.\n\nIf the location has uniqueness check enabled on phone and any phone number you send (primary or additional) already belongs to another contact, the request fails with BadRequest (400) and nothing is saved.",
       "maxItems": 10,
       "example": [
        {
@@ -48974,8 +49062,24 @@
     "properties": {
      "name": {
       "type": "string",
-      "description": "Tag name",
+      "description": "Tag name, up to 1000 characters. Stored lowercased and trimmed, and unique in the sub-account ignoring case.",
       "example": "Tag"
+     },
+     "categoryId": {
+      "type": "string",
+      "description": "Category ID to assign to tag. Null or omit for uncategorized.",
+      "example": "abc123categoryId",
+      "nullable": true
+     },
+     "description": {
+      "type": "string",
+      "description": "Optional tag description (max 200 chars)",
+      "example": "High-intent prospect ready to convert"
+     },
+     "color": {
+      "type": "string",
+      "description": "Color: hex (#RGB, #RRGGBB), CSS name (blue, red), rgb()/hsl(), or gradient.",
+      "example": "#6B7280"
      }
     },
     "required": [
@@ -49000,12 +49104,70 @@
        "id": {
         "type": "string",
         "example": "flGwEuzsfJOia1i1ikRN"
+       },
+       "categoryId": {
+        "type": "string",
+        "description": "ID of the category the tag belongs to. Null when the tag is uncategorized.",
+        "example": "abc123categoryId",
+        "nullable": true
+       },
+       "description": {
+        "type": "string",
+        "description": "Description of the tag. Null when none was set.",
+        "example": "High-intent prospect",
+        "nullable": true
+       },
+       "color": {
+        "type": "string",
+        "description": "Color: hex (#RGB, #RRGGBB), CSS name (blue, red), rgb()/hsl(), or gradient.",
+        "example": "#6B7280",
+        "nullable": true
        }
       },
       "title": "LocationTagsSchema"
      }
     },
     "title": "LocationTagSuccessfulResponseDto"
+   },
+   "TagBadRequestDto": {
+    "type": "object",
+    "properties": {
+     "statusCode": {
+      "type": "number",
+      "description": "HTTP status code",
+      "example": 400
+     },
+     "message": {
+      "type": "string",
+      "description": "Error message describing why the request is invalid",
+      "example": "The tag name is already exist."
+     },
+     "error": {
+      "type": "string",
+      "description": "HTTP error name",
+      "example": "Bad Request"
+     },
+     "meta": {
+      "description": "Present only when the name is already used by another tag in the sub-account.",
+      "allOf": [
+       {
+        "type": "object",
+        "properties": {
+         "existingId": {
+          "type": "string",
+          "description": "ID of the tag that already has the requested name",
+          "example": "flGwEuzsfJOia1i1ikRN"
+         }
+        },
+        "required": [
+         "existingId"
+        ],
+        "title": "TagBadRequestMetaDto"
+       }
+      ]
+     }
+    },
+    "title": "TagBadRequestDto"
    },
    "CustomFieldDeleteSuccessfulResponseDto": {
     "type": "object",
@@ -49030,8 +49192,9 @@
    "LocationTagDeleteSuccessfulResponseDto": {
     "type": "object",
     "properties": {
-     "succeded": {
+     "succeeded": {
       "type": "boolean",
+      "description": "Whether the delete operation succeeded.",
       "example": true
      }
     },
@@ -49472,6 +49635,24 @@
         "id": {
          "type": "string",
          "example": "flGwEuzsfJOia1i1ikRN"
+        },
+        "categoryId": {
+         "type": "string",
+         "description": "ID of the category the tag belongs to. Null when the tag is uncategorized.",
+         "example": "abc123categoryId",
+         "nullable": true
+        },
+        "description": {
+         "type": "string",
+         "description": "Description of the tag. Null when none was set.",
+         "example": "High-intent prospect",
+         "nullable": true
+        },
+        "color": {
+         "type": "string",
+         "description": "Color: hex (#RGB, #RRGGBB), CSS name (blue, red), rgb()/hsl(), or gradient.",
+         "example": "#6B7280",
+         "nullable": true
         }
        },
        "title": "LocationTagsSchema"
@@ -52958,37 +53139,177 @@
     "properties": {
      "locationId": {
       "type": "string",
-      "description": "Location Id",
+      "description": "Location ID in which the search needs to be performed",
       "example": "i2SpAtBVHSVea1sL6oah"
      },
      "query": {
       "type": "string",
-      "description": "Full-text search query string (max 75 characters)",
-      "example": "john@deo.com"
+      "description": "Text to search for within your opportunities. It is matched against the opportunity fields marked searchable in the location's settings. Maximum 75 characters.",
+      "maxLength": 75,
+      "example": "john@example.com"
      },
      "limit": {
       "type": "number",
-      "description": "Maximum number of results to return per page",
+      "description": "Number of opportunities per page. Minimum 1, maximum 500.",
+      "minimum": 1,
+      "maximum": 500,
       "example": 20
      },
      "page": {
       "type": "number",
-      "description": "Page number, starting at 1 (0 is treated as 1). `page * limit` cannot exceed 10,000; use `searchAfter` without `page` to read further.",
+      "description": "Page number for standard pagination, starting at 1 (0 is treated as 1).\n- Standard pagination returns up to **10,000** records in total: `page \u00d7 limit` must not exceed 10,000. For example, `page: 20` with `limit: 500` returns the last set.\n- To go past 10,000 records, use `searchAfter`.\n- \u26a0\ufe0f When you use `searchAfter`, do not send `page`: it is ignored for the results but still counts toward the 10,000 limit.",
+      "minimum": 0,
       "example": 1
      },
      "searchAfter": {
-      "description": "Search-after cursor values for deep pagination",
+      "type": "array",
+      "description": "Use this to get the next page of results (cursor-based pagination).\n\n\u2022 Copy the `sort` value from the last opportunity in the previous response and send it here unchanged. Its values can be numbers or strings.\n\n\u2022 You need it to go past the first **10,000** opportunities.\n\n\u2022 Do not send `page` with it.\n\n\u2022 To start from the first page, leave it out or send an empty list (`[]`).\n\n\u2022 If the response has no opportunities, you have reached the end.",
+      "items": {
+       "oneOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "number"
+        }
+       ]
+      },
       "example": [
        1625203104328,
        "yWQobCRIhRguQtD2llvk"
-      ],
+      ]
+     },
+     "filters": {
       "type": "array",
+      "description": "Filters, or groups of filters, to narrow the results. Each filter has three parts:\n1. **Field**: the opportunity attribute the filter applies to, e.g. `status`.\n2. **Operator**: the comparison to run on the field, e.g. `eq` or `range`.\n3. **Value**: the value the field is compared with; a string, number or other type that fits the field.\n\n- Each item is either a **filter** (`field`, `operator`, `value`) or a **group** (`group`: `AND` / `OR`, with nested `filters`). Groups can be nested.\n- \u26a0\ufe0f By default every filter in the `filters` array is combined with **AND**.\n- Results can take a few seconds to reflect recent changes.\n\nExample: open opportunities worth 1,000 to 5,000, assigned to a user or with a source set\n\n```json\n[\n  {\n    \"group\": \"AND\",\n    \"filters\": [\n      {\n        \"field\": \"status\",\n        \"operator\": \"eq\",\n        \"value\": \"open\"\n      },\n      {\n        \"field\": \"monetary_value\",\n        \"operator\": \"range\",\n        \"value\": {\n          \"gte\": 1000,\n          \"lte\": 5000\n        }\n      }\n    ]\n  },\n  {\n    \"group\": \"OR\",\n    \"filters\": [\n      {\n        \"field\": \"assigned_to\",\n        \"operator\": \"eq\",\n        \"value\": \"082goXVW3lIExEQPOnd3\"\n      },\n      {\n        \"field\": \"source\",\n        \"operator\": \"exists\"\n      }\n    ]\n  }\n]\n```\n\n**Opportunities changed since a time** (incremental sync): filter `date_updated` with `range` and `gte` set to the time of your last sync, sort by `date_updated` `asc`, and page with `searchAfter`. Start each sync a little before the previous one ended, so changes still being indexed are not missed. Deleted opportunities are not returned.",
       "items": {
-       "type": "string"
-      }
+       "type": "object",
+       "properties": {
+        "field": {
+         "type": "string",
+         "description": "Field to filter on (filter item). Use the field names below exactly as written (snake_case). The supported fields, grouped as in the Opportunities Search API reference, with the operators each one supports:\n\n### Opportunity Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Opportunity ID | `id` | `eq`, `not_eq` | `{ \"field\": \"id\", \"operator\": \"eq\", \"value\": \"{opportunityId}\" }` |\n| Opportunity Name | `name` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"name\", \"operator\": \"contains\", \"value\": \"renewal\" }` |\n| Monetary Value | `monetary_value` | `eq`, `not_eq`, `range`, `exists`, `not_exists` | `{ \"field\": \"monetary_value\", \"operator\": \"range\", \"value\": { \"gte\": 1000, \"lte\": 5000 } }` |\n| Pipeline ID | `pipeline_id` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"pipeline_id\", \"operator\": \"eq\", \"value\": \"{pipelineId}\" }` |\n| Pipeline Stage ID | `pipeline_stage_id` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"pipeline_stage_id\", \"operator\": \"eq\", \"value\": \"{pipelineStageId}\" }` |\n| Status `open`, `won`, `lost` or `abandoned` | `status` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"status\", \"operator\": \"eq\", \"value\": \"open\" }` |\n| Lost Reason ID | `lost_reason_id` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"lost_reason_id\", \"operator\": \"eq\", \"value\": \"{lostReasonId}\" }` |\n| Source | `source` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"source\", \"operator\": \"eq\", \"value\": \"Website\" }` |\n| Assigned To | `assigned_to` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"assigned_to\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n| Followers | `followers` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"followers\", \"operator\": \"eq\", \"value\": \"{userId}\" }` |\n\n### Contact Information\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Contact ID | `contact_id` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"contact_id\", \"operator\": \"eq\", \"value\": \"{contactId}\" }` |\n| Contact Name | `contact_name` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"contact_name\", \"operator\": \"contains\", \"value\": \"john\" }` |\n| Company Name | `company_name` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"company_name\", \"operator\": \"eq\", \"value\": \"Tesla Inc\" }` |\n| Email | `email` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"email\", \"operator\": \"eq\", \"value\": \"john@example.com\" }` |\n| Phone Pass the country code, e.g. `+12025550107` | `phone` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"phone\", \"operator\": \"eq\", \"value\": \"+12025550107\" }` |\n\n### Date Fields\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| Date Added | `date_added` | `range`, `exists`, `not_exists` | `{ \"field\": \"date_added\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-06-30T23:59:59Z\" } }` |\n| Date Updated | `date_updated` | `range`, `exists`, `not_exists` | `{ \"field\": \"date_updated\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-11-01T00:00:00Z\" } }` |\n| Last Status Change Date | `last_status_change_date` | `range`, `exists`, `not_exists` | `{ \"field\": \"last_status_change_date\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01T00:00:00Z\", \"lte\": \"2026-06-30T23:59:59Z\" } }` |\n| Last Stage Change Date | `last_stage_change_date` | `range`, `exists`, `not_exists` | `{ \"field\": \"last_stage_change_date\", \"operator\": \"exists\" }` |\n\n### Custom Fields\n\n| Display name | Field name | Supported operators | Example |\n| --- | --- | --- | --- |\n| TEXT, LARGE_TEXT, SINGLE_OPTIONS, RADIO, PHONE | `custom_fields.{customFieldId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"custom_fields.{customFieldId}\", \"operator\": \"contains\", \"value\": \"gold\" }` |\n| CHECKBOX, MULTIPLE_OPTIONS | `custom_fields.{customFieldId}` | `eq`, `not_eq`, `exists`, `not_exists` | `{ \"field\": \"custom_fields.{customFieldId}\", \"operator\": \"eq\", \"value\": [ \"Option A\", \"Option B\" ] }` |\n| NUMERICAL, MONETORY | `custom_fields.{customFieldId}` | `eq`, `not_eq`, `range`, `exists`, `not_exists` | `{ \"field\": \"custom_fields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": 100, \"lte\": 500 } }` |\n| DATE | `custom_fields.{customFieldId}` | `range`, `exists`, `not_exists` | `{ \"field\": \"custom_fields.{customFieldId}\", \"operator\": \"range\", \"value\": { \"gte\": \"2026-01-01\", \"lte\": \"2026-12-31\" } }` |\n| TEXTBOX_LIST | `custom_fields.{customFieldId}.{optionId}` | `eq`, `not_eq`, `contains`, `not_contains`, `exists`, `not_exists` | `{ \"field\": \"custom_fields.{customFieldId}.{optionId}\", \"operator\": \"eq\", \"value\": \"Line one\" }` |\n\n- Custom field: `custom_fields.{customFieldId}`, e.g. `custom_fields.OBj007JIEmLP0IEHdV1l`.\n- TEXTBOX_LIST: add the option id, `custom_fields.{customFieldId}.{optionId}`, e.g. `custom_fields.OBj007JIEmLP0IEHdV1l.c1b70ec9-664f-400f-a3fc-6f7912c5e310`.\n- CHECKBOX / MULTIPLE_OPTIONS: `value` is an option, or an array of options to match any of them.",
+         "example": "status"
+        },
+        "operator": {
+         "type": "string",
+         "description": "Operator to apply (filter item). Each field supports only some operators; see the supported operators of each field.\n\n#### `eq`: Equals\n\n- **Value type:** Number, String, Boolean\n- **Character limit:** None\n\nExample\n\n```json\n{\n  \"field\": \"status\",\n  \"operator\": \"eq\",\n  \"value\": \"open\"\n}\n```\n\n#### `not_eq`: Not Equals\n\n- **Value type:** Number, String, Boolean\n- **Character limit:** None\n\nExample\n\n```json\n{\n  \"field\": \"status\",\n  \"operator\": \"not_eq\",\n  \"value\": \"lost\"\n}\n```\n\n#### `contains`: Contains\n\n- **Value type:** String\n- **Character limit:** At least 3 characters\n- \u26a0\ufe0f The `contains` operator does not support special characters.\n\nExample\n\n```json\n{\n  \"field\": \"name\",\n  \"operator\": \"contains\",\n  \"value\": \"renewal\"\n}\n```\n\n#### `not_contains`: Not Contains\n\n- **Value type:** String\n- **Character limit:** At least 3 characters\n- \u26a0\ufe0f The `not_contains` operator does not support special characters.\n\nExample\n\n```json\n{\n  \"field\": \"company_name\",\n  \"operator\": \"not_contains\",\n  \"value\": \"test\"\n}\n```\n\n#### `exists`: Exists (has a value)\n\n- **Value type:** Undefined\n- **Character limit:** None\n- \u26a0\ufe0f **Do not pass any `value`**; `field` and `operator` are enough.\n\nExample\n\n```json\n{\n  \"field\": \"source\",\n  \"operator\": \"exists\"\n}\n```\n\n#### `not_exists`: Does not exist (no value)\n\n- **Value type:** Undefined\n- **Character limit:** None\n- \u26a0\ufe0f **Do not pass any `value`**; `field` and `operator` are enough.\n\nExample\n\n```json\n{\n  \"field\": \"assigned_to\",\n  \"operator\": \"not_exists\"\n}\n```\n\n#### `range`: Range\n\n- **Value type:** An object with `gte` / `lte` (or `gt` / `lt`) bounds: numbers for number fields, ISO 8601 dates or epoch milliseconds for date fields\n- **Character limit:** None\n\nExample\n\n```json\n{\n  \"field\": \"monetary_value\",\n  \"operator\": \"range\",\n  \"value\": {\n    \"gte\": 1000,\n    \"lte\": 5000\n  }\n}\n```",
+         "example": "eq"
+        },
+        "value": {
+         "description": "Value to compare with (filter item). A string, number or boolean for most operators (an array matches any of its values); `{ gte, lte, gt, lt }` for `range`; omitted for `exists` / `not_exists`. `contains` and `not_contains` values need at least 3 characters.",
+         "oneOf": [
+          {
+           "type": "string"
+          },
+          {
+           "type": "number"
+          },
+          {
+           "type": "boolean"
+          },
+          {
+           "type": "array",
+           "items": {
+            "type": "string"
+           }
+          },
+          {
+           "type": "object"
+          }
+         ],
+         "example": "open"
+        },
+        "group": {
+         "type": "string",
+         "enum": [
+          "AND",
+          "OR"
+         ],
+         "description": "Logical group operator for the nested `filters` (group item). Must be either `AND` or `OR`.",
+         "example": "OR"
+        },
+        "filters": {
+         "type": "array",
+         "description": "Array of filters or nested filter groups to be grouped together (group item), in the same form as this item",
+         "items": {
+          "type": "object"
+         },
+         "example": [
+          {
+           "field": "pipeline_id",
+           "operator": "eq",
+           "value": "bCkKGpDsyPP4peuKowkG"
+          },
+          {
+           "field": "pipeline_stage_id",
+           "operator": "eq",
+           "value": "7915dedc-8f18-44d5-8bc3-77c04e994a10"
+          }
+         ]
+        }
+       }
+      },
+      "example": [
+       {
+        "field": "status",
+        "operator": "eq",
+        "value": "open"
+       },
+       {
+        "field": "date_updated",
+        "operator": "range",
+        "value": {
+         "gte": "2026-11-01T00:00:00Z"
+        }
+       },
+       {
+        "group": "OR",
+        "filters": [
+         {
+          "field": "pipeline_id",
+          "operator": "eq",
+          "value": "bCkKGpDsyPP4peuKowkG"
+         },
+         {
+          "field": "pipeline_stage_id",
+          "operator": "eq",
+          "value": "7915dedc-8f18-44d5-8bc3-77c04e994a10"
+         }
+        ]
+       }
+      ]
+     },
+     "sort": {
+      "type": "array",
+      "description": "Sort order, applied in the order given. Without `sort`, the newest opportunities come first (`date_added` `desc`). Opportunities that tie are ordered by id, so `searchAfter` paging is stable.",
+      "items": {
+       "type": "object",
+       "properties": {
+        "field": {
+         "type": "string",
+         "description": "Field to sort on (sort item). The standard sort fields of the Opportunities Search API reference, each with an example, and how to sort on a custom field:\n\n#### Date Created: `date_added`\n\nExample: newest opportunities first\n\n```json\n[\n  {\n    \"field\": \"date_added\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Date Updated: `date_updated`\n\nExample: most recently updated opportunities first\n\n```json\n[\n  {\n    \"field\": \"date_updated\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Opportunity Name: `name`\n\nExample: names A to Z\n\n```json\n[\n  {\n    \"field\": \"name\",\n    \"direction\": \"asc\"\n  }\n]\n```\n\n#### Monetary Value: `monetary_value`\n\nExample: highest value first\n\n```json\n[\n  {\n    \"field\": \"monetary_value\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Last Status Change Date: `last_status_change_date`\n\nExample: most recent status change first\n\n```json\n[\n  {\n    \"field\": \"last_status_change_date\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Last Stage Change Date: `last_stage_change_date`\n\nExample: most recent stage change first\n\n```json\n[\n  {\n    \"field\": \"last_stage_change_date\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Custom fields: `{customFieldId}`\n\nSet `field` to the custom field id itself, without the `custom_fields.` prefix that filters use.\n\nExample: highest value of a number custom field first\n\n```json\n[\n  {\n    \"field\": \"{customFieldId}\",\n    \"direction\": \"desc\"\n  }\n]\n```\n\n#### Combining sorts\n\nYou can combine sorts; they apply in the order given.\n\nExample: newest opportunities first, then by monetary value\n\n```json\n[\n  {\n    \"field\": \"date_added\",\n    \"direction\": \"desc\"\n  },\n  {\n    \"field\": \"monetary_value\",\n    \"direction\": \"asc\"\n  }\n]\n```",
+         "example": "date_added"
+        },
+        "direction": {
+         "type": "string",
+         "enum": [
+          "asc",
+          "desc"
+         ],
+         "description": "Sorting direction: `asc` for ascending, `desc` for descending",
+         "example": "desc"
+        }
+       }
+      },
+      "example": [
+       {
+        "field": "date_added",
+        "direction": "desc"
+       }
+      ]
      },
      "additionalDetails": {
-      "description": "Flags to include additional related entities in the response",
+      "description": "Related data to include with each opportunity: notes, tasks and calendar events",
       "example": {
        "notes": false,
        "tasks": false,
@@ -53032,10 +53353,7 @@
     },
     "required": [
      "locationId",
-     "query",
-     "limit",
-     "searchAfter",
-     "additionalDetails"
+     "limit"
     ],
     "title": "OpportunitySearchBodyDTO"
    },

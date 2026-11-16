@@ -6,7 +6,7 @@ subs=[("\t\thandleCodeOrchSearch,\n","\t\tscalifySearch,\n"),
       ("Returns a ranked list of {endpoint_id, method, path, summary} entries. Call this first to find the endpoint to execute.",
        "Returns a ranked list of {endpoint_id, method, path, summary, params} entries; params lists the path, query and body fields (* = required, then :type). Call this first to find the endpoint to execute."),
       ("Params are passed as a JSON object; path placeholders and query strings are resolved automatically.",
-       "Params are one flat JSON object: path and query fields are taken out by name, the rest is the JSON body (POST/PUT/PATCH) or query string (GET/DELETE). locationId defaults to the active location."),
+       "Params are one flat JSON object: path and query fields are taken out by name, the rest is the JSON body (POST/PUT/PATCH) or query string (GET/DELETE). locationId defaults to the active location; a locationId with a saved token is called with that token."),
       ("Path placeholders match by name; remaining entries become query string on GET/DELETE or JSON body on POST/PUT/PATCH.",
        "Flat object of the endpoint's params, by name (see params in scalify_search results)."),
 ]
