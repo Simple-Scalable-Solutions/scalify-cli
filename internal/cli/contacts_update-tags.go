@@ -147,10 +147,10 @@ func newContactsUpdateTagsCmd(flags *rootFlags) *cobra.Command {
 			return printOutputWithFlags(cmd.OutOrStdout(), data, flags)
 		},
 	}
-	cmd.Flags().StringVar(&bodyContacts, "contacts", "", "list of contact ids to be processed")
+	cmd.Flags().StringVar(&bodyContacts, "contacts", "", "list of contact ids to be processed. Minimum 1, maximum 500 per request.")
 	cmd.Flags().StringVar(&bodyLocationId, "location-id", "", "location id from where the bulk request is executed")
-	cmd.Flags().BoolVar(&bodyRemoveAllTags, "remove-all-tags", false, "Option to implement remove all tags. if true, all tags will be removed from the contacts. Can only be used with...")
-	cmd.Flags().StringVar(&bodyTags, "tags", "", "list of tags to be added or removed")
+	cmd.Flags().BoolVar(&bodyRemoveAllTags, "remove-all-tags", false, "Optional. If `true`, removes all tags from the contacts, and `tags` can be empty. Can only be used with the `remove`...")
+	cmd.Flags().StringVar(&bodyTags, "tags", "", "list of tags to be added or removed. Minimum 1, maximum 50 per request. Can be empty only when removeAllTags is true.")
 	cmd.Flags().BoolVar(&stdinBody, "stdin", false, "Read request body as JSON from stdin")
 
 	return cmd
